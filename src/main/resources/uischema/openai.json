@@ -1,0 +1,47 @@
+{
+  "connectorName": "ai",
+  "connectionName": "OPEN_AI",
+  "title": "OpenAI Connection Config",
+  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "OPEN_AI_CONNECTION_1",
+        "required": "true",
+        "helpTip": "The name for the OpenAI connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "OpenAI Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "OpenAI Key"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "connectorName": "ai",
+  "operationName": "prompt",
+  "title": "Define your prompt template",
+  "help": "<h1>Define LLM prompts</h1><b>Define LLM prompts</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "name",
+                    "displayName": "Name",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Give a name to the prompt"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "prompt",
+                    "displayName": "Prompt",
+                    "inputType": "string",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Define the prompt"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

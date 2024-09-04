@@ -1,0 +1,72 @@
+{
+  "connectorName": "ai",
+  "operationName": "chat",
+  "title": "Chat completion with LLM",
+  "help": "<h1>Chat completion with LLM</h1><b>Chat completion with LLM</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "LLM Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "OPEN_AI"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "LLM service connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "systemPrompt",
+                    "displayName": "System prompt name you need to use",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "System prompt name to be used"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "prompt",
+                    "displayName": "Prompt name you need to use",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Prompt name to be used"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "output",
+                    "displayName": "Define name of the output property",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Define name of the output property"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
