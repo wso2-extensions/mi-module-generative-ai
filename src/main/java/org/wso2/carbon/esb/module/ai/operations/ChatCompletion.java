@@ -20,45 +20,50 @@ package org.wso2.carbon.esb.module.ai.operations;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import org.apache.synapse.MessageContext;
-import org.wso2.carbon.connector.core.AbstractConnector;
-import org.wso2.carbon.connector.core.ConnectException;
+import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
 interface Agent {
     String chat(String userMessage);
 }
 
-public class ChatCompletion extends AbstractConnector {
+/**
+ * Chat completion mediator
+ * @author Isuru Wijesiri
+ */
+public class ChatCompletion extends AbstractAIMediator {
 
-    String SYSTEM_PROMPT_NAME = "systemPrompt";
-    String PROMPT_NAME = "prompt";
-    String OUTPUT_NAME = "output";
+    String TEMPLATE_SYSTEM_PROMPT = "systemPrompt";
+    String TEMPLATE_PROMPT = "prompt";
+    String TEMPLATE_OUTPUT_NAME = "output";
+
     String API_KEY = "ai_openai_apiKey";
 
-    @Override
-    public void connect(MessageContext messageContext) throws ConnectException {
-        String systemPromptName = (String) getParameter(messageContext, SYSTEM_PROMPT_NAME);
-        String promptName = (String) getParameter(messageContext, PROMPT_NAME);
-        String output = (String) getParameter(messageContext, OUTPUT_NAME);
+    String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
 
-        String apiKey = (String) messageContext.getProperty(API_KEY);
-        String systemPrompt = (String) messageContext.getProperty(systemPromptName);
-        String prompt = (String) messageContext.getProperty(promptName);
+    @Override
+    public void execute(MessageContext mc) {
+
+        // Load mediator configurations from template
+        String systemPromptName = getMediatorParameter(mc, TEMPLATE_SYSTEM_PROMPT, String.class, false);
+        String promptName = getMediatorParameter(mc, TEMPLATE_PROMPT, String.class, false);
+        String output = getMediatorParameter(mc, TEMPLATE_OUTPUT_NAME, String.class, false);
+
+        // Load properties from message context
+        String apiKey = getProperty(mc, API_KEY, String.class, false);
+        String systemPrompt = getProperty(mc, systemPromptName, String.class, false);
+        String prompt = getProperty(mc, promptName, String.class, false);
+
         try {
             OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
             Agent agent = AiServices.builder(Agent.class)
                     .chatLanguageModel(model)
-                    .systemMessageProvider(chatMemoryId -> {
-                        if (systemPrompt == null) {
-                            return "You are a helpful assistant.";
-                        }
-                        return systemPrompt;
-                    })
+                    .systemMessageProvider(chatMemoryId -> systemPrompt != null ? systemPrompt : DEFAULT_SYSTEM_PROMPT)
                     .build();
             String answer = agent.chat(prompt);
-            messageContext.setProperty(output, answer);
+            mc.setProperty(output, answer);
         } catch (Exception e) {
             log.error(e);
-	        throw new ConnectException(e);
+	        handleException("Error while LLM chat completion", e, mc);
         }
     }
 }

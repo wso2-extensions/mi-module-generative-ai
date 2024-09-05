@@ -18,21 +18,24 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
 import org.apache.synapse.MessageContext;
-import org.wso2.carbon.connector.core.AbstractConnector;
+import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
-public class Prompt extends AbstractConnector {
+/**
+ * Prompt mediator
+ * @author Isuru Wijesiri
+ */
+public class Prompt extends AbstractAIMediator {
 
     String NAME = "name";
     String PROMPT = "prompt";
 
     @Override
-    public void connect(MessageContext messageContext){
-        String promptName = (String) getParameter(messageContext, NAME);
-        String prompt = (String) getParameter(messageContext, PROMPT);
+    public void execute(MessageContext mc){
 
-        messageContext.setProperty(promptName, prompt);
+        // Load mediator configurations
+        String promptName = getMediatorParameter(mc, NAME, String.class, false);
+        String prompt = getMediatorParameter(mc, PROMPT, String.class, false);
+
+        mc.setProperty(promptName, prompt);
     }
 }
-
-//         String promptName = (String) mc.lookupTemplateParameter(NAME);
-//        String prompt = (String) mc.lookupTemplateParameter(PROMPT);
