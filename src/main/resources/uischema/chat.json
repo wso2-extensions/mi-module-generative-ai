@@ -33,7 +33,7 @@
                   "type": "attribute",
                   "value": {
                     "name": "systemPrompt",
-                    "displayName": "System prompt name you need to use",
+                    "displayName": "Enter the name of pre-defined system prompt",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
@@ -44,7 +44,7 @@
                   "type": "attribute",
                   "value": {
                     "name": "prompt",
-                    "displayName": "Prompt name you need to use",
+                    "displayName": "Enter the name of pre-defined user prompt",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
@@ -55,11 +55,23 @@
                   "type": "attribute",
                   "value": {
                     "name": "output",
-                    "displayName": "Define name of the output property",
+                    "displayName": "Output property",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Define name of the output property"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "outputType",
+                    "displayName": "Define type of the output property",
+                    "inputType": "combo",
+                    "comboValues": ["string", "integer", "float", "boolean"],
+                    "defaultValue": "string",
+                    "required": "true",
+                    "helpTip": "Define type of the output property"
                   }
                 }
               ]

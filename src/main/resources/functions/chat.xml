@@ -19,6 +19,7 @@
     <parameter name="systemPrompt" description="System prompt name"/>
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="output" description="Output property name"/>
+    <parameter name="outputType" description="Output type"/>
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.ChatCompletion" />
     </sequence>
