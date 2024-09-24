@@ -20,6 +20,14 @@
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="output" description="Output property name"/>
     <parameter name="outputType" description="Output type"/>
+
+    <parameter name="modelName" description="Model name"/>
+    <parameter name="temperature" description="Temperature"/>
+    <parameter name="maxTokens" description="Max tokens"/>
+    <parameter name="topP" description="Top P"/>
+    <parameter name="frequencyPenalty" description="Frequency penalty"/>
+    <parameter name="seed" description="Seed"/>
+
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.ChatCompletion" />
     </sequence>

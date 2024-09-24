@@ -52,6 +52,13 @@ public class ChatCompletion extends AbstractAIMediator {
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
     private static final String API_KEY = "ai_openai_apiKey";
 
+    private static final String TEMPLATE_MODEL_NAME = "modelName";
+    private static final String TEMPLATE_TEMPERATURE = "temperature";
+    private static final String TEMPLATE_MAX_TOKENS = "maxTokens";
+    private static final String TEMPLATE_TOP_P = "topP";
+    private static final String TEMPLATE_FREQUENCY_PENALTY = "frequencyPenalty";
+    private static final String TEMPLATE_SEED = "seed";
+
     @Override
     public void execute(MessageContext mc) {
 
@@ -61,6 +68,15 @@ public class ChatCompletion extends AbstractAIMediator {
         String output = getMediatorParameter(mc, TEMPLATE_OUTPUT_NAME, String.class, false);
         String outputType = getMediatorParameter(mc, TEMPLATE_OUTPUT_TYPE, String.class, false);
 
+        // Load LLM configurations from template
+        // Null values will be handled by langchain4j
+        String modelName = getMediatorParameter(mc, TEMPLATE_MODEL_NAME, String.class, false);
+        Double temperature = getMediatorParameter(mc, TEMPLATE_TEMPERATURE, Double.class, true);
+        Integer maxTokens = getMediatorParameter(mc, TEMPLATE_MAX_TOKENS, Integer.class, true);
+        Double topP = getMediatorParameter(mc, TEMPLATE_TOP_P, Double.class, true);
+        Double frequencyPenalty = getMediatorParameter(mc, TEMPLATE_FREQUENCY_PENALTY, Double.class, true);
+        Integer seed = getMediatorParameter(mc, TEMPLATE_SEED, Integer.class, true);
+
         // Load properties from message context - Model configurations
         String apiKey = getProperty(mc, API_KEY, String.class, false);
         String systemPrompt = getProperty(mc, systemPromptName, String.class, false);
@@ -68,7 +84,12 @@ public class ChatCompletion extends AbstractAIMediator {
 
         try {
             OpenAiChatModel model = OpenAiChatModel.builder()
-                    .modelName("gpt-4o-mini")
+                    .modelName(modelName)
+                    .temperature(temperature)
+                    .maxTokens(maxTokens)
+                    .topP(topP)
+                    .frequencyPenalty(frequencyPenalty)
+                    .seed(seed)
                     .apiKey(apiKey)
                     .build();
 

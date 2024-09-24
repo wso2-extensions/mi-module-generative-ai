@@ -76,6 +76,80 @@
                 }
               ]
             }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Advanced",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "modelName",
+                    "displayName": "Model name",
+                    "inputType": "string",
+                    "defaultValue": "gpt-4o-mini",
+                    "required": "true",
+                    "helpTip": "Name of the model to use"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "maxTokens",
+                    "displayName": "Max tokens",
+                    "inputType": "string",
+                    "defaultValue": "4069",
+                    "required": "true",
+                    "helpTip": "Maximum number of tokens to generate"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "temperature",
+                    "displayName": "Temperature",
+                    "inputType": "string",
+                    "defaultValue": "0.7",
+                    "required": "true",
+                    "helpTip": "Controls randomness: lower temperature results in less randomness"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "topP",
+                    "displayName": "Top P",
+                    "inputType": "string",
+                    "defaultValue": "1",
+                    "required": "true",
+                    "helpTip": "Controls diversity: lower value results in more diversity"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "frequencyPenalty",
+                    "displayName": "Frequency penalty",
+                    "inputType": "string",
+                    "defaultValue": "0",
+                    "required": "true",
+                    "helpTip": "Controls repetition: lower value results in less repetition"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "seed",
+                    "displayName": "Seed",
+                    "inputType": "string",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Stop sequence"
+                  }
+                }
+              ]
+            }
           }
         ]
       }
