@@ -22,6 +22,7 @@ import dev.langchain4j.service.AiServices;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
+import java.util.concurrent.ConcurrentHashMap;
 
 interface StringAgent {
     String chat(String userMessage);
@@ -59,6 +60,19 @@ public class ChatCompletion extends AbstractAIMediator {
     private static final String TEMPLATE_FREQUENCY_PENALTY = "frequencyPenalty";
     private static final String TEMPLATE_SEED = "seed";
 
+    // Thread safe cache to store the created agent to avoid creating a new agents for each request
+    private static final ConcurrentHashMap<String, Object> agentCache = new ConcurrentHashMap<>();
+
+    // Agent configurations
+    private String modelName;
+    private Double temperature;
+    private Integer maxTokens;
+    private Double topP;
+    private Double frequencyPenalty;
+    private Integer seed;
+    private String apiKey;
+    private String systemPrompt;
+
     @Override
     public void execute(MessageContext mc) {
 
@@ -68,32 +82,21 @@ public class ChatCompletion extends AbstractAIMediator {
         String output = getMediatorParameter(mc, TEMPLATE_OUTPUT_NAME, String.class, false);
         String outputType = getMediatorParameter(mc, TEMPLATE_OUTPUT_TYPE, String.class, false);
 
-        // Load LLM configurations from template
-        // Null values will be handled by langchain4j
-        String modelName = getMediatorParameter(mc, TEMPLATE_MODEL_NAME, String.class, false);
-        Double temperature = getMediatorParameter(mc, TEMPLATE_TEMPERATURE, Double.class, true);
-        Integer maxTokens = getMediatorParameter(mc, TEMPLATE_MAX_TOKENS, Integer.class, true);
-        Double topP = getMediatorParameter(mc, TEMPLATE_TOP_P, Double.class, true);
-        Double frequencyPenalty = getMediatorParameter(mc, TEMPLATE_FREQUENCY_PENALTY, Double.class, true);
-        Integer seed = getMediatorParameter(mc, TEMPLATE_SEED, Integer.class, true);
+        // Load LLM agent configurations from template and message context
+        modelName = getMediatorParameter(mc, TEMPLATE_MODEL_NAME, String.class, false);
+        temperature = getMediatorParameter(mc, TEMPLATE_TEMPERATURE, Double.class, true);
+        maxTokens = getMediatorParameter(mc, TEMPLATE_MAX_TOKENS, Integer.class, true);
+        topP = getMediatorParameter(mc, TEMPLATE_TOP_P, Double.class, true);
+        frequencyPenalty = getMediatorParameter(mc, TEMPLATE_FREQUENCY_PENALTY, Double.class, true);
+        seed = getMediatorParameter(mc, TEMPLATE_SEED, Integer.class, true);
 
-        // Load properties from message context - Model configurations
-        String apiKey = getProperty(mc, API_KEY, String.class, false);
-        String systemPrompt = getProperty(mc, systemPromptName, String.class, false);
+        apiKey = getProperty(mc, API_KEY, String.class, false);
+        systemPrompt = getProperty(mc, systemPromptName, String.class, false);
+
         String prompt = getProperty(mc, promptName, String.class, false);
 
         try {
-            OpenAiChatModel model = OpenAiChatModel.builder()
-                    .modelName(modelName)
-                    .temperature(temperature)
-                    .maxTokens(maxTokens)
-                    .topP(topP)
-                    .frequencyPenalty(frequencyPenalty)
-                    .seed(seed)
-                    .apiKey(apiKey)
-                    .build();
-
-            Object answer = getChatResponse(outputType, model, systemPrompt, prompt);
+            Object answer = getChatResponse(outputType, prompt);
             if (answer != null) {
                 mc.setProperty(output, answer);
             } else {
@@ -106,25 +109,40 @@ public class ChatCompletion extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(String outputType, OpenAiChatModel model, String systemPrompt, String prompt) {
+    private Object getChatResponse(String outputType, String prompt) {
         switch (outputType.toLowerCase()) {
             case "string":
-                return createAgent(StringAgent.class, model, systemPrompt).chat(prompt);
+                return getAgent(StringAgent.class).chat(prompt);
             case "integer":
-                return createAgent(IntegerAgent.class, model, systemPrompt).chat(prompt);
+                return getAgent(IntegerAgent.class).chat(prompt);
             case "float":
-                return createAgent(FloatAgent.class, model, systemPrompt).chat(prompt);
+                return getAgent(FloatAgent.class).chat(prompt);
             case "boolean":
-                return createAgent(BooleanAgent.class, model, systemPrompt).chat(prompt);
+                return getAgent(BooleanAgent.class).chat(prompt);
             default:
                 return null;
         }
     }
 
-    private <T> T createAgent(Class<T> agentType, OpenAiChatModel model, String systemPrompt) {
-        return AiServices.builder(agentType)
-                .chatLanguageModel(model)
-                .systemMessageProvider(chatMemoryId -> systemPrompt != null ? systemPrompt : DEFAULT_SYSTEM_PROMPT)
-                .build();
+    @SuppressWarnings("unchecked")
+    private <T> T getAgent(Class<T> agentType) {
+        return (T) agentCache.computeIfAbsent( agentType.getName(), key -> {
+            // Null values of LLM params will be handled by LangChain4j
+            OpenAiChatModel model = OpenAiChatModel.builder()
+                    .modelName(modelName)
+                    .temperature(temperature)
+                    .maxTokens(maxTokens)
+                    .topP(topP)
+                    .frequencyPenalty(frequencyPenalty)
+                    .seed(seed)
+                    .apiKey(apiKey)
+                    .build();
+
+            return AiServices
+                    .builder(agentType)
+                    .chatLanguageModel(model)
+                    .systemMessageProvider(chatMemoryId -> systemPrompt != null ? systemPrompt : DEFAULT_SYSTEM_PROMPT)
+                    .build();
+        });
     }
 }
