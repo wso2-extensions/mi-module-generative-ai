@@ -3,6 +3,8 @@ package org.wso2.carbon.esb.module.ai;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 
+import java.util.Objects;
+
 /**
  * Abstract base class for AI mediators
  */
@@ -24,9 +26,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             return null;
         }
 
-        if (type.isInstance(parameter)) {
-            return type.cast(parameter); // Cast safely using Class<T>
-        } else {
+        try {
+            return parse(Objects.requireNonNull(parameter).toString(), type);
+        } catch (IllegalArgumentException e) {
             handleException(String.format("Parameter %s is not of type %s", parameterName, type.getName()), messageContext);
         }
 
@@ -41,12 +43,27 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             return null;
         }
 
-        if (type.isInstance(property)) {
-            return type.cast(property); // Cast safely using Class<T>
-        } else {
+        try {
+            return parse(Objects.requireNonNull(property).toString(), type);
+        } catch (IllegalArgumentException e) {
             handleException(String.format("Property %s is not of type %s", propertyName, type.getName()), messageContext);
         }
 
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T parse(String value, Class<T> type) throws IllegalArgumentException {
+        if (type == Integer.class) {
+            return (T) Integer.valueOf(value);
+        } else if (type == Double.class) {
+            return (T) Double.valueOf(value);
+        } else if (type == Boolean.class) {
+            return (T) Boolean.valueOf(value);
+        } else if (type == String.class) {
+            return (T) value;
+        } else {
+            throw new IllegalArgumentException("Unsupported type: " + type);
+        }
     }
 }
