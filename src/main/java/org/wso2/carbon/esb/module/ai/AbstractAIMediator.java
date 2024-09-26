@@ -66,4 +66,12 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             throw new IllegalArgumentException("Unsupported type: " + type);
         }
     }
+
+    protected Object getObjetFromMC(MessageContext messageContext, String propertyName, boolean isOptional) {
+        Object property = messageContext.getProperty(propertyName);
+        if (property == null && !isOptional) {
+            handleException(String.format("Property %s is not set", propertyName), messageContext);
+        }
+        return property;
+    }
 }

@@ -26,5 +26,17 @@
 			<file>prompt.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
+		<component name="LoadKnowledgeStore" >
+			<file>loadKnowledgeStore.xml</file>
+			<description>LLM chat prompt</description>
+		</component>
+		<component name="SaveDocsToStore" >
+			<file>saveDocsToStore.xml</file>
+			<description>LLM chat prompt</description>
+		</component>
+		<component name="LoadDocuments" >
+			<file>docLoader.xml</file>
+			<description>LLM chat prompt</description>
+		</component>
     </subComponents>
 </component>

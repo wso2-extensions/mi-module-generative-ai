@@ -46,19 +46,7 @@ interface BooleanAgent {
  */
 public class ChatCompletion extends AbstractAIMediator {
 
-    private static final String TEMPLATE_SYSTEM_PROMPT = "systemPrompt";
-    private static final String TEMPLATE_PROMPT = "prompt";
-    private static final String TEMPLATE_OUTPUT_NAME = "output";
-    private static final String TEMPLATE_OUTPUT_TYPE = "outputType";
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
-    private static final String API_KEY = "ai_openai_apiKey";
-
-    private static final String TEMPLATE_MODEL_NAME = "modelName";
-    private static final String TEMPLATE_TEMPERATURE = "temperature";
-    private static final String TEMPLATE_MAX_TOKENS = "maxTokens";
-    private static final String TEMPLATE_TOP_P = "topP";
-    private static final String TEMPLATE_FREQUENCY_PENALTY = "frequencyPenalty";
-    private static final String TEMPLATE_SEED = "seed";
 
     // Thread safe cache to store the created agent to avoid creating a new agents for each request
     private static final ConcurrentHashMap<String, Object> agentCache = new ConcurrentHashMap<>();
@@ -77,20 +65,20 @@ public class ChatCompletion extends AbstractAIMediator {
     public void execute(MessageContext mc) {
 
         // Load mediator configurations from template
-        String systemPromptName = getMediatorParameter(mc, TEMPLATE_SYSTEM_PROMPT, String.class, false);
-        String promptName = getMediatorParameter(mc, TEMPLATE_PROMPT, String.class, false);
-        String output = getMediatorParameter(mc, TEMPLATE_OUTPUT_NAME, String.class, false);
-        String outputType = getMediatorParameter(mc, TEMPLATE_OUTPUT_TYPE, String.class, false);
+        String systemPromptName = getMediatorParameter(mc, "systemPrompt", String.class, false);
+        String promptName = getMediatorParameter(mc, "prompt", String.class, false);
+        String output = getMediatorParameter(mc, "output", String.class, false);
+        String outputType = getMediatorParameter(mc, "outputType", String.class, false);
 
         // Load LLM agent configurations from template and message context
-        modelName = getMediatorParameter(mc, TEMPLATE_MODEL_NAME, String.class, false);
-        temperature = getMediatorParameter(mc, TEMPLATE_TEMPERATURE, Double.class, true);
-        maxTokens = getMediatorParameter(mc, TEMPLATE_MAX_TOKENS, Integer.class, true);
-        topP = getMediatorParameter(mc, TEMPLATE_TOP_P, Double.class, true);
-        frequencyPenalty = getMediatorParameter(mc, TEMPLATE_FREQUENCY_PENALTY, Double.class, true);
-        seed = getMediatorParameter(mc, TEMPLATE_SEED, Integer.class, true);
+        modelName = getMediatorParameter(mc, "modelName", String.class, false);
+        temperature = getMediatorParameter(mc, "temperature", Double.class, true);
+        maxTokens = getMediatorParameter(mc, "maxTokens", Integer.class, true);
+        topP = getMediatorParameter(mc, "topP", Double.class, true);
+        frequencyPenalty = getMediatorParameter(mc, "frequencyPenalty", Double.class, true);
+        seed = getMediatorParameter(mc, "seed", Integer.class, true);
 
-        apiKey = getProperty(mc, API_KEY, String.class, false);
+        apiKey = getProperty(mc, "ai_openai_apiKey", String.class, false);
         systemPrompt = getProperty(mc, systemPromptName, String.class, false);
 
         String prompt = getProperty(mc, promptName, String.class, false);

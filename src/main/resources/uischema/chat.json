@@ -13,7 +13,7 @@
             "type": "attribute",
             "value": {
               "name": "configRef",
-              "displayName": "LLM Connection",
+              "displayName": "OpenAI Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
                 "OPEN_AI"
