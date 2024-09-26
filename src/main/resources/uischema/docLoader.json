@@ -1,0 +1,46 @@
+{
+  "connectorName": "ai",
+  "operationName": "LoadDocuments",
+  "title": "Load documents from file system",
+  "help": "<h1>Define LLM prompts</h1><b>Define LLM prompts</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "documentsPath",
+                    "displayName": "Path to documents",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Give the path to documents"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "attribute",
+            "value": {
+              "name": "outputProperty",
+              "displayName": "Output property",
+              "inputType": "stringOrExpression",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "Define name of the output property"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
