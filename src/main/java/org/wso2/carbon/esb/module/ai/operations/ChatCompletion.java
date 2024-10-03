@@ -18,9 +18,13 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.rag.DefaultRetrievalAugmentor;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.rag.KnowledgeStore;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -60,6 +64,8 @@ public class ChatCompletion extends AbstractAIMediator {
     private Integer seed;
     private String apiKey;
     private String systemPrompt;
+    private String knowledgeStoreName;
+    private KnowledgeStore knowledgeStore;
 
     @Override
     public void execute(MessageContext mc) {
@@ -82,6 +88,13 @@ public class ChatCompletion extends AbstractAIMediator {
         systemPrompt = getProperty(mc, systemPromptName, String.class, false);
 
         String prompt = getProperty(mc, promptName, String.class, false);
+
+        // RAG configurations
+        knowledgeStoreName = getMediatorParameter(mc, "knowledgeStore", String.class, true);
+        // Does not need to be thread safe
+        if (knowledgeStore == null) {
+            knowledgeStore = (KnowledgeStore) getObjetFromMC(mc, "VECTOR_STORE_" + knowledgeStoreName, false);
+        }
 
         try {
             Object answer = getChatResponse(outputType, prompt);
@@ -130,7 +143,18 @@ public class ChatCompletion extends AbstractAIMediator {
                     .builder(agentType)
                     .chatLanguageModel(model)
                     .systemMessageProvider(chatMemoryId -> systemPrompt != null ? systemPrompt : DEFAULT_SYSTEM_PROMPT)
+                    .contentRetriever(getContentRetriever(knowledgeStore))
                     .build();
         });
+    }
+
+    // TODO: Use advanced retrieval augmentor
+    private ContentRetriever getContentRetriever(KnowledgeStore knowledgeStore) {
+        return EmbeddingStoreContentRetriever.builder()
+                .embeddingStore(knowledgeStore.getEmbeddingStore())
+                .embeddingModel(knowledgeStore.getEmbeddingModel())
+                .maxResults(2) // on each interaction we will retrieve the 2 most relevant segments
+                .minScore(0.5) // we want to retrieve segments at least somewhat similar to user query
+                .build();
     }
 }

@@ -14,10 +14,10 @@ public class DocumentLoader extends AbstractAIMediator {
     @Override
     public void execute(MessageContext mc) {
         String documentsPath = getMediatorParameter(mc, "documentsPath", String.class, false);
-        String outputPropertyName = getMediatorParameter(mc, "outputProperty", String.class, false);
+        String docLoaderName = getMediatorParameter(mc, "docLoaderName", String.class, false);
 
         List<Document> documents = FileSystemDocumentLoader.loadDocumentsRecursively(documentsPath, new TextDocumentParser());
 
-        mc.setProperty(outputPropertyName, documents);
+        mc.setProperty("DOC_LOADER_" + docLoaderName, documents);
     }
 }

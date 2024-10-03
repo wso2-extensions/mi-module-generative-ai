@@ -17,7 +17,7 @@
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="LoadDocuments">
     <parameter name="documentsPath" description="Path to documents"/>
-    <parameter name="outputProperty" description="Property to store loaded documents"/>
+    <parameter name="docLoaderName" description="Name of the document loader"/>
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.rag.DocumentLoader"/>
     </sequence>

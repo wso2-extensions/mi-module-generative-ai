@@ -150,6 +150,25 @@
                 }
               ]
             }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "RAG",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "knowledgeStore",
+                    "displayName": "Knowledge Store",
+                    "inputType": "string",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Stop sequence"
+                  }
+                }
+              ]
+            }
           }
         ]
       }

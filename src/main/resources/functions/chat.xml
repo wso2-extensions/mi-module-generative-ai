@@ -28,6 +28,8 @@
     <parameter name="frequencyPenalty" description="Frequency penalty"/>
     <parameter name="seed" description="Seed"/>
 
+    <parameter name="knowledgeStore" description="Knowledge store"/>
+
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.ChatCompletion" />
     </sequence>

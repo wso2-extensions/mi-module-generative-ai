@@ -10,25 +10,21 @@
         "groupName": "General",
         "elements": [
           {
-            "type": "attribute",
-            "value": {
-              "name": "configRef",
-              "displayName": "OpenAI Connection",
-              "inputType": "connection",
-              "allowedConnectionTypes": [
-                "OPEN_AI"
-              ],
-              "defaultType": "connection.local",
-              "defaultValue": "",
-              "required": "true",
-              "helpTip": "LLM service connection to be used"
-            }
-          },
-          {
             "type": "attributeGroup",
             "value": {
               "groupName": "Basic",
               "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "docLoader",
+                    "displayName": "Document loader",
+                    "inputType": "string",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Give a document loader to use"
+                  }
+                },
                 {
                   "type": "attribute",
                   "value": {

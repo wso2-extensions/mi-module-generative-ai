@@ -24,19 +24,19 @@
                     "required": "true",
                     "helpTip": "Give the path to documents"
                   }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "docLoaderName",
+                    "displayName": "Document loader name",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Define name of the document loader"
+                  }
                 }
               ]
-            }
-          },
-          {
-            "type": "attribute",
-            "value": {
-              "name": "outputProperty",
-              "displayName": "Output property",
-              "inputType": "stringOrExpression",
-              "defaultValue": "",
-              "required": "true",
-              "helpTip": "Define name of the output property"
             }
           }
         ]

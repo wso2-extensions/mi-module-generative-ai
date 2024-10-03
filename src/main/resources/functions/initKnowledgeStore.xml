@@ -18,6 +18,6 @@
 <template xmlns="http://ws.apache.org/ns/synapse" name="LoadKnowledgeStore">
     <parameter name="storeName" description="Knowledge store name"/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.rag.CreateOrLoadInMemoryStore"/>
+        <class name="org.wso2.carbon.esb.module.ai.rag.InitKnowledgeStore"/>
     </sequence>
 </template>
