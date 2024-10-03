@@ -17,6 +17,29 @@
                 {
                   "type": "attribute",
                   "value": {
+                    "name": "name",
+                    "displayName": "Store Name",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Give a name to the knowledge store"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "type",
+                    "displayName": "Store type",
+                    "inputType": "combo",
+                    "comboValues": ["In-Memory"],
+                    "defaultValue": "In-Memory",
+                    "required": "true",
+                    "helpTip": "Select the type of the knowledge store"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
                     "name": "configRef",
                     "displayName": "Embedding model",
                     "inputType": "connection",
@@ -27,17 +50,6 @@
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "LLM service connection to be used"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "storeName",
-                    "displayName": "Store Name",
-                    "inputType": "stringOrExpression",
-                    "defaultValue": "",
-                    "required": "true",
-                    "helpTip": "Give a name to the knowledge store"
                   }
                 }
               ]

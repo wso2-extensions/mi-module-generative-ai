@@ -23,8 +23,6 @@ public class IngestDocuments extends AbstractAIMediator {
     public void execute(MessageContext mc){
         List<Document> documents = getDocuments(mc, "DOC_LOADER_" + docLoader);
         knowledgeStore.ingestDocuments(documents);
-
-        knowledgeStore.serializeToJson("/Users/isuruWij/wso2/LowCodeAIBuilder/docs/store.json");
     }
 
     @SuppressWarnings("unchecked")
