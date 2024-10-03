@@ -15,9 +15,10 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<template xmlns="http://ws.apache.org/ns/synapse" name="LoadKnowledgeStore">
+<template xmlns="http://ws.apache.org/ns/synapse" name="ingestDocuments">
     <parameter name="storeName" description="Knowledge store name"/>
+    <parameter name="docLoader" description="Document loader name"/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.rag.InitKnowledgeStore"/>
+        <class name="org.wso2.carbon.esb.module.ai.rag.IngestDocuments"/>
     </sequence>
 </template>

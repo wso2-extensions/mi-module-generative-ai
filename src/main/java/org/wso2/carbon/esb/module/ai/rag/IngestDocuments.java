@@ -6,7 +6,7 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
 import java.util.List;
 
-public class SaveDocsToStore extends AbstractAIMediator {
+public class IngestDocuments extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc){

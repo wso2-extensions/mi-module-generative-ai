@@ -18,20 +18,20 @@
 -->
 <component name="functions" type="synapse/template" >
     <subComponents> 
-		<component name="chat" >
-	    		<file>chat.xml</file>
-	    		<description>LLM chat completion</description>
+		<component name="agent" >
+			<file>agent.xml</file>
+			<description>LLM chat completion</description>
 		</component>
-		<component name="prompt" >
+		<component name="prompt">
 			<file>prompt.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
-		<component name="InitKnowledgeStore" >
-			<file>initKnowledgeStore.xml</file>
+		<component name="knowledgeStore" >
+			<file>knowledgeStore.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
-		<component name="SaveDocsToStore" >
-			<file>saveDocsToStore.xml</file>
+		<component name="ingestDocuments" >
+			<file>ingestDocuments.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
 		<component name="LoadDocuments" >

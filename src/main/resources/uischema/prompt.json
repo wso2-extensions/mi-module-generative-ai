@@ -19,7 +19,7 @@
                   "value": {
                     "name": "name",
                     "displayName": "Name",
-                    "inputType": "stringOrExpression",
+                    "inputType": "string",
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Give a name to the prompt"
@@ -30,7 +30,7 @@
                   "value": {
                     "name": "prompt",
                     "displayName": "Prompt",
-                    "inputType": "string",
+                    "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Define the prompt"

@@ -15,8 +15,8 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<template xmlns="http://ws.apache.org/ns/synapse" name="chat">
-    <parameter name="systemPrompt" description="System prompt name"/>
+<template xmlns="http://ws.apache.org/ns/synapse" name="agent">
+    <parameter name="role" description="System prompt name"/>
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="output" description="Output property name"/>
     <parameter name="outputType" description="Output type"/>
@@ -31,6 +31,6 @@
     <parameter name="knowledgeStore" description="Knowledge store"/>
 
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.operations.ChatCompletion" />
+        <class name="org.wso2.carbon.esb.module.ai.operations.Agent" />
     </sequence>
 </template>

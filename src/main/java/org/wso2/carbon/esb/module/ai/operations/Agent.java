@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
@@ -48,7 +47,7 @@ interface BooleanAgent {
  * Chat completion mediator
  * @author Isuru Wijesiri
  */
-public class ChatCompletion extends AbstractAIMediator {
+public class Agent extends AbstractAIMediator {
 
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
 
@@ -64,6 +63,7 @@ public class ChatCompletion extends AbstractAIMediator {
     private Integer seed;
     private String apiKey;
     private String systemPrompt;
+    private String prompt;
     private String knowledgeStoreName;
     private KnowledgeStore knowledgeStore;
 
@@ -71,8 +71,6 @@ public class ChatCompletion extends AbstractAIMediator {
     public void execute(MessageContext mc) {
 
         // Load mediator configurations from template
-        String systemPromptName = getMediatorParameter(mc, "systemPrompt", String.class, false);
-        String promptName = getMediatorParameter(mc, "prompt", String.class, false);
         String output = getMediatorParameter(mc, "output", String.class, false);
         String outputType = getMediatorParameter(mc, "outputType", String.class, false);
 
@@ -85,9 +83,8 @@ public class ChatCompletion extends AbstractAIMediator {
         seed = getMediatorParameter(mc, "seed", Integer.class, true);
 
         apiKey = getProperty(mc, "ai_openai_apiKey", String.class, false);
-        systemPrompt = getProperty(mc, systemPromptName, String.class, false);
-
-        String prompt = getProperty(mc, promptName, String.class, false);
+        systemPrompt = getMediatorParameter(mc, "role", String.class, false);
+        prompt = getMediatorParameter(mc, "prompt", String.class, false);
 
         // RAG configurations
         knowledgeStoreName = getMediatorParameter(mc, "knowledgeStore", String.class, true);

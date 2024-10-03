@@ -1,6 +1,6 @@
 {
   "connectorName": "ai",
-  "operationName": "chat",
+  "operationName": "agent",
   "title": "Chat completion with LLM",
   "help": "<h1>Chat completion with LLM</h1><b>Chat completion with LLM</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
   "elements": [
@@ -27,46 +27,46 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "Basic",
+              "groupName": "Agent",
               "elements": [
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "systemPrompt",
-                    "displayName": "Enter the name of pre-defined system prompt",
-                    "inputType": "stringOrExpression",
-                    "defaultValue": "",
-                    "required": "true",
-                    "helpTip": "System prompt name to be used"
+                    "name": "role",
+                    "displayName": "Agent Role/Instructions",
+                    "inputType": "textAreaOrExpression",
+                    "defaultValue": "You are an helpful AI agent",
+                    "required": "false",
+                    "helpTip": "Give a description of the agent"
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
                     "name": "prompt",
-                    "displayName": "Enter the name of pre-defined user prompt",
-                    "inputType": "stringOrExpression",
+                    "displayName": "User query/prompt",
+                    "inputType": "textAreaOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Prompt name to be used"
+                    "helpTip": "Ask a question"
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
                     "name": "output",
-                    "displayName": "Output property",
+                    "displayName": "Define output property",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Define name of the output property"
+                    "helpTip": "Define the output property"
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
                     "name": "outputType",
-                    "displayName": "Define type of the output property",
+                    "displayName": "Output type",
                     "inputType": "combo",
                     "comboValues": ["string", "integer", "float", "boolean"],
                     "defaultValue": "string",
@@ -80,7 +80,26 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "Advanced",
+              "groupName": "Memory",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "memory",
+                    "displayName": "Choose a memory module",
+                    "inputType": "string",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "Choose a memory module to use"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "LLM Parameters",
               "elements": [
                 {
                   "type": "attribute",
@@ -88,7 +107,7 @@
                     "name": "modelName",
                     "displayName": "Model name",
                     "inputType": "string",
-                    "defaultValue": "gpt-4o-mini",
+                    "defaultValue": "gpt-4o",
                     "required": "true",
                     "helpTip": "Name of the model to use"
                   }
@@ -100,7 +119,7 @@
                     "displayName": "Max tokens",
                     "inputType": "string",
                     "defaultValue": "4069",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Maximum number of tokens to generate"
                   }
                 },
@@ -111,7 +130,7 @@
                     "displayName": "Temperature",
                     "inputType": "string",
                     "defaultValue": "0.7",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Controls randomness: lower temperature results in less randomness"
                   }
                 },
@@ -122,7 +141,7 @@
                     "displayName": "Top P",
                     "inputType": "string",
                     "defaultValue": "1",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Controls diversity: lower value results in more diversity"
                   }
                 },
@@ -133,7 +152,7 @@
                     "displayName": "Frequency penalty",
                     "inputType": "string",
                     "defaultValue": "0",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Controls repetition: lower value results in less repetition"
                   }
                 },
@@ -144,7 +163,7 @@
                     "displayName": "Seed",
                     "inputType": "string",
                     "defaultValue": "",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Stop sequence"
                   }
                 }
@@ -163,8 +182,27 @@
                     "displayName": "Knowledge Store",
                     "inputType": "string",
                     "defaultValue": "",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Stop sequence"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Tools",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "tools",
+                    "displayName": "Tool box",
+                    "inputType": "string",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "Choose a toolbox to use"
                   }
                 }
               ]
