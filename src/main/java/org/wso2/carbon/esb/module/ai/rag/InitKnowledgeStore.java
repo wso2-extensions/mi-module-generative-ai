@@ -12,10 +12,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InitKnowledgeStore extends AbstractAIMediator {
 
     private static final ConcurrentHashMap<String, KnowledgeStore> storeCache = new ConcurrentHashMap<>();
+    private String storeName;
+
+    @Override
+    public void init(MessageContext mc) {
+        storeName = getMediatorParameter(mc, "storeName", String.class, false);
+    }
 
     @Override
     public void execute(MessageContext mc) {
-        String storeName = getMediatorParameter(mc, "storeName", String.class, false);
         mc.setProperty("VECTOR_STORE_" + storeName, storeCache.computeIfAbsent(storeName, k -> {
             String apiKey = getProperty(mc, "ai_openai_apiKey", String.class, false);
             EmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()

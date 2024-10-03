@@ -64,15 +64,15 @@ public class Agent extends AbstractAIMediator {
     private String apiKey;
     private String systemPrompt;
     private String prompt;
-    private String knowledgeStoreName;
     private KnowledgeStore knowledgeStore;
+    private String output;
+    private String outputType;
 
     @Override
-    public void execute(MessageContext mc) {
-
+    public void init(MessageContext mc) {
         // Load mediator configurations from template
-        String output = getMediatorParameter(mc, "output", String.class, false);
-        String outputType = getMediatorParameter(mc, "outputType", String.class, false);
+        output = getMediatorParameter(mc, "output", String.class, false);
+        outputType = getMediatorParameter(mc, "outputType", String.class, false);
 
         // Load LLM agent configurations from template and message context
         modelName = getMediatorParameter(mc, "modelName", String.class, false);
@@ -87,12 +87,14 @@ public class Agent extends AbstractAIMediator {
         prompt = getMediatorParameter(mc, "prompt", String.class, false);
 
         // RAG configurations
-        knowledgeStoreName = getMediatorParameter(mc, "knowledgeStore", String.class, true);
-        // Does not need to be thread safe
-        if (knowledgeStore == null) {
+        String knowledgeStoreName = getMediatorParameter(mc, "knowledgeStore", String.class, true);
+        if (knowledgeStoreName != null) {
             knowledgeStore = (KnowledgeStore) getObjetFromMC(mc, "VECTOR_STORE_" + knowledgeStoreName, false);
         }
+    }
 
+    @Override
+    public void execute(MessageContext mc) {
         try {
             Object answer = getChatResponse(outputType, prompt);
             if (answer != null) {
@@ -147,6 +149,9 @@ public class Agent extends AbstractAIMediator {
 
     // TODO: Use advanced retrieval augmentor
     private ContentRetriever getContentRetriever(KnowledgeStore knowledgeStore) {
+        if (knowledgeStore == null) {
+            return null;
+        }
         return EmbeddingStoreContentRetriever.builder()
                 .embeddingStore(knowledgeStore.getEmbeddingStore())
                 .embeddingModel(knowledgeStore.getEmbeddingModel())

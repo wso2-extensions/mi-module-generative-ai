@@ -10,11 +10,16 @@ import java.util.Objects;
  */
 public abstract class AbstractAIMediator extends AbstractConnector {
 
-    // This method needs to be implemented by every AI mediator
+    private Boolean initialized = false;
+    abstract public void init(MessageContext messageContext);
     abstract public void execute(MessageContext messageContext);
 
     @Override
     public void connect(MessageContext messageContext){
+        if (!initialized) {
+            init(messageContext);
+            initialized = true;
+        }
         execute(messageContext);
     }
 

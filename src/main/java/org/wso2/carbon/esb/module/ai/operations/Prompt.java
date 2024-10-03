@@ -26,16 +26,18 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
  */
 public class Prompt extends AbstractAIMediator {
 
-    String NAME = "name";
-    String PROMPT = "prompt";
+    String promptName;
+    String prompt;
+
+    @Override
+    public void init(MessageContext mc) {
+        // Load mediator configurations
+        promptName = getMediatorParameter(mc, "name", String.class, false);
+        prompt = getMediatorParameter(mc, "prompt", String.class, false);
+    }
 
     @Override
     public void execute(MessageContext mc){
-
-        // Load mediator configurations
-        String promptName = getMediatorParameter(mc, NAME, String.class, false);
-        String prompt = getMediatorParameter(mc, PROMPT, String.class, false);
-
         mc.setProperty(promptName, prompt);
     }
 }

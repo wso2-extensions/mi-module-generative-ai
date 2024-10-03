@@ -8,16 +8,20 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
 import java.util.List;
 
-
 public class DocumentLoader extends AbstractAIMediator {
+
+    String documentsPath;
+    String docLoaderName;
+
+    @Override
+    public void init(MessageContext mc) {
+        documentsPath = getMediatorParameter(mc, "documentsPath", String.class, false);
+        docLoaderName = getMediatorParameter(mc, "docLoaderName", String.class, false);
+    }
 
     @Override
     public void execute(MessageContext mc) {
-        String documentsPath = getMediatorParameter(mc, "documentsPath", String.class, false);
-        String docLoaderName = getMediatorParameter(mc, "docLoaderName", String.class, false);
-
         List<Document> documents = FileSystemDocumentLoader.loadDocumentsRecursively(documentsPath, new TextDocumentParser());
-
         mc.setProperty("DOC_LOADER_" + docLoaderName, documents);
     }
 }
