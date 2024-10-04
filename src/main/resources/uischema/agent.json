@@ -35,7 +35,7 @@
                     "name": "role",
                     "displayName": "Agent Role/Instructions",
                     "inputType": "textAreaOrExpression",
-                    "defaultValue": "You are an helpful AI agent",
+                    "defaultValue": "You are a helpful AI agent",
                     "required": "false",
                     "helpTip": "Give a description of the agent"
                   }

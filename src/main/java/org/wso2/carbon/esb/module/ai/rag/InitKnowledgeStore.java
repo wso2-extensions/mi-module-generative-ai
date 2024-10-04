@@ -1,9 +1,7 @@
 package org.wso2.carbon.esb.module.ai.rag;
 
-import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
@@ -20,13 +18,11 @@ public class InitKnowledgeStore extends AbstractAIMediator {
     public void init(MessageContext mc) {
         storeName = getMediatorParameter(mc, "name", String.class, false);
         type = getMediatorParameter(mc, "type", String.class, false);
-
-        mc.setProperty("VECTOR_STORE_" + storeName, createKnowledgeStore(mc));
     }
 
     @Override
     public void execute(MessageContext mc) {
-        // Do nothing
+        mc.setProperty("VECTOR_STORE_" + storeName, createKnowledgeStore(mc));
     }
 
     private KnowledgeStore createKnowledgeStore(MessageContext mc) {
@@ -47,10 +43,9 @@ public class InitKnowledgeStore extends AbstractAIMediator {
         EmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
                 .apiKey(apiKey)
                 .build();
-        InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
         MicroIntegratorRegistry microIntegratorRegistry =
                 (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
-        return new KnowledgeStore(storeName, type, embeddingStore, embeddingModel, microIntegratorRegistry);
+        return new InMemoryKnowledgeStore(storeName, embeddingModel, microIntegratorRegistry);
     }
 }
 

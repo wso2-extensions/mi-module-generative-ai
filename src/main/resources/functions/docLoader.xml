@@ -15,9 +15,11 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<template xmlns="http://ws.apache.org/ns/synapse" name="LoadDocuments">
-    <parameter name="documentsPath" description="Path to documents"/>
-    <parameter name="docLoaderName" description="Name of the document loader"/>
+<template xmlns="http://ws.apache.org/ns/synapse" name="loadDocs">
+    <parameter name="name" description="Name of the document loader"/>
+    <parameter name="source" description="Document source"/>
+    <parameter name="document" description="Path to the document"/>
+    <parameter name="directory" description="Document directory"/>
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.rag.DocumentLoader"/>
     </sequence>

@@ -23,6 +23,7 @@ public class IngestDocuments extends AbstractAIMediator {
     public void execute(MessageContext mc){
         List<Document> documents = getDocuments(mc, "DOC_LOADER_" + docLoader);
         knowledgeStore.ingestDocuments(documents);
+        log.info("Ingested " + documents.size() + " documents");
     }
 
     @SuppressWarnings("unchecked")
