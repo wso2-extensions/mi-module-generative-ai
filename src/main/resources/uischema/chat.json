@@ -1,6 +1,6 @@
 {
   "connectorName": "ai",
-  "operationName": "agent",
+  "operationName": "chat",
   "title": "Chat completion with LLM",
   "help": "<h1>Chat completion with LLM</h1><b>Chat completion with LLM</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
   "elements": [

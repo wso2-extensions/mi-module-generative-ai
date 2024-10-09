@@ -18,9 +18,9 @@
 -->
 <component name="functions" type="synapse/template" >
     <subComponents> 
-		<component name="agent" >
-			<file>agent.xml</file>
-			<description>LLM chat completion</description>
+		<component name="chat" >
+			<file>chat.xml</file>
+			<description>LLM chat</description>
 		</component>
 		<component name="prompt">
 			<file>prompt.xml</file>
