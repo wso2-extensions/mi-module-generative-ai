@@ -63,7 +63,6 @@ public class Agent extends AbstractAIMediator {
     private Integer seed;
     private String apiKey;
     private String systemPrompt;
-    private String prompt;
     private KnowledgeStore knowledgeStore;
     private String output;
     private String outputType;
@@ -81,10 +80,9 @@ public class Agent extends AbstractAIMediator {
         topP = getMediatorParameter(mc, "topP", Double.class, true);
         frequencyPenalty = getMediatorParameter(mc, "frequencyPenalty", Double.class, true);
         seed = getMediatorParameter(mc, "seed", Integer.class, true);
-
         apiKey = getProperty(mc, "ai_openai_apiKey", String.class, false);
+
         systemPrompt = getMediatorParameter(mc, "role", String.class, false);
-        prompt = getMediatorParameter(mc, "prompt", String.class, false);
 
         // RAG configurations
         String knowledgeStoreName = getMediatorParameter(mc, "knowledgeStore", String.class, true);
@@ -95,6 +93,7 @@ public class Agent extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
+        String prompt = getMediatorParameter(mc, "prompt", String.class, false);
         try {
             Object answer = getChatResponse(outputType, prompt);
             if (answer != null) {
@@ -126,6 +125,7 @@ public class Agent extends AbstractAIMediator {
 
     @SuppressWarnings("unchecked")
     private <T> T getAgent(Class<T> agentType) {
+        // TODO: Use type +. name as the key
         return (T) agentCache.computeIfAbsent( agentType.getName(), key -> {
             // Null values of LLM params will be handled by LangChain4j
             OpenAiChatModel model = OpenAiChatModel.builder()
@@ -138,6 +138,14 @@ public class Agent extends AbstractAIMediator {
                     .apiKey(apiKey)
                     .build();
 
+            // TODO: Handle null content retriever
+            if (knowledgeStore == null) {
+                return AiServices
+                        .builder(agentType)
+                        .chatLanguageModel(model)
+                        .systemMessageProvider(chatMemoryId -> systemPrompt != null ? systemPrompt : DEFAULT_SYSTEM_PROMPT)
+                        .build();
+            }
             return AiServices
                     .builder(agentType)
                     .chatLanguageModel(model)
