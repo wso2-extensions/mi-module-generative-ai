@@ -15,7 +15,7 @@ public class InitKnowledgeStore extends AbstractAIMediator {
     private String type;
 
     @Override
-    public void init(MessageContext mc) {
+    public void initialize(MessageContext mc) {
         storeName = getMediatorParameter(mc, "name", String.class, false);
         type = getMediatorParameter(mc, "type", String.class, false);
     }

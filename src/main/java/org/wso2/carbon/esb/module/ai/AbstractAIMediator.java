@@ -11,13 +11,13 @@ import java.util.Objects;
 public abstract class AbstractAIMediator extends AbstractConnector {
 
     private Boolean initialized = false;
-    abstract public void init(MessageContext messageContext);
+    abstract public void initialize(MessageContext messageContext);
     abstract public void execute(MessageContext messageContext);
 
     @Override
     public void connect(MessageContext messageContext){
         if (!initialized) {
-            init(messageContext);
+            initialize(messageContext);
             initialized = true;
         }
         execute(messageContext);

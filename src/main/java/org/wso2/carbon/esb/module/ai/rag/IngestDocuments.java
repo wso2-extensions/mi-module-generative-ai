@@ -12,7 +12,7 @@ public class IngestDocuments extends AbstractAIMediator {
     private String docLoader;
 
     @Override
-    public void init(MessageContext mc) {
+    public void initialize(MessageContext mc) {
         String storeName = "VECTOR_STORE_" + getMediatorParameter(mc, "storeName", String.class, false);
         Object store = getObjetFromMC(mc, storeName, false);
         knowledgeStore = (KnowledgeStore) store;

@@ -17,9 +17,13 @@
    under the License.
 -->
 <template name="init" onError="fault" xmlns="http://ws.apache.org/ns/synapse">
+	<parameter name="connectionType" description="LLM provider type"/>
+	<parameter name="name" description="Unique name the connection is identified by"/>
 	<parameter name="apiKey" description="API key"/>
 	<sequence>
-		<property name="ai_openai_apiKey" expression="$func:apiKey"/>
-		<class name="org.wso2.carbon.esb.module.ai.operations.Config" />
+		<property name="connectionType" expression="$func:connectionType"/>
+		<property name="connectionName" expression="$func:name"/>
+		<property name="apiKey" expression="$func:apiKey"/>
+		<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 	</sequence>
 </template>

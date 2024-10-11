@@ -27,17 +27,17 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "Agent",
+              "groupName": "Basic",
               "elements": [
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "role",
-                    "displayName": "Agent Role/Instructions",
+                    "name": "system",
+                    "displayName": "System prompt",
                     "inputType": "textAreaOrExpression",
                     "defaultValue": "You are a helpful AI agent",
                     "required": "false",
-                    "helpTip": "Give a description of the agent"
+                    "helpTip": "Give instructions to LLM"
                   }
                 },
                 {
@@ -48,7 +48,7 @@
                     "inputType": "textAreaOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Ask a question"
+                    "helpTip": "Query the LLM"
                   }
                 },
                 {
@@ -71,26 +71,7 @@
                     "comboValues": ["string", "integer", "float", "boolean"],
                     "defaultValue": "string",
                     "required": "true",
-                    "helpTip": "Define type of the output property"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "type": "attributeGroup",
-            "value": {
-              "groupName": "Memory",
-              "elements": [
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "memory",
-                    "displayName": "Choose a memory module",
-                    "inputType": "string",
-                    "defaultValue": "",
-                    "required": "false",
-                    "helpTip": "Choose a memory module to use"
+                    "helpTip": "Define type of the output"
                   }
                 }
               ]
@@ -178,31 +159,12 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "knowledgeStore",
-                    "displayName": "Knowledge Store",
-                    "inputType": "string",
+                    "name": "knowledge",
+                    "displayName": "External knowledge",
+                    "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "false",
-                    "helpTip": "Stop sequence"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "type": "attributeGroup",
-            "value": {
-              "groupName": "Tools",
-              "elements": [
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "tools",
-                    "displayName": "Tool box",
-                    "inputType": "string",
-                    "defaultValue": "",
-                    "required": "false",
-                    "helpTip": "Choose a toolbox to use"
+                    "helpTip": "Provide external knowledge to LLM"
                   }
                 }
               ]

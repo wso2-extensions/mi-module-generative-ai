@@ -17,7 +17,7 @@ public class DocumentLoader extends AbstractAIMediator {
     String document;
 
     @Override
-    public void init(MessageContext mc) {
+    public void initialize(MessageContext mc) {
         name = getMediatorParameter(mc, "name", String.class, false);
         source = getMediatorParameter(mc, "source", String.class, false);
 

@@ -17,18 +17,14 @@
 */
 package org.wso2.carbon.esb.module.ai.operations;
 
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.service.AiServices;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.connections.LLMConnectionHandler;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * LLM Chat mediator
@@ -44,9 +40,6 @@ public class LLMChat extends AbstractAIMediator {
 
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
 
-    // Thread safe cache to store the created agent using a unique ID to avoid creating a new agents for each request
-    private static final ConcurrentHashMap<String, Object> agentCache = new ConcurrentHashMap<>();
-
     // Chat configurations
     private String modelName;
     private Double temperature;
@@ -54,13 +47,13 @@ public class LLMChat extends AbstractAIMediator {
     private Double topP;
     private Double frequencyPenalty;
     private Integer seed;
-    private String apiKey;
     private String system;
     private String output;
     private String outputType;
+    private String connectionName;
 
     @Override
-    public void init(MessageContext mc) {
+    public void initialize(MessageContext mc) {
         // Load mediator configurations from template
         output = getMediatorParameter(mc, "output", String.class, false);
         outputType = getMediatorParameter(mc, "outputType", String.class, false);
@@ -72,15 +65,16 @@ public class LLMChat extends AbstractAIMediator {
         topP = getMediatorParameter(mc, "topP", Double.class, true);
         frequencyPenalty = getMediatorParameter(mc, "frequencyPenalty", Double.class, true);
         seed = getMediatorParameter(mc, "seed", Integer.class, true);
-        apiKey = getProperty(mc, "ai_openai_apiKey", String.class, false);
 
-        system = getMediatorParameter(mc, "role", String.class, false);
+        system = getMediatorParameter(mc, "system", String.class, false);
+
+        connectionName = getProperty(mc, "connectionName", String.class, false);
     }
 
     @Override
     public void execute(MessageContext mc) {
         String prompt = getMediatorParameter(mc, "prompt", String.class, false);
-        String knowledge = getMediatorParameter(mc, "knowledgeStore", String.class, true);
+        String knowledge = getMediatorParameter(mc, "knowledge", String.class, true);
         try {
             Object answer = getChatResponse(outputType, prompt, knowledge);
             if (answer != null) {
@@ -110,42 +104,16 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private <T> T getAgent(Class<T> agentType, String knowledge) {
-        // Unique ID for the agent based on the configurations
-        String agentId = String.format("%s-%s-%s-%s-%s-%s-%s-%s",
-                agentType.getName(), modelName, temperature, maxTokens, topP, frequencyPenalty, seed,
-                hashApiKey(apiKey));
-
-        return (T) agentCache.computeIfAbsent(agentId, key -> {
-            // Null values of LLM params will be handled by LangChain4j
-            OpenAiChatModel model = OpenAiChatModel.builder()
-                    .modelName(modelName)
-                    .temperature(temperature)
-                    .maxTokens(maxTokens)
-                    .topP(topP)
-                    .frequencyPenalty(frequencyPenalty)
-                    .seed(seed)
-                    .apiKey(apiKey)
-                    .build();
-
-            return AiServices
-                    .builder(agentType)
-                    .chatLanguageModel(model)
-                    .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT)
-                    .contentRetriever(query -> List.of(new Content(Objects.requireNonNullElse(knowledge, ""))))
-                    .build();
-        });
-    }
-
-    // Hash the API key to avoid storing the actual key in the cache
-    private String hashApiKey(String apiKey) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(apiKey.getBytes());
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing API key", e);
+        ChatLanguageModel model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
+        AiServices<T> service = AiServices
+                .builder(agentType)
+                .chatLanguageModel(model)
+                .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT);
+        if (knowledge != null && !knowledge.isEmpty()) {
+            return service.contentRetriever(query -> List.of(new Content(knowledge))).build();
         }
+        return service.build();
     }
 }
+

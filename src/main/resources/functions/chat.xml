@@ -16,7 +16,7 @@
    under the License.
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="chat">
-    <parameter name="role" description="System prompt name"/>
+    <parameter name="system" description="System prompt"/>
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="output" description="Output property name"/>
     <parameter name="outputType" description="Output type"/>
@@ -28,7 +28,7 @@
     <parameter name="frequencyPenalty" description="Frequency penalty"/>
     <parameter name="seed" description="Seed"/>
 
-    <parameter name="knowledgeStore" description="Knowledge store"/>
+    <parameter name="knowledge" description="Knowledge store"/>
 
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.LLMChat" />
