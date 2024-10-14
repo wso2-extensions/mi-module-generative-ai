@@ -30,7 +30,7 @@ public class Prompt extends AbstractAIMediator {
     String prompt;
 
     @Override
-    public void init(MessageContext mc) {
+    public void initialize(MessageContext mc) {
         // Load mediator configurations
         promptName = getMediatorParameter(mc, "name", String.class, false);
         prompt = getMediatorParameter(mc, "prompt", String.class, false);

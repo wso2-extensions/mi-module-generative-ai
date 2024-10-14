@@ -1,6 +1,6 @@
 {
   "connectorName": "ai",
-  "operationName": "loadDocs",
+  "operationName": "split",
   "title": "Load documents",
   "help": "<h1>Define LLM prompts</h1><b>Define LLM prompts</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
   "elements": [
@@ -17,8 +17,8 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "name",
-                    "displayName": "Document loader name",
+                    "name": "input",
+                    "displayName": "Input",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
@@ -28,35 +28,24 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "source",
-                    "displayName": "Document source",
+                    "name": "strategy",
+                    "displayName": "Strategy",
                     "inputType": "combo",
-                    "comboValues": ["Local-directory", "Local-file", "File-inbound-endpoint"],
-                    "defaultValue": "File-inbound-endpoint",
+                    "comboValues": ["Recursive"],
+                    "defaultValue": "Recursive",
                     "required": "true",
-                    "helpTip": "Select the document source"
+                    "helpTip": "Select the splitting strategy"
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "document",
-                    "displayName": "Path to the document",
+                    "name": "outputProperty",
+                    "displayName": "Output property",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
-                    "required": "false",
-                    "helpTip": "Ex: /home/user/documents/doc.txt"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "directory",
-                    "displayName": "Document directory",
-                    "inputType": "stringOrExpression",
-                    "defaultValue": "",
-                    "required": "false",
-                    "helpTip": "Ex: /home/user/documents"
+                    "required": "true",
+                    "helpTip": "Define the output property"
                   }
                 }
               ]

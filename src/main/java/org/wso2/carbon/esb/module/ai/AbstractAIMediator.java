@@ -25,9 +25,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
 
     protected <T> T getMediatorParameter(MessageContext messageContext, String parameterName, Class<T> type, boolean isOptional) {
         Object parameter = getParameter(messageContext, parameterName);
-        if (parameter == null && !isOptional) {
+        if (!isOptional && (parameter == null || parameter.toString().isEmpty())) {
             handleException(String.format("Parameter %s is not provided", parameterName), messageContext);
-        } else if (parameter == null) {
+        } else if (parameter == null || parameter.toString().isEmpty()) {
             return null;
         }
 
@@ -42,9 +42,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
 
     protected <T> T getProperty(MessageContext messageContext, String propertyName, Class<T> type, boolean isOptional) {
         Object property = messageContext.getProperty(propertyName);
-        if (property == null && !isOptional) {
+        if (!isOptional && (property == null || property.toString().isEmpty())) {
             handleException(String.format("Property %s is not set", propertyName), messageContext);
-        } else if (property == null) {
+        } else if (property == null || property.toString().isEmpty()) {
             return null;
         }
 

@@ -1,7 +1,9 @@
 package org.wso2.carbon.esb.module.ai.connections;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,4 +47,22 @@ public class LLMConnectionHandler {
         return chatModel;
     }
 
+    public static EmbeddingModel getEmbeddingModel(String connectionName, String modelName) {
+        EmbeddingModel embeddingModel = null;
+        LLMConnectionParams connectionParams = connectionMap.get(connectionName);
+        switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
+            case "OPEN_AI":
+                // Null values of LLM params will be handled by LangChain4j
+                embeddingModel = OpenAiEmbeddingModel.builder()
+                        .apiKey(connectionParams.getApiKey())
+                        .modelName(modelName)
+                        .build();
+            case "ANTHROPIC":
+                // To be implemented
+                break;
+            default:
+                break;
+        }
+        return embeddingModel;
+    }
 }

@@ -6,7 +6,6 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 
-
 public class LLMConnection extends AbstractConnector implements ManagedLifecycle {
 
     @Override
@@ -15,6 +14,8 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
         String connectionType = messageContext.getProperty("connectionType").toString();
         String connectionName = messageContext.getProperty("connectionName").toString();
         LLMConnectionHandler.addConnection(connectionName, new LLMConnectionParams(apiKey, connectionName, connectionType));
+        // Clear the apiKey property for security reasons
+        messageContext.setProperty("apiKey", "");
     }
 
     @Override

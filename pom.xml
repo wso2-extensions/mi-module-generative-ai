@@ -207,6 +207,11 @@
             <version>${langchain4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-document-parser-apache-tika</artifactId>
+            <version>${langchain4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.registry</artifactId>
             <version>4.2.0</version>
@@ -220,8 +225,8 @@
                 <version>3.7.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
             <plugin>

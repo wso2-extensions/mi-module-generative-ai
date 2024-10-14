@@ -1,0 +1,73 @@
+{
+  "connectorName": "ai",
+  "operationName": "embed",
+  "title": "Load documents",
+  "help": "<h1>Define LLM prompts</h1><b>Define LLM prompts</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "OpenAI Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "OPEN_AI"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "LLM service connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "input",
+                    "displayName": "Input",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Name of the document loader"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "model",
+                    "displayName": "Embedding model",
+                    "inputType": "combo",
+                    "comboValues": ["TEXT_EMBEDDING_3_SMALL"],
+                    "defaultValue": "TEXT_EMBEDDING_3_SMALL",
+                    "required": "true",
+                    "helpTip": "Select the splitting strategy"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "outputProperty",
+                    "displayName": "Output property",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Define the output property"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -23,7 +23,6 @@ import dev.langchain4j.service.AiServices;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.connections.LLMConnectionHandler;
-
 import java.util.List;
 
 /**

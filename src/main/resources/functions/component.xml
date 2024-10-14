@@ -34,9 +34,17 @@
 			<file>ingestDocuments.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
-		<component name="loadDocs" >
-			<file>docLoader.xml</file>
-			<description>LLM chat prompt</description>
+		<component name="parse" >
+			<file>docParser.xml</file>
+			<description>Parse Documents</description>
+		</component>
+		<component name="split" >
+			<file>docSplitter.xml</file>
+			<description>Split Documents</description>
+		</component>
+		<component name="embed" >
+			<file>embed.xml</file>
+			<description>Embed document chunks</description>
 		</component>
     </subComponents>
 </component>
