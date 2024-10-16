@@ -46,8 +46,8 @@
                     "name": "model",
                     "displayName": "Embedding model",
                     "inputType": "combo",
-                    "comboValues": ["TEXT_EMBEDDING_3_SMALL"],
-                    "defaultValue": "TEXT_EMBEDDING_3_SMALL",
+                    "comboValues": ["text-embedding-3-small"],
+                    "defaultValue": "text-embedding-3-small",
                     "required": "true",
                     "helpTip": "Select the splitting strategy"
                   }
