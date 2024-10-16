@@ -19,11 +19,26 @@
 <template name="init" onError="fault" xmlns="http://ws.apache.org/ns/synapse">
 	<parameter name="connectionType" description="LLM provider type"/>
 	<parameter name="name" description="Unique name the connection is identified by"/>
+	<parameter name="provider" description="AI service provider"/>
 	<parameter name="apiKey" description="API key"/>
 	<sequence>
 		<property name="connectionType" expression="$func:connectionType"/>
 		<property name="connectionName" expression="$func:name"/>
+		<property name="provider" expression="$func:provider"/>
 		<property name="apiKey" expression="$func:apiKey"/>
-		<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
+
+		<switch source="get-property('connectionType')">
+			<case regex="AI_CONNECTION">
+				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
+			</case>
+			<case regex="KNOWLEDGE_STORE_CONNECTION">
+				<class name="org.wso2.carbon.esb.module.ai.connections.KnowledgeStoreConnection" />
+			</case>
+			<default>
+				<log level="full">
+					<property name="error" value="Unknown connection type"/>
+				</log>
+			</default>
+		</switch>
 	</sequence>
 </template>

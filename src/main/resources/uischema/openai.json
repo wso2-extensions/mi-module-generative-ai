@@ -1,6 +1,6 @@
 {
   "connectorName": "ai",
-  "connectionName": "OPEN_AI",
+  "connectionName": "AI_CONNECTION",
   "title": "OpenAI Connection Config",
   "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
   "elements": [
@@ -26,6 +26,18 @@
             "value": {
               "groupName": "Basic",
               "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "provider",
+                    "displayName": "AI service provider",
+                    "inputType": "combo",
+                    "comboValues": ["OpenAI"],
+                    "defaultValue": "OpenAI",
+                    "required": "true",
+                    "helpTip": "Define type of the output"
+                  }
+                },
                 {
                   "type": "attribute",
                   "value": {

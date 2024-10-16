@@ -89,18 +89,13 @@ public class LLMChat extends AbstractAIMediator {
     }
 
     private Object getChatResponse(String outputType, String prompt, String knowledge) {
-        switch (outputType.toLowerCase()) {
-            case "string":
-                return getAgent(StringAgent.class, knowledge).chat(prompt);
-            case "integer":
-                return getAgent(IntegerAgent.class, knowledge).chat(prompt);
-            case "float":
-                return getAgent(FloatAgent.class, knowledge).chat(prompt);
-            case "boolean":
-                return getAgent(BooleanAgent.class, knowledge).chat(prompt);
-            default:
-                return null;
-        }
+        return switch (outputType.toLowerCase()) {
+            case "string" -> getAgent(StringAgent.class, knowledge).chat(prompt);
+            case "integer" -> getAgent(IntegerAgent.class, knowledge).chat(prompt);
+            case "float" -> getAgent(FloatAgent.class, knowledge).chat(prompt);
+            case "boolean" -> getAgent(BooleanAgent.class, knowledge).chat(prompt);
+            default -> null;
+        };
     }
 
     private <T> T getAgent(Class<T> agentType, String knowledge) {
