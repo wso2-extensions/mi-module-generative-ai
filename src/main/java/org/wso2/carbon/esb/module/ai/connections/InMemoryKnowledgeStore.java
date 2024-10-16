@@ -1,16 +1,10 @@
-package org.wso2.carbon.esb.module.ai.rag;
+package org.wso2.carbon.esb.module.ai.connections;
 
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.splitter.DocumentSplitters;
+import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
-
-import java.util.List;
 
 public class InMemoryKnowledgeStore implements KnowledgeStore {
 
@@ -22,14 +16,11 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
     private final String name;
 
     private final EmbeddingStore<TextSegment> embeddingStore;
-    private final EmbeddingModel embeddingModel;
-    private final EmbeddingStoreIngestor ingestor;
 
     private final String STORE_FILE;
 
-    public InMemoryKnowledgeStore(String name, EmbeddingModel embeddingModel, MicroIntegratorRegistry registry) {
+    public InMemoryKnowledgeStore(String name, MicroIntegratorRegistry registry) {
         this.name = name;
-        this.embeddingModel = embeddingModel;
         InMemoryKnowledgeStore.registry = registry;
 
         STORE_FILE = AI_KNOWLEDGE_STORE + name + JSON;
@@ -39,8 +30,6 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
             this.embeddingStore = new InMemoryEmbeddingStore<>();
             persistStoreToRegistry();
         }
-
-        this.ingestor = createIngestor(this.embeddingStore);
     }
 
     @Override
@@ -54,14 +43,9 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
     }
 
     @Override
-    public EmbeddingModel getEmbeddingModel() {
-        return embeddingModel;
-    }
-
-    @Override
-    public void ingestDocuments(List<Document> documents) {
+    public void ingest(Embedding embedding, TextSegment segment) {
         synchronized (this) {
-            ingestor.ingest(documents);
+            embeddingStore.add(embedding, segment);
             persistStoreToRegistry();
         }
     }
@@ -70,17 +54,5 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
         InMemoryEmbeddingStore<TextSegment> embeddingStore = (InMemoryEmbeddingStore<TextSegment>) this.embeddingStore;
         String serializedStore = embeddingStore.serializeToJson();
         registry.addMultipartResource(STORE_FILE, CONTENT_TYPE, serializedStore.getBytes());
-    }
-
-    private EmbeddingStoreIngestor createIngestor(EmbeddingStore<TextSegment> embeddingStore) {
-        return EmbeddingStoreIngestor.builder()
-                .documentSplitter(DocumentSplitters.recursive(1000, 200, new OpenAiTokenizer()))
-                .textSegmentTransformer(textSegment -> TextSegment.from(
-                        textSegment.metadata().getString("file_name") + "\n" + textSegment.text(),
-                        textSegment.metadata()
-                ))
-                .embeddingModel(embeddingModel)
-                .embeddingStore(embeddingStore)
-                .build();
     }
 }
