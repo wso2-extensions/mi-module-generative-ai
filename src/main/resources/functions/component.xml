@@ -26,7 +26,7 @@
 			<file>prompt.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
-		<component name="ingestDocuments" >
+		<component name="addToStore" >
 			<file>ingestDocuments.xml</file>
 			<description>LLM chat prompt</description>
 		</component>

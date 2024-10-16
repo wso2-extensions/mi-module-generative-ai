@@ -1,14 +1,9 @@
-package org.wso2.carbon.esb.module.ai.rag;
+package org.wso2.carbon.esb.module.ai.operations;
 
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
-import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.embedding.Embedding;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.wso2.carbon.esb.module.ai.stores.KnowledgeStore;
 
 public class EmbeddingStoreRetriever extends AbstractAIMediator {
 

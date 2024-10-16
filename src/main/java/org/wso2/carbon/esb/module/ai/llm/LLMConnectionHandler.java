@@ -1,4 +1,4 @@
-package org.wso2.carbon.esb.module.ai.connections;
+package org.wso2.carbon.esb.module.ai.llm;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;

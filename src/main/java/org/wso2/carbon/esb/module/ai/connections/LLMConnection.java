@@ -5,6 +5,8 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
+import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
+import org.wso2.carbon.esb.module.ai.llm.LLMConnectionParams;
 
 public class LLMConnection extends AbstractConnector implements ManagedLifecycle {
 

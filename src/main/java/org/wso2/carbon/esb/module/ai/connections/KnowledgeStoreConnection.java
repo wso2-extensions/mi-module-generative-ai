@@ -5,6 +5,8 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
+import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionHandler;
+import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionParams;
 
 public class KnowledgeStoreConnection extends AbstractConnector implements ManagedLifecycle {
 

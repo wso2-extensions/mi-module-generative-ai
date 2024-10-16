@@ -20,6 +20,6 @@
     <parameter name="model" description="Embedding model"/>
     <parameter name="outputProperty" description="Output"/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.rag.EmbeddingGenerator"/>
+        <class name="org.wso2.carbon.esb.module.ai.operations.EmbeddingGenerator"/>
     </sequence>
 </template>

@@ -1,4 +1,4 @@
-package org.wso2.carbon.esb.module.ai.connections;
+package org.wso2.carbon.esb.module.ai.llm;
 
 public class LLMConnectionParams {
 

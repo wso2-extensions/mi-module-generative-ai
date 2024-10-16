@@ -1,10 +1,14 @@
-package org.wso2.carbon.esb.module.ai.connections;
+package org.wso2.carbon.esb.module.ai.stores;
 
+import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryKnowledgeStore implements KnowledgeStore {
 
@@ -33,19 +37,28 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
+    public void ingest(TextEmbedding textEmbedding) {
+        Embedding embedding = new Embedding(textEmbedding.vector());
+        TextSegment textSegment = new TextSegment(textEmbedding.text(), new Metadata());
 
-    @Override
-    public EmbeddingStore<TextSegment> getEmbeddingStore() {
-        return embeddingStore;
-    }
-
-    @Override
-    public void ingest(Embedding embedding, TextSegment segment) {
         synchronized (this) {
-            embeddingStore.add(embedding, segment);
+            embeddingStore.add(embedding, textSegment);
+            persistStoreToRegistry();
+        }
+    }
+
+    @Override
+    public void ingestAll(List<TextEmbedding> textEmbeddings) {
+        List<Embedding> embeddings = new ArrayList<>();
+        List<TextSegment> textSegments = new ArrayList<>();
+
+        for (TextEmbedding textEmbedding : textEmbeddings) {
+            embeddings.add(new Embedding(textEmbedding.vector()));
+            textSegments.add(new TextSegment(textEmbedding.text(), new Metadata()));
+        }
+
+        synchronized (this) {
+            embeddingStore.addAll(embeddings, textSegments);
             persistStoreToRegistry();
         }
     }

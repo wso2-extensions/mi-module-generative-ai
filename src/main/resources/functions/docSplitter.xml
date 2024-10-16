@@ -20,6 +20,6 @@
     <parameter name="strategy" description="Splitting strategy"/>
     <parameter name="outputProperty" description="Output"/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.rag.DocSplitter"/>
+        <class name="org.wso2.carbon.esb.module.ai.operations.DocSplitter"/>
     </sequence>
 </template>

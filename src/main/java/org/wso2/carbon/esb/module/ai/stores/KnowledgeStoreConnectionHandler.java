@@ -1,4 +1,4 @@
-package org.wso2.carbon.esb.module.ai.connections;
+package org.wso2.carbon.esb.module.ai.stores;
 
 import org.apache.synapse.MessageContext;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
@@ -26,7 +26,7 @@ public class KnowledgeStoreConnectionHandler {
                 knowledgeStore = knowledgeStores.computeIfAbsent(key, k -> {
                     MicroIntegratorRegistry microIntegratorRegistry =
                             (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
-                    return new InMemoryKnowledgeStore(connectionParams.getConnectionName(), microIntegratorRegistry);
+                    return new InMemoryKnowledgeStore(key, microIntegratorRegistry);
                 });
             case "Pine-cone":
                 // To be implemented

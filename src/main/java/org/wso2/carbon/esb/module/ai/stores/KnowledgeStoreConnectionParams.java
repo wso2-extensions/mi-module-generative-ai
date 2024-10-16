@@ -1,4 +1,4 @@
-package org.wso2.carbon.esb.module.ai.connections;
+package org.wso2.carbon.esb.module.ai.stores;
 
 public class KnowledgeStoreConnectionParams {
 

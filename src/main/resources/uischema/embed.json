@@ -13,15 +13,15 @@
             "type": "attribute",
             "value": {
               "name": "configRef",
-              "displayName": "OpenAI Connection",
+              "displayName": "Embedding model Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "OPEN_AI"
+                "AI_CONNECTION"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "LLM service connection to be used"
+              "helpTip": "AI service connection to be used"
             }
           },
           {
@@ -37,7 +37,7 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Name of the document loader"
+                    "helpTip": "A string or a JSON array of Strings"
                   }
                 },
                 {

@@ -19,6 +19,6 @@
     <parameter name="input" description="Input"/>
     <parameter name="outputProperty" description="Output"/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.rag.DocParser"/>
+        <class name="org.wso2.carbon.esb.module.ai.operations.DocParser"/>
     </sequence>
 </template>

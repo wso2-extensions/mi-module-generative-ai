@@ -1,4 +1,4 @@
-package org.wso2.carbon.esb.module.ai.rag;
+package org.wso2.carbon.esb.module.ai.operations;
 
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
