@@ -1,14 +1,11 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.stores.KnowledgeStore;
 import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionHandler;
-import org.wso2.carbon.esb.module.ai.stores.TextEmbedding;
+import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +51,8 @@ public class EmbeddingIngestor extends AbstractAIMediator {
             List<TextEmbedding> textEmbeddings = new ArrayList<>();
             for (JsonElement element : jsonArray) {
                 if (element.isJsonObject()) {
-                    TextEmbedding embedding = gson.fromJson(element, TextEmbedding.class);
-                    if (embedding.text() != null && embedding.vector() != null) {
+                    TextEmbedding embedding = TextEmbedding.deserialize(element);
+                    if (embedding.getText() != null && embedding.getEmbedding() != null) {
                         textEmbeddings.add(embedding);
                     } else {
                         return null;

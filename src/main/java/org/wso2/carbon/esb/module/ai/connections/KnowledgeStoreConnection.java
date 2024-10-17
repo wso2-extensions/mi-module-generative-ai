@@ -12,7 +12,7 @@ public class KnowledgeStoreConnection extends AbstractConnector implements Manag
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        String connectionType = messageContext.getProperty("connectionType").toString();
+        String connectionType = messageContext.getProperty("provider").toString();
         String connectionName = messageContext.getProperty("connectionName").toString();
         KnowledgeStoreConnectionHandler.addConnection(connectionName, new KnowledgeStoreConnectionParams(connectionName, connectionType));
     }

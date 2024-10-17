@@ -22,7 +22,7 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Name of the document loader"
+                    "helpTip": "Parsed content as a string"
                   }
                 },
                 {

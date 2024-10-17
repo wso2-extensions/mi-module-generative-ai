@@ -5,6 +5,7 @@ import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
 
     @Override
     public void ingest(TextEmbedding textEmbedding) {
-        Embedding embedding = new Embedding(textEmbedding.vector());
-        TextSegment textSegment = new TextSegment(textEmbedding.text(), new Metadata());
+        Embedding embedding = new Embedding(textEmbedding.getEmbedding());
+        TextSegment textSegment = new TextSegment(textEmbedding.getText(), new Metadata());
 
         synchronized (this) {
             embeddingStore.add(embedding, textSegment);
@@ -53,8 +54,8 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
         List<TextSegment> textSegments = new ArrayList<>();
 
         for (TextEmbedding textEmbedding : textEmbeddings) {
-            embeddings.add(new Embedding(textEmbedding.vector()));
-            textSegments.add(new TextSegment(textEmbedding.text(), new Metadata()));
+            embeddings.add(new Embedding(textEmbedding.getEmbedding()));
+            textSegments.add(new TextSegment(textEmbedding.getText(), new Metadata()));
         }
 
         synchronized (this) {

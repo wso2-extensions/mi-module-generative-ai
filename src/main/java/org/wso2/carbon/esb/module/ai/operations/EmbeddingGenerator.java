@@ -12,7 +12,7 @@ import dev.langchain4j.model.output.Response;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
-import org.wso2.carbon.esb.module.ai.stores.TextEmbedding;
+import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
             handleException("Failed to generate embedding", e, mc);
         }
 
-        String jsonTextEmbeddings = gson.toJson(textEmbeddings);
+        String jsonTextEmbeddings = gson.toJson(textEmbeddings.stream().map(TextEmbedding::serialize).toArray());
         mc.setProperty(outputProperty, jsonTextEmbeddings);
     }
 

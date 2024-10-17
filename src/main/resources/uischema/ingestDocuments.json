@@ -10,6 +10,21 @@
         "groupName": "General",
         "elements": [
           {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Knowledge store Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "KNOWLEDGE_STORE_CONNECTION"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "Knowledge store connection to be used"
+            }
+          },
+          {
             "type": "attributeGroup",
             "value": {
               "groupName": "Basic",
@@ -17,23 +32,23 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "docLoader",
-                    "displayName": "Document loader",
-                    "inputType": "string",
+                    "name": "input",
+                    "displayName": "Input",
+                    "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Give a document loader to use"
+                    "helpTip": "An array of JSON objects in the format of {\"text\":\"test\",\"embedding\":\"[array of numbers]\"}"
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "storeName",
-                    "displayName": "Store Name",
+                    "name": "outputProperty",
+                    "displayName": "Output property",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Give a name to the knowledge store"
+                    "helpTip": "Define the output property"
                   }
                 }
               ]

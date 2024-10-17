@@ -26,7 +26,7 @@ public class KnowledgeStoreConnectionHandler {
                 knowledgeStore = knowledgeStores.computeIfAbsent(key, k -> {
                     MicroIntegratorRegistry microIntegratorRegistry =
                             (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
-                    return new InMemoryKnowledgeStore(key, microIntegratorRegistry);
+                    return new InMemoryKnowledgeStore(connectionName, microIntegratorRegistry);
                 });
             case "Pine-cone":
                 // To be implemented
