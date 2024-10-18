@@ -27,7 +27,7 @@ public class DocSplitter extends AbstractAIMediator {
         String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
 
         DocumentSplitter splitter = DocumentSplitters.recursive(1000, 200, new OpenAiTokenizer());
-        List<String> segments = splitter.split(new Document(input)).stream().map(TextSegment::text).toList();
+        List<TextSegment> segments = splitter.split(new Document(input));
 
         String jsonSegments = gson.toJson(segments);
         mc.setProperty(outputProperty, jsonSegments);

@@ -1,12 +1,14 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.stores.KnowledgeStore;
 import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,37 +44,30 @@ public class EmbeddingIngestor extends AbstractAIMediator {
 
     private List<TextEmbedding> parseAndValidateInput(String input) {
         try {
-            JsonElement jsonElement = gson.fromJson(input, JsonElement.class);
-            List<TextEmbedding> textEmbeddings = new ArrayList<>();
-
-            if (jsonElement.isJsonArray()) {
-                JsonArray jsonArray = jsonElement.getAsJsonArray();
-                for (JsonElement element : jsonArray) {
-                    if (processJsonElement(element, textEmbeddings)) {
-                        return null;
-                    }
-                }
-            } else if (jsonElement.isJsonObject()) {
-                if (processJsonElement(jsonElement, textEmbeddings)) {
-                    return null;
-                }
-            } else {
+            Type listType = new TypeToken<List<TextEmbedding>>() {}.getType();
+            List<TextEmbedding> textEmbeddings = gson.fromJson(input, listType);
+            return validateTextEmbeddings(textEmbeddings);
+        } catch (JsonSyntaxException e) {
+            try {
+                TextEmbedding singleEmbedding = gson.fromJson(input, TextEmbedding.class);
+                List<TextEmbedding> textEmbeddings = new ArrayList<>();
+                textEmbeddings.add(singleEmbedding);
+                return validateTextEmbeddings(textEmbeddings);
+            } catch (JsonSyntaxException ex) {
                 return null;
             }
-            return textEmbeddings;
-        } catch (JsonSyntaxException e) {
-            return null;
         }
     }
 
-    private boolean processJsonElement(JsonElement element, List<TextEmbedding> textEmbeddings) {
-        if (element.isJsonObject()) {
-            TextEmbedding embedding = gson.fromJson(element, TextEmbedding.class);
-            if (embedding.getText() != null && embedding.getEmbedding() != null) {
-                textEmbeddings.add(embedding);
-                return false;
+    private List<TextEmbedding> validateTextEmbeddings(List<TextEmbedding> textEmbeddings) {
+        if (textEmbeddings != null) {
+            for (TextEmbedding embedding : textEmbeddings) {
+                if (embedding.getText() == null || embedding.getText().isEmpty() ||
+                        embedding.getEmbedding() == null || embedding.getEmbedding().length == 0) {
+                    return null;
+                }
             }
         }
-        return true;
+        return textEmbeddings;
     }
 }

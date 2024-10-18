@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
@@ -14,6 +15,7 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,23 +65,24 @@ public class EmbeddingGenerator extends AbstractAIMediator {
     private List<TextSegment> parseAndValidateInput(String input) {
         List<TextSegment> textSegments = new ArrayList<>();
         try {
-            JsonElement jsonElement = gson.fromJson(input, JsonElement.class);
-            if (jsonElement.isJsonArray()) {
-                JsonArray jsonArray = jsonElement.getAsJsonArray();
-                for (JsonElement element : jsonArray) {
-                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                        textSegments.add(new TextSegment(element.getAsString(), new Metadata()));
-                    } else {
-                        return null;
-                    }
+            // Try to parse input as a JSON array of TextSegment objects
+            Type listType = new TypeToken<List<TextSegment>>() {}.getType();
+            textSegments = gson.fromJson(input, listType);
+
+            // If parsing as JSON array fails, treat input as a single string
+            if (textSegments == null || textSegments.isEmpty()) {
+                textSegments = new ArrayList<>();
+                textSegments.add(new TextSegment(input, new Metadata()));
+            }
+
+            for (TextSegment segment : textSegments) {
+                if (segment.text() == null || segment.text().isEmpty()) {
+                    return null;
                 }
-            } else if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString()) {
-                textSegments.add(new TextSegment(jsonElement.getAsString(), new Metadata()));
-            } else {
-                return null;
             }
         } catch (JsonSyntaxException e) {
-            // If input is not a valid JSON, treat it as a single string
+            // If JSON parsing fails, treat input as a single string
+            textSegments = new ArrayList<>();
             textSegments.add(new TextSegment(input, new Metadata()));
         }
         return textSegments;

@@ -62,14 +62,11 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
 
     private TextEmbedding parseAndValidateInput(String input) {
         try {
-            JsonElement jsonElement = gson.fromJson(input, JsonElement.class);
-            if (jsonElement.isJsonObject()) {
-                TextEmbedding embedding = TextEmbedding.deserialize(jsonElement);
-                if (embedding.getText() != null && embedding.getEmbedding() != null) {
-                    return embedding;
-                }
+            TextEmbedding textEmbedding = gson.fromJson(input, TextEmbedding.class);
+            if (textEmbedding == null || textEmbedding.getEmbedding() == null || textEmbedding.getEmbedding().length == 0) {
+                return null;
             }
-            return null;
+            return textEmbedding;
         } catch (JsonSyntaxException e) {
             return null;
         }

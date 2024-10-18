@@ -145,4 +145,3 @@ public class LLMChat extends AbstractAIMediator {
         return service.build();
     }
 }
-
