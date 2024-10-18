@@ -15,6 +15,7 @@ import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EmbeddingGenerator extends AbstractAIMediator {
@@ -43,12 +44,18 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         try {
             Response<List<Embedding>> embedding = embeddingModel.embedAll(inputs);
             for (int i = 0; i < inputs.size(); i++) {
-                textEmbeddings.add(new TextEmbedding(inputs.get(i).text(), embedding.content().get(i).vector()));
+                textEmbeddings.add(new TextEmbedding(inputs.get(i).text(), embedding.content().get(i).vector(), new Metadata()));
             }
         } catch (Exception e) {
             handleException("Failed to generate embedding", e, mc);
         }
 
+        // If input is a single string, return a single TextEmbedding object
+        // Otherwise, return a JSON array of TextEmbedding objects
+        if (textEmbeddings.size() == 1) {
+            mc.setProperty(outputProperty, gson.toJson(textEmbeddings.get(0).serialize()));
+            return;
+        }
         String jsonTextEmbeddings = gson.toJson(textEmbeddings.stream().map(TextEmbedding::serialize).toArray());
         mc.setProperty(outputProperty, jsonTextEmbeddings);
     }

@@ -32,7 +32,7 @@ public class EmbeddingIngestor extends AbstractAIMediator {
 
         KnowledgeStore knowledgeStore = KnowledgeStoreConnectionHandler.getKnowledgeStore(connectionName, mc);
         try {
-            knowledgeStore.ingestAll(textEmbeddings);
+            knowledgeStore.add(textEmbeddings);
         } catch (Exception e) {
             handleException("Failed to ingest embedding", e, mc);
         } finally {
@@ -43,27 +43,36 @@ public class EmbeddingIngestor extends AbstractAIMediator {
     private List<TextEmbedding> parseAndValidateInput(String input) {
         try {
             JsonElement jsonElement = gson.fromJson(input, JsonElement.class);
-            if (!jsonElement.isJsonArray()) {
-                return null;
-            }
-
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
             List<TextEmbedding> textEmbeddings = new ArrayList<>();
-            for (JsonElement element : jsonArray) {
-                if (element.isJsonObject()) {
-                    TextEmbedding embedding = TextEmbedding.deserialize(element);
-                    if (embedding.getText() != null && embedding.getEmbedding() != null) {
-                        textEmbeddings.add(embedding);
-                    } else {
+
+            if (jsonElement.isJsonArray()) {
+                JsonArray jsonArray = jsonElement.getAsJsonArray();
+                for (JsonElement element : jsonArray) {
+                    if (processJsonElement(element, textEmbeddings)) {
                         return null;
                     }
-                } else {
+                }
+            } else if (jsonElement.isJsonObject()) {
+                if (processJsonElement(jsonElement, textEmbeddings)) {
                     return null;
                 }
+            } else {
+                return null;
             }
             return textEmbeddings;
         } catch (JsonSyntaxException e) {
             return null;
         }
+    }
+
+    private boolean processJsonElement(JsonElement element, List<TextEmbedding> textEmbeddings) {
+        if (element.isJsonObject()) {
+            TextEmbedding embedding = TextEmbedding.deserialize(element);
+            if (embedding.getText() != null && embedding.getEmbedding() != null) {
+                textEmbeddings.add(embedding);
+                return false;
+            }
+        }
+        return true;
     }
 }

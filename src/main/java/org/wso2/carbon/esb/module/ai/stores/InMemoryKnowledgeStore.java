@@ -2,8 +2,11 @@ package org.wso2.carbon.esb.module.ai.stores;
 
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import dev.langchain4j.store.embedding.filter.Filter;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
@@ -38,30 +41,25 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
     }
 
     @Override
-    public void ingest(TextEmbedding textEmbedding) {
-        Embedding embedding = new Embedding(textEmbedding.getEmbedding());
-        TextSegment textSegment = new TextSegment(textEmbedding.getText(), new Metadata());
-
-        synchronized (this) {
-            embeddingStore.add(embedding, textSegment);
-            persistStoreToRegistry();
-        }
-    }
-
-    @Override
-    public void ingestAll(List<TextEmbedding> textEmbeddings) {
+    public void add(List<TextEmbedding> textEmbeddings) {
         List<Embedding> embeddings = new ArrayList<>();
         List<TextSegment> textSegments = new ArrayList<>();
 
         for (TextEmbedding textEmbedding : textEmbeddings) {
             embeddings.add(new Embedding(textEmbedding.getEmbedding()));
-            textSegments.add(new TextSegment(textEmbedding.getText(), new Metadata()));
+            textSegments.add(new TextSegment(textEmbedding.getText(), textEmbedding.getMetadata()));
         }
 
         synchronized (this) {
             embeddingStore.addAll(embeddings, textSegments);
             persistStoreToRegistry();
         }
+    }
+
+    @Override
+    public List<EmbeddingMatch<TextSegment>> search(Embedding embedding, Integer maxResults, Double minScore, Filter filter) {
+        EmbeddingSearchRequest embeddingSearchRequest = new EmbeddingSearchRequest(embedding, maxResults, minScore, filter);
+        return embeddingStore.search(embeddingSearchRequest).matches();
     }
 
     private synchronized void persistStoreToRegistry() {
