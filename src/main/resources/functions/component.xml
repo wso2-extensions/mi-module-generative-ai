@@ -42,5 +42,9 @@
 			<file>embed.xml</file>
 			<description>Embed document chunks</description>
 		</component>
+		<component name="getFromStore" >
+			<file>retriever.xml</file>
+			<description>Retrieve documents</description>
+		</component>
     </subComponents>
 </component>

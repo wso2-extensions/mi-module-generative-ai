@@ -19,12 +19,4 @@ public class Utils {
         }
         return connectionName;
     }
-
-    public static String toJSONString(Object object) {
-        return new Gson().toJson(object);
-    }
-
-    public static <T> T fromJSONString(String json, Class<T> clazz) {
-        return new Gson().fromJson(json, clazz);
-    }
 }

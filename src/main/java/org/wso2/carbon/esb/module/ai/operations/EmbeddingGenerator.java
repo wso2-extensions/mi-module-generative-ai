@@ -61,9 +61,9 @@ public class EmbeddingGenerator extends AbstractAIMediator {
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {
+        List<TextSegment> textSegments = new ArrayList<>();
         try {
             JsonElement jsonElement = gson.fromJson(input, JsonElement.class);
-            List<TextSegment> textSegments = new ArrayList<>();
             if (jsonElement.isJsonArray()) {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
                 for (JsonElement element : jsonArray) {
@@ -78,9 +78,10 @@ public class EmbeddingGenerator extends AbstractAIMediator {
             } else {
                 return null;
             }
-            return textSegments;
         } catch (JsonSyntaxException e) {
-            return null;
+            // If input is not a valid JSON, treat it as a single string
+            textSegments.add(new TextSegment(input, new Metadata()));
         }
+        return textSegments;
     }
 }

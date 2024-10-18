@@ -1,0 +1,94 @@
+{
+  "connectorName": "ai",
+  "operationName": "getFromStore",
+  "title": "Retrieve documents from the knowledge store",
+  "help": "<h1>Define LLM prompts</h1><b>Define LLM prompts</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Knowledge store Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "KNOWLEDGE_STORE_CONNECTION"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "Knowledge store connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "input",
+                    "displayName": "Input",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "An array of JSON objects in the format of {\"text\":\"test\",\"embedding\":\"[array of numbers]\"}"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "maxResults",
+                    "displayName": "Max Results",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "5",
+                    "required": "false",
+                    "helpTip": "Maximum number of results to be returned"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "minScore",
+                    "displayName": "Min Score",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "0.75",
+                    "required": "false",
+                    "helpTip": "Minimum score to be considered as a valid result"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "filter",
+                    "displayName": "Metadata Filter",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "Filter to be applied to the metadata"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "outputProperty",
+                    "displayName": "Output property",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Define the output property"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

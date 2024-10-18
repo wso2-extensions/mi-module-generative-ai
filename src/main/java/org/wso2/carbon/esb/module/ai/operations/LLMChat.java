@@ -17,12 +17,19 @@
 */
 package org.wso2.carbon.esb.module.ai.operations;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
+
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -30,6 +37,8 @@ import java.util.List;
  * @author Isuru Wijesiri
  */
 public class LLMChat extends AbstractAIMediator {
+
+    private static final Gson gson = new Gson();
 
     // Define the agent interfaces for different output types for the LangChain4j service
     interface StringAgent { String chat(String userMessage); }
@@ -74,6 +83,13 @@ public class LLMChat extends AbstractAIMediator {
     public void execute(MessageContext mc) {
         String prompt = getMediatorParameter(mc, "prompt", String.class, false);
         String knowledge = getMediatorParameter(mc, "knowledge", String.class, true);
+
+        List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateInput(knowledge);
+        if (parsedKnowledge == null) {
+            handleException("Invalid input format. Expected a JSON array of Objects.", mc);
+            return;
+        }
+
         try {
             Object answer = getChatResponse(outputType, prompt, knowledge);
             if (answer != null) {
@@ -85,6 +101,25 @@ public class LLMChat extends AbstractAIMediator {
         } catch (Exception e) {
             log.error("Error while LLM chat completion", e);
             handleException("Error while LLM chat completion", e, mc);
+        }
+    }
+
+    private List<EmbeddingMatch<TextSegment>> parseAndValidateInput(String knowledge) {
+        try {
+            Type listType = new TypeToken<List<EmbeddingMatch<TextSegment>>>() {}.getType();
+            List<EmbeddingMatch<TextSegment>> embeddingMatches = gson.fromJson(knowledge, listType);
+
+            // Validate the parsed list
+            if (embeddingMatches != null) {
+                for (EmbeddingMatch<TextSegment> match : embeddingMatches) {
+                    if (match.embedding() == null || match.embedded() == null) {
+                        return null;
+                    }
+                }
+            }
+            return embeddingMatches;
+        } catch (JsonSyntaxException e) {
+            return null;
         }
     }
 

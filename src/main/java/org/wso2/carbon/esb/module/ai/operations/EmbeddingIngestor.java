@@ -67,7 +67,7 @@ public class EmbeddingIngestor extends AbstractAIMediator {
 
     private boolean processJsonElement(JsonElement element, List<TextEmbedding> textEmbeddings) {
         if (element.isJsonObject()) {
-            TextEmbedding embedding = TextEmbedding.deserialize(element);
+            TextEmbedding embedding = gson.fromJson(element, TextEmbedding.class);
             if (embedding.getText() != null && embedding.getEmbedding() != null) {
                 textEmbeddings.add(embedding);
                 return false;
