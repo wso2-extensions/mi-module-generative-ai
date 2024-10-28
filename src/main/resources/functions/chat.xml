@@ -31,7 +31,6 @@
     <parameter name="knowledge" description="Knowledge store"/>
 
     <sequence>
-        <property name="knowledge" expression="$func:knowledge"/>
         <class name="org.wso2.carbon.esb.module.ai.operations.LLMChat" />
     </sequence>
 </template>

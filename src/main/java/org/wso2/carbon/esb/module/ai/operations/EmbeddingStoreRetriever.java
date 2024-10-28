@@ -1,7 +1,6 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
@@ -42,17 +41,12 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         }
 
         Filter filter = null;
-        try {
-            filter = filterParser.parse(filterString);
-        } catch (IllegalArgumentException e) {
-            handleException("Failed to parse filter", e, mc);
-            return;
-        }
+        // Filter parsing is yet to be implemented
 
         KnowledgeStore knowledgeStore = KnowledgeStoreConnectionHandler.getKnowledgeStore(connectionName, mc);
         try {
             Embedding embedding = new Embedding(textEmbedding.getEmbedding());
-            List<EmbeddingMatch<TextSegment>> matches = knowledgeStore.search(embedding, maxResults, minScore, filter);
+            List<EmbeddingMatch<TextSegment>> matches = knowledgeStore.search(embedding, maxResults, minScore, null);
             String jsonMatches = gson.toJson(matches);
             mc.setProperty(outputProperty, jsonMatches);
         } catch (Exception e) {

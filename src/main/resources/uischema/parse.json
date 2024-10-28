@@ -28,6 +28,18 @@
                 {
                   "type": "attribute",
                   "value": {
+                    "name": "parser",
+                    "displayName": "Parser",
+                    "inputType": "combo",
+                    "comboValues": ["Text-Parser"],
+                    "defaultValue": "Text-Parser",
+                    "required": "true",
+                    "helpTip": "Select a suitable parser"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
                     "name": "output",
                     "displayName": "Output property",
                     "inputType": "stringOrExpression",

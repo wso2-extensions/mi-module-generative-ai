@@ -22,7 +22,6 @@
     <parameter name="filter" description="Metadata filter for the results"/>
     <parameter name="outputProperty" description="Output"/>
     <sequence>
-        <property name="input" expression="$func:input"/>
         <class name="org.wso2.carbon.esb.module.ai.operations.EmbeddingStoreRetriever"/>
     </sequence>
 </template>

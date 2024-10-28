@@ -1,11 +1,9 @@
 package org.wso2.carbon.esb.module.ai.stores;
 
-import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
-import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.filter.Filter;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
@@ -22,14 +20,11 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
     public static final String CONTENT_TYPE = "application/json";
     private static MicroIntegratorRegistry registry;
 
-    private final String name;
-
     private final EmbeddingStore<TextSegment> embeddingStore;
 
     private final String STORE_FILE;
 
     public InMemoryKnowledgeStore(String name, MicroIntegratorRegistry registry) {
-        this.name = name;
         InMemoryKnowledgeStore.registry = registry;
 
         STORE_FILE = AI_KNOWLEDGE_STORE + name + JSON;

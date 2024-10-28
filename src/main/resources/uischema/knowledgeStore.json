@@ -30,7 +30,7 @@
                   "type": "attribute",
                   "value": {
                     "name": "provider",
-                    "displayName": "AI service provider",
+                    "displayName": "Knowledge Store Provider",
                     "inputType": "combo",
                     "comboValues": ["In-Memory"],
                     "defaultValue": "In-Memory",

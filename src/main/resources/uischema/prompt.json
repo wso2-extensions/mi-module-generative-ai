@@ -30,7 +30,7 @@
                   "value": {
                     "name": "prompt",
                     "displayName": "Prompt",
-                    "inputType": "stringOrExpression",
+                    "inputType": "textAreaOrExpression",
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Define the prompt"

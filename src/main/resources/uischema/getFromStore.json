@@ -65,17 +65,6 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "filter",
-                    "displayName": "Metadata Filter",
-                    "inputType": "stringOrExpression",
-                    "defaultValue": "",
-                    "required": "false",
-                    "helpTip": "Filter to be applied to the metadata"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
                     "name": "outputProperty",
                     "displayName": "Output property",
                     "inputType": "stringOrExpression",

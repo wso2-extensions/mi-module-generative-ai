@@ -37,7 +37,7 @@ public class TextEmbedding {
     }
 
     public JsonElement serialize() {
-        JsonObject jsonObject = new JsonObject();
+        var jsonObject = new JsonObject();
         jsonObject.addProperty("text", text);
         jsonObject.add("embedding", new Gson().toJsonTree(embedding));
         jsonObject.add("metadata", new Gson().toJsonTree(metadata.toMap()));

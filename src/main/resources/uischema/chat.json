@@ -32,12 +32,12 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "system",
-                    "displayName": "System prompt",
-                    "inputType": "textAreaOrExpression",
-                    "defaultValue": "You are a helpful AI agent",
-                    "required": "false",
-                    "helpTip": "Give instructions to LLM"
+                    "name": "modelName",
+                    "displayName": "Model name",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "gpt-4o",
+                    "required": "true",
+                    "helpTip": "Name of the model to use"
                   }
                 },
                 {
@@ -80,17 +80,17 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "LLM Parameters",
+              "groupName": "Advanced",
               "elements": [
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "modelName",
-                    "displayName": "Model name",
-                    "inputType": "string",
-                    "defaultValue": "gpt-4o",
-                    "required": "true",
-                    "helpTip": "Name of the model to use"
+                    "name": "system",
+                    "displayName": "System prompt",
+                    "inputType": "textAreaOrExpression",
+                    "defaultValue": "You are a helpful AI agent",
+                    "required": "false",
+                    "helpTip": "Give instructions to LLM"
                   }
                 },
                 {

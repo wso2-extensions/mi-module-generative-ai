@@ -55,11 +55,10 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         // If input is a single string, return a single TextEmbedding object
         // Otherwise, return a JSON array of TextEmbedding objects
         if (textEmbeddings.size() == 1) {
-            mc.setProperty(outputProperty, gson.toJson(textEmbeddings.get(0).serialize()));
+            mc.setProperty(outputProperty, gson.toJson(textEmbeddings.get(0)));
             return;
         }
-        String jsonTextEmbeddings = gson.toJson(textEmbeddings.stream().map(TextEmbedding::serialize).toArray());
-        mc.setProperty(outputProperty, jsonTextEmbeddings);
+        mc.setProperty(outputProperty, gson.toJson(textEmbeddings));
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {
