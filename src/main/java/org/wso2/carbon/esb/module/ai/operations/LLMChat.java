@@ -24,6 +24,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.Result;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
@@ -41,10 +42,10 @@ public class LLMChat extends AbstractAIMediator {
     private static final Gson gson = new Gson();
 
     // Define the agent interfaces for different output types for the LangChain4j service
-    interface StringAgent { String chat(String userMessage); }
-    interface IntegerAgent { Integer chat(String userMessage); }
-    interface FloatAgent { Float chat(String userMessage); }
-    interface BooleanAgent { Boolean chat(String userMessage); }
+    interface StringAgent { Result<String> chat(String userMessage); }
+    interface IntegerAgent { Result<Integer> chat(String userMessage); }
+    interface FloatAgent { Result<Float> chat(String userMessage); }
+    interface BooleanAgent { Result<Boolean> chat(String userMessage); }
 
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
 
@@ -93,7 +94,7 @@ public class LLMChat extends AbstractAIMediator {
         try {
             Object answer = getChatResponse(outputType, prompt, knowledge);
             if (answer != null) {
-                mc.setProperty(output, answer);
+                mc.setProperty(output, gson.toJson(answer));
             } else {
                 log.error("Invalid output type");
                 handleException("Invalid output type", mc);
