@@ -31,10 +31,32 @@
                     "name": "strategy",
                     "displayName": "Strategy",
                     "inputType": "combo",
-                    "comboValues": ["Recursive"],
+                    "comboValues": ["Recursive", "ByParagraph", "BySentence"],
                     "defaultValue": "Recursive",
                     "required": "true",
                     "helpTip": "Select the splitting strategy"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "maxSegmentSize",
+                    "displayName": "Max segment size",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "1000",
+                    "required": "false",
+                    "helpTip": "Max segment size in tokens"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "maxOverlapSize",
+                    "displayName": "Max overlap size",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "200",
+                    "required": "false",
+                    "helpTip": "Max overlap size in tokens"
                   }
                 },
                 {

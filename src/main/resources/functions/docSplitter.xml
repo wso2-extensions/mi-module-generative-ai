@@ -18,6 +18,8 @@
 <template xmlns="http://ws.apache.org/ns/synapse" name="split">
     <parameter name="input" description="Input"/>
     <parameter name="strategy" description="Splitting strategy"/>
+    <parameter name="maxSegmentSize" description="Splitting strategy"/>
+    <parameter name="maxOverlapSize" description="Splitting strategy"/>
     <parameter name="outputProperty" description="Output"/>
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.DocSplitter"/>
