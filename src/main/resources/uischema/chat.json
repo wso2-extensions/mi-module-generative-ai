@@ -145,7 +145,7 @@
                     "inputType": "string",
                     "defaultValue": "",
                     "required": "false",
-                    "helpTip": "Stop sequence"
+                    "helpTip": "Seed"
                   }
                 }
               ]

@@ -28,7 +28,7 @@ public class DocSplitter extends AbstractAIMediator {
         String input = getMediatorParameter(mc, "input", String.class, false);
         String strategy = getMediatorParameter(mc, "strategy", String.class, false);
         Integer maxSegmentSize = getMediatorParameter(mc, "maxSegmentSize", Integer.class, true);
-        Integer maxOverlapSize = getMediatorParameter(mc, "minSegmentSize", Integer.class, true);
+        Integer maxOverlapSize = getMediatorParameter(mc, "maxOverlapSize", Integer.class, true);
         String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
 
         maxSegmentSize = (maxSegmentSize == null) ? 1000 : maxSegmentSize;

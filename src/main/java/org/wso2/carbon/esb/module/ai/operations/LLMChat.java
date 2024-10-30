@@ -91,8 +91,13 @@ public class LLMChat extends AbstractAIMediator {
             return;
         }
 
+        // Extract text segments from the parsed knowledge and convert to content
+        List<Content> knowledgeTexts = parsedKnowledge.stream()
+                .map(match -> new Content(match.embedded()))
+                .toList();
+
         try {
-            Object answer = getChatResponse(outputType, prompt, knowledge);
+            Object answer = getChatResponse(outputType, prompt, knowledgeTexts);
             if (answer != null) {
                 mc.setProperty(output, gson.toJson(answer));
             } else {
@@ -124,7 +129,7 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(String outputType, String prompt, String knowledge) {
+    private Object getChatResponse(String outputType, String prompt, List<Content> knowledge) {
         return switch (outputType.toLowerCase()) {
             case "string" -> getAgent(StringAgent.class, knowledge).chat(prompt);
             case "integer" -> getAgent(IntegerAgent.class, knowledge).chat(prompt);
@@ -134,14 +139,14 @@ public class LLMChat extends AbstractAIMediator {
         };
     }
 
-    private <T> T getAgent(Class<T> agentType, String knowledge) {
+    private <T> T getAgent(Class<T> agentType, List<Content> knowledge) {
         ChatLanguageModel model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
         AiServices<T> service = AiServices
                 .builder(agentType)
                 .chatLanguageModel(model)
                 .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT);
         if (knowledge != null && !knowledge.isEmpty()) {
-            return service.contentRetriever(query -> List.of(new Content(knowledge))).build();
+            return service.contentRetriever(query -> knowledge).build();
         }
         return service.build();
     }
