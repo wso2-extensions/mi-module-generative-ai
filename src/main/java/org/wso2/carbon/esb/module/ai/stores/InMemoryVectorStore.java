@@ -13,9 +13,9 @@ import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryKnowledgeStore implements KnowledgeStore {
+public class InMemoryVectorStore implements VectorStore {
 
-    public static final String AI_KNOWLEDGE_STORE = "ai/knowledge-store/";
+    public static final String AI_VECTOR_STORE = "ai/vector-store/";
     public static final String JSON = ".json";
     public static final String CONTENT_TYPE = "application/json";
     private static MicroIntegratorRegistry registry;
@@ -24,10 +24,10 @@ public class InMemoryKnowledgeStore implements KnowledgeStore {
 
     private final String STORE_FILE;
 
-    public InMemoryKnowledgeStore(String name, MicroIntegratorRegistry registry) {
-        InMemoryKnowledgeStore.registry = registry;
+    public InMemoryVectorStore(String name, MicroIntegratorRegistry registry) {
+        InMemoryVectorStore.registry = registry;
 
-        STORE_FILE = AI_KNOWLEDGE_STORE + name + JSON;
+        STORE_FILE = AI_VECTOR_STORE + name + JSON;
         if (registry.isResourceExists(STORE_FILE)) {
             this.embeddingStore = InMemoryEmbeddingStore.fromFile(registry.getRegistryEntry(STORE_FILE).getName());
         } else {

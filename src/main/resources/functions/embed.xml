@@ -15,7 +15,7 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<template xmlns="http://ws.apache.org/ns/synapse" name="embed">
+<template xmlns="http://ws.apache.org/ns/synapse" name="generateEmbeddings">
     <parameter name="input" description="Input"/>
     <parameter name="model" description="Embedding model"/>
     <parameter name="outputProperty" description="Output"/>

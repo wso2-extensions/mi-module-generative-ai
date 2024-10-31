@@ -15,9 +15,9 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<template xmlns="http://ws.apache.org/ns/synapse" name="getFromStore">
+<template xmlns="http://ws.apache.org/ns/synapse" name="searchStore">
     <parameter name="input" description="Input"/>
-    <parameter name="maxResults" description="Max results from knowledge store"/>
+    <parameter name="maxResults" description="Max results from the vector store"/>
     <parameter name="minScore" description="Minimum score for a result"/>
     <parameter name="filter" description="Metadata filter for the results"/>
     <parameter name="outputProperty" description="Output"/>

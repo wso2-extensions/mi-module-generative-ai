@@ -1,6 +1,6 @@
 {
   "connectorName": "ai",
-  "connectionName": "KNOWLEDGE_STORE_CONNECTION",
+  "connectionName": "VECTOR_STORE_CONNECTION",
   "title": "OpenAI Connection Config",
   "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
   "elements": [
@@ -10,9 +10,9 @@
         "name": "connectionName",
         "displayName": "Connection Name",
         "inputType": "string",
-        "defaultValue": "KNOWLEDGE_STORE_1",
+        "defaultValue": "VECTOR_STORE_1",
         "required": "true",
-        "helpTip": "The name for the knowledge store connection",
+        "helpTip": "A name for the vector store connection",
         "validation": "nameWithoutSpecialCharactors"
       }
     },
@@ -30,7 +30,7 @@
                   "type": "attribute",
                   "value": {
                     "name": "provider",
-                    "displayName": "Knowledge Store Provider",
+                    "displayName": "Vector Store Provider",
                     "inputType": "combo",
                     "comboValues": ["In-Memory"],
                     "defaultValue": "In-Memory",

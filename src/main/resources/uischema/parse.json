@@ -31,8 +31,8 @@
                     "name": "parser",
                     "displayName": "Parser",
                     "inputType": "combo",
-                    "comboValues": ["Text/Markdown/HTML"],
-                    "defaultValue": "Text/Markdown/HTML",
+                    "comboValues": ["Text-Parser"],
+                    "defaultValue": "Text-Parser",
                     "required": "true",
                     "helpTip": "Select a suitable parser"
                   }

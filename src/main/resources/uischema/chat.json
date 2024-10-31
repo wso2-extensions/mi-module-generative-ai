@@ -16,7 +16,7 @@
               "displayName": "OpenAI Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "OPEN_AI"
+                "AI_CONNECTION"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
@@ -160,7 +160,7 @@
                   "type": "attribute",
                   "value": {
                     "name": "knowledge",
-                    "displayName": "External knowledge",
+                    "displayName": "Additional knowledge",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "false",

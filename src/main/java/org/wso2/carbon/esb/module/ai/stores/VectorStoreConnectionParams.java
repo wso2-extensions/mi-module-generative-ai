@@ -1,11 +1,11 @@
 package org.wso2.carbon.esb.module.ai.stores;
 
-public class KnowledgeStoreConnectionParams {
+public class VectorStoreConnectionParams {
 
         String connectionName;
         String connectionType;
 
-        public KnowledgeStoreConnectionParams(String connectionName, String connectionType) {
+        public VectorStoreConnectionParams(String connectionName, String connectionType) {
             this.connectionName = connectionName;
             this.connectionType = connectionType;
         }

@@ -9,7 +9,7 @@ import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
 import java.util.List;
 
-public interface KnowledgeStore {
+public interface VectorStore {
     void add(List<TextEmbedding> textEmbeddings);
     List<EmbeddingMatch<TextSegment>> search(Embedding embedding, Integer maxResults, Double minScore, Filter filter);
 }

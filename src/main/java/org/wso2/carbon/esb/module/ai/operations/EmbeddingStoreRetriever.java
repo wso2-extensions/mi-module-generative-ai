@@ -11,8 +11,8 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.utils.StringFilterParser;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
-import org.wso2.carbon.esb.module.ai.stores.KnowledgeStore;
-import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionHandler;
+import org.wso2.carbon.esb.module.ai.stores.VectorStore;
+import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 
 import java.util.List;
 
@@ -43,10 +43,10 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         Filter filter = null;
         // Filter parsing is yet to be implemented
 
-        KnowledgeStore knowledgeStore = KnowledgeStoreConnectionHandler.getKnowledgeStore(connectionName, mc);
+        VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
         try {
             Embedding embedding = new Embedding(textEmbedding.getEmbedding());
-            List<EmbeddingMatch<TextSegment>> matches = knowledgeStore.search(embedding, maxResults, minScore, null);
+            List<EmbeddingMatch<TextSegment>> matches = vectorStore.search(embedding, maxResults, minScore, null);
             String jsonMatches = gson.toJson(matches);
             mc.setProperty(outputProperty, jsonMatches);
         } catch (Exception e) {

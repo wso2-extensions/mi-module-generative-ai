@@ -5,16 +5,16 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
-import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionHandler;
-import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionParams;
+import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
+import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionParams;
 
-public class KnowledgeStoreConnection extends AbstractConnector implements ManagedLifecycle {
+public class vectorStoreConnection extends AbstractConnector implements ManagedLifecycle {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
         String connectionType = messageContext.getProperty("provider").toString();
         String connectionName = messageContext.getProperty("connectionName").toString();
-        KnowledgeStoreConnectionHandler.addConnection(connectionName, new KnowledgeStoreConnectionParams(connectionName, connectionType));
+        VectorStoreConnectionHandler.addConnection(connectionName, new VectorStoreConnectionParams(connectionName, connectionType));
     }
 
     @Override

@@ -25,7 +25,7 @@ public class DocParser extends AbstractAIMediator {
 
         DocumentParser parser = null;
         switch (parserType) {
-            case "Text/Markdown/HTML":
+            case "Text-Parser":
                 parser = new TextDocumentParser();
                 break;
             case "PDF":

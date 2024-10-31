@@ -31,8 +31,8 @@
 			<case regex="AI_CONNECTION">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
-			<case regex="KNOWLEDGE_STORE_CONNECTION">
-				<class name="org.wso2.carbon.esb.module.ai.connections.KnowledgeStoreConnection" />
+			<case regex="VECTOR_STORE_CONNECTION">
+				<class name="org.wso2.carbon.esb.module.ai.connections.vectorStoreConnection" />
 			</case>
 			<default>
 				<log level="full">

@@ -4,8 +4,8 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
-import org.wso2.carbon.esb.module.ai.stores.KnowledgeStore;
-import org.wso2.carbon.esb.module.ai.stores.KnowledgeStoreConnectionHandler;
+import org.wso2.carbon.esb.module.ai.stores.VectorStore;
+import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 
 import java.lang.reflect.Type;
@@ -32,9 +32,9 @@ public class EmbeddingIngestor extends AbstractAIMediator {
             return;
         }
 
-        KnowledgeStore knowledgeStore = KnowledgeStoreConnectionHandler.getKnowledgeStore(connectionName, mc);
+        VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
         try {
-            knowledgeStore.add(textEmbeddings);
+            vectorStore.add(textEmbeddings);
         } catch (Exception e) {
             handleException("Failed to ingest embedding", e, mc);
         } finally {

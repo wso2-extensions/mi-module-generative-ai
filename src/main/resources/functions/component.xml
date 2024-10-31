@@ -38,11 +38,11 @@
 			<file>docSplitter.xml</file>
 			<description>Split Documents</description>
 		</component>
-		<component name="embed" >
+		<component name="generateEmbeddings" >
 			<file>embed.xml</file>
 			<description>Embed document chunks</description>
 		</component>
-		<component name="getFromStore" >
+		<component name="searchStore" >
 			<file>retriever.xml</file>
 			<description>Retrieve documents</description>
 		</component>
