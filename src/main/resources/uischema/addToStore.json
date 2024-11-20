@@ -16,7 +16,7 @@
               "displayName": "Vector store Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "VECTOR_STORE_CONNECTION"
+                "MI_VECTOR_STORE"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",

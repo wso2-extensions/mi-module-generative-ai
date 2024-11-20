@@ -13,22 +13,25 @@ import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryVectorStore implements VectorStore {
+public class MIVectorStore implements VectorStore {
 
     public static final String AI_VECTOR_STORE = "ai/vector-store/";
     public static final String JSON = ".json";
     public static final String CONTENT_TYPE = "application/json";
+
+    private static Boolean PERSISTENCE_ENABLED = false;
     private static MicroIntegratorRegistry registry;
 
     private final EmbeddingStore<TextSegment> embeddingStore;
 
     private final String STORE_FILE;
 
-    public InMemoryVectorStore(String name, MicroIntegratorRegistry registry) {
-        InMemoryVectorStore.registry = registry;
+    public MIVectorStore(String name, Boolean enablePersistence, MicroIntegratorRegistry registry) {
+        PERSISTENCE_ENABLED = enablePersistence;
+        MIVectorStore.registry = registry;
 
         STORE_FILE = AI_VECTOR_STORE + name + JSON;
-        if (registry.isResourceExists(STORE_FILE)) {
+        if ( PERSISTENCE_ENABLED && registry.isResourceExists(STORE_FILE)) {
             this.embeddingStore = InMemoryEmbeddingStore.fromFile(registry.getRegistryEntry(STORE_FILE).getName());
         } else {
             this.embeddingStore = new InMemoryEmbeddingStore<>();
@@ -59,6 +62,9 @@ public class InMemoryVectorStore implements VectorStore {
     }
 
     private synchronized void persistStoreToRegistry() {
+        if (!PERSISTENCE_ENABLED) {
+            return;
+        }
         InMemoryEmbeddingStore<TextSegment> embeddingStore = (InMemoryEmbeddingStore<TextSegment>) this.embeddingStore;
         String serializedStore = embeddingStore.serializeToJson();
         registry.addMultipartResource(STORE_FILE, CONTENT_TYPE, serializedStore.getBytes());

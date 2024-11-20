@@ -13,7 +13,7 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
         String apiKey = messageContext.getProperty("apiKey").toString();
-        String connectionType = messageContext.getProperty("provider").toString();
+        String connectionType = messageContext.getProperty("connectionType").toString();
         String connectionName = messageContext.getProperty("connectionName").toString();
         LLMConnectionHandler.addConnection(connectionName, new LLMConnectionParams(apiKey, connectionName, connectionType));
         // Clear the apiKey property for security reasons

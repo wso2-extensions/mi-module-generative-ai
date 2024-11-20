@@ -1,7 +1,7 @@
 {
   "connectorName": "ai",
-  "connectionName": "AI_CONNECTION",
-  "title": "OpenAI Connection Config",
+  "connectionName": "MI_VECTOR_STORE",
+  "title": "MI In-Memory Vector Store",
   "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
   "elements": [
     {
@@ -10,9 +10,9 @@
         "name": "connectionName",
         "displayName": "Connection Name",
         "inputType": "string",
-        "defaultValue": "OPEN_AI_CONNECTION_1",
+        "defaultValue": "MI_VECTOR_STORE_1",
         "required": "true",
-        "helpTip": "The name for the OpenAI connection",
+        "helpTip": "A name for the vector store connection",
         "validation": "nameWithoutSpecialCharactors"
       }
     },
@@ -29,24 +29,13 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "provider",
-                    "displayName": "AI service provider",
+                    "name": "persistence",
+                    "displayName": "Persist to MI registry",
                     "inputType": "combo",
-                    "comboValues": ["OpenAI"],
-                    "defaultValue": "OpenAI",
+                    "comboValues": ["Enable", "Disable"],
+                    "defaultValue": "Enable",
                     "required": "true",
-                    "helpTip": "Define type of the output"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "apiKey",
-                    "displayName": "OpenAI Key",
-                    "inputType": "stringOrExpression",
-                    "defaultValue": "",
-                    "required": "true",
-                    "helpTip": "OpenAI Key"
+                    "helpTip": "Persist the vector store to the MI registry"
                   }
                 }
               ]

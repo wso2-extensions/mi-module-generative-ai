@@ -27,7 +27,7 @@ public class LLMConnectionHandler {
         ChatLanguageModel chatModel = null;
         LLMConnectionParams connectionParams = connectionMap.get(connectionName);
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
-            case "OpenAI":
+            case "OPEN_AI":
                 // Null values of LLM params will be handled by LangChain4j
                  chatModel =  OpenAiChatModel.builder()
                          .modelName(modelName)
@@ -38,7 +38,7 @@ public class LLMConnectionHandler {
                          .seed(seed)
                          .apiKey(connectionParams.getApiKey())
                          .build();
-            case "Anthropic":
+            case "ANTHROPIC":
                 // To be implemented
                 break;
             default:
@@ -51,13 +51,13 @@ public class LLMConnectionHandler {
         EmbeddingModel embeddingModel = null;
         LLMConnectionParams connectionParams = connectionMap.get(connectionName);
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
-            case "OpenAI":
+            case "OPEN_AI":
                 // Null values of LLM params will be handled by LangChain4j
                 embeddingModel = OpenAiEmbeddingModel.builder()
                         .apiKey(connectionParams.getApiKey())
                         .modelName(modelName)
                         .build();
-            case "Anthropic":
+            case "ANTHROPIC":
                 // To be implemented
                 break;
             default:

@@ -16,7 +16,7 @@
               "displayName": "Embedding model Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "AI_CONNECTION"
+                "OPEN_AI"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
