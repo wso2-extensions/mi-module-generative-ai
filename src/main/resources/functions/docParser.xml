@@ -17,7 +17,7 @@
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="parse">
     <parameter name="input" description="Input"/>
-    <parameter name="parser" description="Input"/>
+    <parameter name="contentType" description="Content Type"/>
     <parameter name="outputProperty" description="Output"/>
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.DocParser"/>

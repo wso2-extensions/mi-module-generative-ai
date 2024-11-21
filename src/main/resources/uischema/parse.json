@@ -21,20 +21,20 @@
                     "displayName": "Input",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Content as a string"
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "parser",
-                    "displayName": "Parser",
+                    "name": "contentType",
+                    "displayName": "Content Type",
                     "inputType": "combo",
-                    "comboValues": ["Text-Parser"],
-                    "defaultValue": "Text-Parser",
+                    "comboValues": ["Auto", "pdf", "text", "html", "xml", "json", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
+                    "defaultValue": "Auto",
                     "required": "true",
-                    "helpTip": "Select a suitable parser"
+                    "helpTip": "Select the content type of the input"
                   }
                 },
                 {
