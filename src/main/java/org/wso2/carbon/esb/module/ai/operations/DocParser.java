@@ -48,21 +48,8 @@ public class DocParser extends AbstractAIMediator {
         String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
 
         PARSER parser = null;
-        if (contentType.toLowerCase().equals("auto")) {
-            parser = autoDetectParser(mc);
-        } else {
-            parser = determineParser(contentType);
-        }
-        if (parser == null) {
-            handleException("Unsupported content type: " + contentType, mc);
-        }
-
-        if (input == null || input.toLowerCase().equals("payload")) {
-            input = mc.getEnvelope().getBody().getFirstElement().getText();
-        }
-        if (input == null) {
-            handleException("Input cannot be null", mc);
-        }
+        parser = contentType.equalsIgnoreCase("auto") ? autoDetectParser(mc) : determineParser(contentType);
+        input = input.equalsIgnoreCase("payload") ? mc.getEnvelope().getBody().getFirstElement().getText() : input;
 
         DocumentParser docParser = null;
         ByteArrayInputStream inputStream = null;
@@ -73,13 +60,11 @@ public class DocParser extends AbstractAIMediator {
                 break;
             case PDF_BOX:
                 docParser = new ApachePdfBoxDocumentParser();
-                byte[] decodedBytes = Base64.getDecoder().decode(input);
-                inputStream = new ByteArrayInputStream(decodedBytes);
+                inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
                 break;
             case POI:
                 docParser = new ApachePoiDocumentParser();
-                decodedBytes = Base64.getDecoder().decode(input);
-                inputStream = new ByteArrayInputStream(decodedBytes);
+                inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
                 break;
             default:
                 handleException("Unsupported content type: " + contentType, mc);

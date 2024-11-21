@@ -31,8 +31,8 @@
                     "name": "contentType",
                     "displayName": "Content Type",
                     "inputType": "combo",
-                    "comboValues": ["Auto", "pdf", "text", "html", "xml", "json", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
-                    "defaultValue": "Auto",
+                    "comboValues": ["auto", "pdf", "text", "html", "xml", "json", "markdown", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
+                    "defaultValue": "auto",
                     "required": "true",
                     "helpTip": "Select the content type of the input"
                   }
