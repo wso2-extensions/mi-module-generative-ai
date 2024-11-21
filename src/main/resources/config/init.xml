@@ -21,18 +21,23 @@
 	<parameter name="name" description="Unique name the connection is identified by"/>
 	<parameter name="persistence" description="Persist to MI registry"/>
 	<parameter name="apiKey" description="API key"/>
+
+	<parameter name="url" description="URL of the Vector Store"/>
+	<parameter name="collection" description="Collection name"/>
 	<sequence>
 		<property name="connectionType" expression="$func:connectionType"/>
 		<property name="connectionName" expression="$func:name"/>
 		<property name="persistence" expression="$func:persistence"/>
 		<property name="apiKey" expression="$func:apiKey"/>
+		<property name="url" expression="$func:url"/>
+		<property name="collection" expression="$func:collection"/>
 
 		<switch source="get-property('connectionType')">
 			<case regex="OPEN_AI">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
-			<case regex="VECTOR_STORE_CONNECTION">
-				<class name="org.wso2.carbon.esb.module.ai.connections.vectorStoreConnection" />
+			<case regex="MI_VECTOR_STORE">
+				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
 			</case>
 			<default>
 				<log level="full">

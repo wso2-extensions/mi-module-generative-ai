@@ -22,15 +22,17 @@ public class VectorStoreConnectionHandler {
         VectorStoreConnectionParams connectionParams = connections.get(connectionName);
         String key = connectionName + "|" + connectionParams.getConnectionType();
         switch (connectionParams.getConnectionType()) {
-            case "MI_REGISTRY_VECTOR_STORE":
+            case "MI_VECTOR_STORE":
                 Boolean persistence = connectionParams.getConnectionProperty("persistence").equals("Enable");
                 vectorStore = vectorStores.computeIfAbsent(key, k -> {
                     MicroIntegratorRegistry microIntegratorRegistry =
                             (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
                     return new MIVectorStore(connectionName, persistence, microIntegratorRegistry);
                 });
-            case "ChromaDB":
-                // To be implemented
+            case "CHROMA_DB":
+                vectorStore = vectorStores.computeIfAbsent(key, k -> new ChromaDB(connectionName,
+                        connectionParams.getConnectionProperty("url"),
+                        connectionParams.getConnectionProperty("collection")));
                 break;
             default:
                 break;

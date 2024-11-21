@@ -16,7 +16,7 @@
               "displayName": "Vector store Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "MI_VECTOR_STORE"
+                "MI_VECTOR_STORE", "CHROMA_DB"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",

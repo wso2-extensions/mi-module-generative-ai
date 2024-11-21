@@ -1,0 +1,58 @@
+{
+  "connectorName": "ai",
+  "connectionName": "CHROMA_DB",
+  "title": "ChromaDB",
+  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "MI_VECTOR_STORE_1",
+        "required": "true",
+        "helpTip": "A name for the vector store connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "url",
+                    "displayName": "Base URL",
+                    "inputType": "string",
+                    "defaultValue": "http://localhost:8000/",
+                    "required": "true",
+                    "helpTip": "The base URL of the ChromaDB server"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "collection",
+                    "displayName": "Collection",
+                    "inputType": "string",
+                    "defaultValue": "WSO2-MI",
+                    "required": "true",
+                    "helpTip": "The collection name in the ChromaDB server"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
