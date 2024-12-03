@@ -1,5 +1,6 @@
 package org.wso2.carbon.esb.module.ai.llm;
 
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -38,8 +39,15 @@ public class LLMConnectionHandler {
                          .seed(seed)
                          .apiKey(connectionParams.getApiKey())
                          .build();
+                 break;
             case "ANTHROPIC":
-                // To be implemented
+                chatModel = AnthropicChatModel.builder()
+                        .modelName(modelName)
+                        .temperature(temperature)
+                        .maxTokens(maxTokens)
+                        .topP(topP)
+                        .apiKey(connectionParams.getApiKey())
+                        .build();
                 break;
             default:
                 break;

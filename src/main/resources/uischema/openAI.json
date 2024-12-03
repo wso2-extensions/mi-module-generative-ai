@@ -10,7 +10,7 @@
         "name": "connectionName",
         "displayName": "Connection Name",
         "inputType": "string",
-        "defaultValue": "OPEN_AI_CONNECTION_1",
+        "defaultValue": "OPEN_AI_CONNECTION",
         "required": "true",
         "helpTip": "The name for the OpenAI connection",
         "validation": "nameWithoutSpecialCharactors"
