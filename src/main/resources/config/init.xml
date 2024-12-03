@@ -39,6 +39,9 @@
 			<case regex="ANTHROPIC">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
+			<case regex="MISTRAL">
+				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
+			</case>
 			<case regex="MI_VECTOR_STORE">
 				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
 			</case>
