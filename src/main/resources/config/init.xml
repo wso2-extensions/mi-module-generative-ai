@@ -24,6 +24,9 @@
 
 	<parameter name="url" description="URL of the Vector Store"/>
 	<parameter name="collection" description="Collection name"/>
+
+	<parameter name="deploymentName" description="Deployment name of Azure Open AI"/>
+	<parameter name="endpoint" description="Endpoint of Azure Open AI"/>
 	<sequence>
 		<property name="connectionType" expression="$func:connectionType"/>
 		<property name="connectionName" expression="$func:name"/>
@@ -32,8 +35,14 @@
 		<property name="url" expression="$func:url"/>
 		<property name="collection" expression="$func:collection"/>
 
+		<property name="deploymentName" expression="$func:deploymentName"/>
+		<property name="endpoint" expression="$func:endpoint"/>
+
 		<switch source="get-property('connectionType')">
 			<case regex="OPEN_AI">
+				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
+			</case>
+			<case regex="AZURE_OPEN_AI">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
 			<case regex="ANTHROPIC">

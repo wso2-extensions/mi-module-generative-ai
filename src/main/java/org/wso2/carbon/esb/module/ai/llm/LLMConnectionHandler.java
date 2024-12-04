@@ -1,6 +1,7 @@
 package org.wso2.carbon.esb.module.ai.llm;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.azure.AzureOpenAiChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
@@ -41,6 +42,19 @@ public class LLMConnectionHandler {
                          .apiKey(connectionParams.getApiKey())
                          .build();
                  break;
+            case "AZURE_OPEN_AI":
+                // Null values of LLM params will be handled by LangChain4j
+                chatModel =  AzureOpenAiChatModel.builder()
+                        .temperature(temperature)
+                        .maxTokens(maxTokens)
+                        .topP(topP)
+                        .frequencyPenalty(frequencyPenalty)
+                        .seed(Long.valueOf(seed))
+                        .apiKey(connectionParams.getApiKey())
+                        .deploymentName(connectionParams.getConnectionProperty("deploymentName"))
+                        .endpoint(connectionParams.getConnectionProperty("endpoint"))
+                        .build();
+                break;
             case "ANTHROPIC":
                 chatModel = MistralAiChatModel.builder()
                         .modelName(modelName)
