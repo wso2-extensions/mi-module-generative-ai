@@ -39,6 +39,7 @@
 		<property name="endpoint" expression="$func:endpoint"/>
 
 		<switch source="get-property('connectionType')">
+
 			<case regex="OPEN_AI">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
@@ -48,12 +49,17 @@
 			<case regex="ANTHROPIC">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
-			<case regex="MISTRAL">
+			<case regex="MISTRAL_AI">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
+
 			<case regex="MI_VECTOR_STORE">
 				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
 			</case>
+			<case regex="CHROMA_DB">
+				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
+			</case>
+
 			<default>
 				<log level="full">
 					<property name="error" value="Unknown connection type"/>

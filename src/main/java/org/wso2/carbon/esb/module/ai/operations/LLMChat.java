@@ -85,16 +85,19 @@ public class LLMChat extends AbstractAIMediator {
         String prompt = getMediatorParameter(mc, "prompt", String.class, false);
         String knowledge = getMediatorParameter(mc, "knowledge", String.class, true);
 
-        List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateInput(knowledge);
-        if (parsedKnowledge == null) {
-            handleException("Invalid input format. Expected a JSON array of Objects.", mc);
-            return;
-        }
+        List<Content> knowledgeTexts = null;
+        if (knowledge != null) {
+            List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateInput(knowledge);
+            if (parsedKnowledge == null) {
+                handleException("Invalid input format. Expected a JSON array of Objects.", mc);
+                return;
+            }
 
-        // Extract text segments from the parsed knowledge and convert to content
-        List<Content> knowledgeTexts = parsedKnowledge.stream()
-                .map(match -> new Content(match.embedded()))
-                .toList();
+            // Extract text segments from the parsed knowledge and convert to content
+            knowledgeTexts = parsedKnowledge.stream()
+                    .map(match -> new Content(match.embedded()))
+                    .toList();
+        }
 
         try {
             Object answer = getChatResponse(outputType, prompt, knowledgeTexts);

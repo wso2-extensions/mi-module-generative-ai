@@ -1,0 +1,69 @@
+{
+  "connectorName": "ai",
+  "connectionName": "AZURE_OPEN_AI",
+  "title": "Azure OpenAI Connection Config",
+  "help": "<h1>AI Connector</h1> <b>The Azure OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "AZURE_OPEN_AI_CONNECTION",
+        "required": "true",
+        "helpTip": "The name for the Azure OpenAI connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "Azure OpenAI Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Azure OpenAI Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "deploymentName",
+                    "displayName": "Deployment name",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Azure deployment name"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "endpoint",
+                    "displayName": "Endpoint",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Azure endpoint"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

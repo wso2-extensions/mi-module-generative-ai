@@ -56,7 +56,7 @@ public class LLMConnectionHandler {
                         .build();
                 break;
             case "ANTHROPIC":
-                chatModel = MistralAiChatModel.builder()
+                chatModel = AnthropicChatModel.builder()
                         .modelName(modelName)
                         .temperature(temperature)
                         .maxTokens(maxTokens)
@@ -65,7 +65,7 @@ public class LLMConnectionHandler {
                         .build();
                 break;
             case "MISTRAL_AI":
-                chatModel = AnthropicChatModel.builder()
+                chatModel = MistralAiChatModel.builder()
                         .modelName(modelName)
                         .temperature(temperature)
                         .maxTokens(maxTokens)
