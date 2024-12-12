@@ -10,7 +10,7 @@
         "name": "connectionName",
         "displayName": "Connection Name",
         "inputType": "string",
-        "defaultValue": "MI_VECTOR_STORE_1",
+        "defaultValue": "CHROMA_DB",
         "required": "true",
         "helpTip": "A name for the vector store connection",
         "validation": "nameWithoutSpecialCharactors"

@@ -46,7 +46,7 @@
                     "name": "model",
                     "displayName": "Embedding model",
                     "inputType": "combo",
-                    "comboValues": ["text-embedding-3-small"],
+                    "comboValues": ["text-embedding-3-small", "text-embedding-3-small", "text-embedding-ada-002"],
                     "defaultValue": "text-embedding-3-small",
                     "required": "true",
                     "helpTip": "Select the splitting strategy"
