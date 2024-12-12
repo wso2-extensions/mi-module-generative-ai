@@ -25,6 +25,12 @@
 	<parameter name="url" description="URL of the Vector Store"/>
 	<parameter name="collection" description="Collection name"/>
 
+	<parameter name="index" description="Index name"/>
+	<parameter name="namespace" description="Namespace of the Vector Store"/>
+	<parameter name="cloud" description="Cloud provider of the Vector Store"/>
+	<parameter name="region" description="Region of the Vector Store"/>
+	<parameter name="dimension" description="Dimension of the embeddings"/>
+
 	<parameter name="deploymentName" description="Deployment name of Azure Open AI"/>
 	<parameter name="endpoint" description="Endpoint of Azure Open AI"/>
 	<sequence>
@@ -32,8 +38,15 @@
 		<property name="connectionName" expression="$func:name"/>
 		<property name="persistence" expression="$func:persistence"/>
 		<property name="apiKey" expression="$func:apiKey"/>
+
 		<property name="url" expression="$func:url"/>
 		<property name="collection" expression="$func:collection"/>
+
+		<property name="index" expression="$func:index"/>
+		<property name="namespace" expression="$func:namespace"/>
+		<property name="cloud" expression="$func:cloud"/>
+		<property name="region" expression="$func:region"/>
+		<property name="dimension" expression="$func:dimension"/>
 
 		<property name="deploymentName" expression="$func:deploymentName"/>
 		<property name="endpoint" expression="$func:endpoint"/>
@@ -57,6 +70,9 @@
 				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
 			</case>
 			<case regex="CHROMA_DB">
+				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
+			</case>
+			<case regex="PINECONE">
 				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
 			</case>
 

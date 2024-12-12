@@ -6,7 +6,6 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
-import org.wso2.carbon.esb.module.ai.llm.LLMConnectionParams;
 
 import java.util.HashMap;
 
@@ -22,10 +21,11 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
         String endpoint = messageContext.getProperty("endpoint") != null ? messageContext.getProperty("url").toString() : null;
 
         HashMap<String, String> connectionProperties = new HashMap<>();
+        connectionProperties.put("apiKey", apiKey);
         connectionProperties.put("deploymentName", deploymentName);
         connectionProperties.put("endpoint", endpoint);
 
-        LLMConnectionHandler.addConnection(connectionName, new LLMConnectionParams(apiKey, connectionName, connectionType, connectionProperties));
+        LLMConnectionHandler.addConnection(connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));
         // Clear the apiKey property for security reasons
         messageContext.setProperty("apiKey", "");
     }
