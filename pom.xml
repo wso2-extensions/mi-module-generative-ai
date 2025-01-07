@@ -44,6 +44,8 @@
         <rampart.apache.version>1.6.1-wso2v18</rampart.apache.version>
         <rampart.wso2.version>1.6.1.wso2v18</rampart.wso2.version>
         <langchain4j.version>0.35.0</langchain4j.version>
+        <!-- Use same Postgres version used in Langchain4j-->
+        <postgresql.version>42.7.3</postgresql.version>
         <module.core.version>1.0.2</module.core.version>
         <skip-tests>true</skip-tests>
     </properties>
@@ -240,6 +242,16 @@
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-chroma</artifactId>
             <version>${langchain4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-pgvector</artifactId>
+            <version>${langchain4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>

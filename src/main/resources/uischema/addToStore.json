@@ -16,7 +16,7 @@
               "displayName": "Vector store Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "MI_VECTOR_STORE", "CHROMA_DB", "PINECONE"
+                "MI_VECTOR_STORE", "CHROMA_DB", "PINECONE", "POSTGRE_SQL"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",

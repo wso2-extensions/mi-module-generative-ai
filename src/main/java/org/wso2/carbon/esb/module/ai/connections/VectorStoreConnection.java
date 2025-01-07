@@ -27,6 +27,13 @@ public class VectorStoreConnection extends AbstractConnector implements ManagedL
         String namespace = messageContext.getProperty("namespace") != null ? messageContext.getProperty("namespace").toString() : null;
         String dimension = messageContext.getProperty("dimension") != null ? messageContext.getProperty("dimension").toString() : null;
 
+        String host = messageContext.getProperty("host") != null ? messageContext.getProperty("host").toString() : null;
+        String port = messageContext.getProperty("port") != null ? messageContext.getProperty("port").toString() : null;
+        String database = messageContext.getProperty("database") != null ? messageContext.getProperty("database").toString() : null;
+        String user = messageContext.getProperty("user") != null ? messageContext.getProperty("user").toString() : "";
+        String password = messageContext.getProperty("password") != null ? messageContext.getProperty("password").toString() : null;
+        String table = messageContext.getProperty("table") != null ? messageContext.getProperty("table").toString() : null;
+
         HashMap<String, String> connectionProperties = new HashMap<>();
         connectionProperties.put("persistence", persistence);
         connectionProperties.put("url", url);
@@ -38,6 +45,13 @@ public class VectorStoreConnection extends AbstractConnector implements ManagedL
         connectionProperties.put("index", index);
         connectionProperties.put("namespace", namespace);
         connectionProperties.put("dimension", dimension);
+
+        connectionProperties.put("host", host);
+        connectionProperties.put("port", port);
+        connectionProperties.put("database", database);
+        connectionProperties.put("user", user);
+        connectionProperties.put("password", password);
+        connectionProperties.put("table", table);
 
         VectorStoreConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));

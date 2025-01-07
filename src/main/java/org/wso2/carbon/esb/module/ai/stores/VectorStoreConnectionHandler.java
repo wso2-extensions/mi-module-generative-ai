@@ -1,6 +1,7 @@
 package org.wso2.carbon.esb.module.ai.stores;
 
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
 import org.wso2.carbon.esb.module.ai.connections.ConnectionParams;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,6 +41,32 @@ public class VectorStoreConnectionHandler {
                         connectionParams.getConnectionProperty("region"),
                         connectionParams.getConnectionProperty("index"),
                         Integer.parseInt(connectionParams.getConnectionProperty("dimension"))));
+                break;
+            case "POSTGRE_SQL":
+                vectorStore = vectorStores.computeIfAbsent(key, k -> {
+                    try {
+                        boolean status = PGVector.testConnection(
+                                connectionParams.getConnectionProperty("host"),
+                                Integer.parseInt(connectionParams.getConnectionProperty("port")),
+                                connectionParams.getConnectionProperty("database"),
+                                connectionParams.getConnectionProperty("user"),
+                                connectionParams.getConnectionProperty("password"));
+                        if (!status) {
+                            throw new SynapseException("Error connecting to PGVector");
+                        }
+
+                        return new PGVector(
+                                connectionParams.getConnectionProperty("host"),
+                                connectionParams.getConnectionProperty("port"),
+                                connectionParams.getConnectionProperty("database"),
+                                connectionParams.getConnectionProperty("user"),
+                                connectionParams.getConnectionProperty("password"),
+                                connectionParams.getConnectionProperty("table"),
+                                Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
+                    } catch (Exception e) {
+                        throw new SynapseException("Error creating PGVector connection", e);
+                    }
+                });
                 break;
             default:
                 break;
