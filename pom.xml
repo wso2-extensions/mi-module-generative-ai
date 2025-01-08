@@ -44,7 +44,7 @@
         <rampart.apache.version>1.6.1-wso2v18</rampart.apache.version>
         <rampart.wso2.version>1.6.1.wso2v18</rampart.wso2.version>
         <langchain4j.version>0.35.0</langchain4j.version>
-        <!-- Use same Postgres version used in Langchain4j-->
+        <!-- Use the same Postgres version as Langchain4j-->
         <postgresql.version>42.7.3</postgresql.version>
         <module.core.version>1.0.2</module.core.version>
         <skip-tests>true</skip-tests>
@@ -60,11 +60,6 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-commons</artifactId>
             <version>${synapse.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json.wso2</groupId>
-            <artifactId>json</artifactId>
-            <version>${json.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
@@ -89,7 +84,6 @@
             </exclusions>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
@@ -198,6 +192,8 @@
             <version>${integration.base.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- GenAI framework specific dependencies and transitive dependencies -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>

@@ -29,6 +29,8 @@
     <parameter name="seed" description="Seed"/>
 
     <parameter name="knowledge" description="Knowledge store"/>
+    <parameter name="history" description="Chat history"/>
+    <parameter name="maxHistory" description="Max chat messages to be used in history"/>
 
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.LLMChat" />

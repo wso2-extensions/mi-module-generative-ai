@@ -154,7 +154,7 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "RAG",
+              "groupName": "Additional",
               "elements": [
                 {
                   "type": "attribute",
@@ -165,6 +165,28 @@
                     "defaultValue": "",
                     "required": "false",
                     "helpTip": "Provide external knowledge to LLM"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "history",
+                    "displayName": "Chat history",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "Provide chat history in OpenAI format"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "maxHistory",
+                    "displayName": "Max chat history",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "10",
+                    "required": "false",
+                    "helpTip": "Maximum chat history to use"
                   }
                 }
               ]

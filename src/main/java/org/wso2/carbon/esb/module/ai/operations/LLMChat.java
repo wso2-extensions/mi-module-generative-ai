@@ -20,9 +20,14 @@ package org.wso2.carbon.esb.module.ai.operations;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.Content;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.Result;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -31,7 +36,9 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * LLM Chat mediator
@@ -84,10 +91,12 @@ public class LLMChat extends AbstractAIMediator {
     public void execute(MessageContext mc) {
         String prompt = getMediatorParameter(mc, "prompt", String.class, false);
         String knowledge = getMediatorParameter(mc, "knowledge", String.class, true);
+        String chatHistory = getMediatorParameter(mc, "history", String.class, true);
+        Integer maxHistory = getMediatorParameter(mc, "maxHistory", Integer.class, true);
 
-        List<Content> knowledgeTexts = null;
+        List<Content> knowledgeTexts;
         if (knowledge != null) {
-            List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateInput(knowledge);
+            List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateKnowledge(knowledge);
             if (parsedKnowledge == null) {
                 handleException("Invalid input format. Expected a JSON array of Objects.", mc);
                 return;
@@ -97,10 +106,26 @@ public class LLMChat extends AbstractAIMediator {
             knowledgeTexts = parsedKnowledge.stream()
                     .map(match -> new Content(match.embedded()))
                     .toList();
+        } else {
+            knowledgeTexts = null;
         }
+        ContentRetriever knowledgeRetriever = query -> knowledgeTexts;
+
+        List<ChatMessage> chatMessages = null;
+        if (chatHistory != null) {
+            chatMessages = parseAndValidateChatHistory(chatHistory);
+            if (chatMessages == null) {
+                handleException("Invalid chat history format. Expected a JSON array of ChatMessage objects. Use OpenAI format", mc);
+                return;
+            }
+        }
+        ChatMemory chatMemory = TemporaryChatMemory.builder()
+                .from(chatMessages)
+                .maxMessages(maxHistory)
+                .build();
 
         try {
-            Object answer = getChatResponse(outputType, prompt, knowledgeTexts);
+            Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
             if (answer != null) {
                 mc.setProperty(output, gson.toJson(answer));
             } else {
@@ -113,7 +138,7 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private List<EmbeddingMatch<TextSegment>> parseAndValidateInput(String knowledge) {
+    private List<EmbeddingMatch<TextSegment>> parseAndValidateKnowledge(String knowledge) {
         try {
             Type listType = new TypeToken<List<EmbeddingMatch<TextSegment>>>() {}.getType();
             List<EmbeddingMatch<TextSegment>> embeddingMatches = gson.fromJson(knowledge, listType);
@@ -132,24 +157,58 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(String outputType, String prompt, List<Content> knowledge) {
+    private List<ChatMessage> parseAndValidateChatHistory(String chatHistory) {
+        try {
+            Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
+            List<Map<String, String>> rawMessages = gson.fromJson(chatHistory, listType);
+
+            List<ChatMessage> chatMessages = new ArrayList<>();
+            for (Map<String, String> rawMessage : rawMessages) {
+                String role = rawMessage.get("role");
+                String content = rawMessage.get("content");
+
+                if (role == null || content == null) {
+                    return null; // Invalid format
+                }
+
+                ChatMessage chatMessage;
+                switch (role) {
+                    case "user":
+                        chatMessage = new UserMessage(content);
+                        break;
+                    case "assistant":
+                        chatMessage = new AiMessage(content);
+                        break;
+                    default:
+                        return null; // Invalid role
+                }
+                chatMessages.add(chatMessage);
+            }
+            return chatMessages;
+        } catch (JsonSyntaxException e) {
+            return null; // Invalid JSON format
+        }
+    }
+
+    private Object getChatResponse(String outputType, String prompt, ContentRetriever knowledge, ChatMemory chatMemory) {
         return switch (outputType.toLowerCase()) {
-            case "string" -> getAgent(StringAgent.class, knowledge).chat(prompt);
-            case "integer" -> getAgent(IntegerAgent.class, knowledge).chat(prompt);
-            case "float" -> getAgent(FloatAgent.class, knowledge).chat(prompt);
-            case "boolean" -> getAgent(BooleanAgent.class, knowledge).chat(prompt);
+            case "string" -> getAgent(StringAgent.class, knowledge, chatMemory).chat(prompt);
+            case "integer" -> getAgent(IntegerAgent.class, knowledge, chatMemory).chat(prompt);
+            case "float" -> getAgent(FloatAgent.class, knowledge, chatMemory).chat(prompt);
+            case "boolean" -> getAgent(BooleanAgent.class, knowledge, chatMemory).chat(prompt);
             default -> null;
         };
     }
 
-    private <T> T getAgent(Class<T> agentType, List<Content> knowledge) {
+    private <T> T getAgent(Class<T> agentType, ContentRetriever knowledge, ChatMemory chatMemory) {
         ChatLanguageModel model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
         AiServices<T> service = AiServices
                 .builder(agentType)
                 .chatLanguageModel(model)
-                .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT);
-        if (knowledge != null && !knowledge.isEmpty()) {
-            return service.contentRetriever(query -> knowledge).build();
+                .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT)
+                .chatMemory(chatMemory);
+        if (knowledge != null) {
+            return service.contentRetriever(knowledge).build();
         }
         return service.build();
     }
