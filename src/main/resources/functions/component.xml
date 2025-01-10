@@ -27,23 +27,23 @@
 			<description>LLM chat prompt</description>
 		</component>
 		<component name="addToStore" >
-			<file>ingestDocuments.xml</file>
+			<file>addToStore.xml</file>
 			<description>LLM chat prompt</description>
 		</component>
 		<component name="parse" >
-			<file>docParser.xml</file>
+			<file>parse.xml</file>
 			<description>Parse Documents</description>
 		</component>
 		<component name="split" >
-			<file>docSplitter.xml</file>
+			<file>split.xml</file>
 			<description>Split Documents</description>
 		</component>
 		<component name="generateEmbeddings" >
-			<file>embed.xml</file>
+			<file>generateEmbeddings.xml</file>
 			<description>Embed document chunks</description>
 		</component>
 		<component name="searchStore" >
-			<file>retriever.xml</file>
+			<file>searchStore.xml</file>
 			<description>Retrieve documents</description>
 		</component>
     </subComponents>

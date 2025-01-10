@@ -64,15 +64,15 @@ public class LLMChat extends AbstractAIMediator {
     private Double frequencyPenalty;
     private Integer seed;
     private String system;
-    private String output;
-    private String outputType;
+    private String responseVariable;
+    private String responseType;
     private String connectionName;
 
     @Override
     public void initialize(MessageContext mc) {
         // Load mediator configurations from template
-        output = getMediatorParameter(mc, "output", String.class, false);
-        outputType = getMediatorParameter(mc, "outputType", String.class, false);
+        responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        responseType = getMediatorParameter(mc, "responseType", String.class, false);
 
         // Load configurations from template and message context
         modelName = getMediatorParameter(mc, "modelName", String.class, false);
@@ -125,9 +125,9 @@ public class LLMChat extends AbstractAIMediator {
                 .build();
 
         try {
-            Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
+            Object answer = getChatResponse(responseType, prompt, knowledgeRetriever, chatMemory);
             if (answer != null) {
-                mc.setProperty(output, gson.toJson(answer));
+                mc.setProperty(responseVariable, gson.toJson(answer));
             } else {
                 log.error("Invalid output type");
                 handleException("Invalid output type", mc);

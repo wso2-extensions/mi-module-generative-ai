@@ -45,7 +45,7 @@ public class DocParser extends AbstractAIMediator {
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, "input", String.class, false);
         String contentType = getMediatorParameter(mc, "contentType", String.class, false);
-        String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
+        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
         PARSER parser = null;
         parser = contentType.equalsIgnoreCase("auto") ? autoDetectParser(mc) : determineParser(contentType);
@@ -71,7 +71,7 @@ public class DocParser extends AbstractAIMediator {
         }
 
         String document = docParser.parse(inputStream).text();
-        mc.setProperty(outputProperty, document);
+        mc.setProperty(responseVariable, document);
     }
 
     private PARSER determineParser(String contentType) {

@@ -15,11 +15,13 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<template xmlns="http://ws.apache.org/ns/synapse" name="generateEmbeddings">
+<template xmlns="http://ws.apache.org/ns/synapse" name="searchStore">
     <parameter name="input" description="Input"/>
-    <parameter name="model" description="Embedding model"/>
-    <parameter name="outputProperty" description="Output"/>
+    <parameter name="maxResults" description="Max results from the vector store"/>
+    <parameter name="minScore" description="Minimum score for a result"/>
+    <parameter name="filter" description="Metadata filter for the results"/>
+    <parameter name="responseVariable" description="Response variable name"/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.operations.EmbeddingGenerator"/>
+        <class name="org.wso2.carbon.esb.module.ai.operations.EmbeddingStoreRetriever"/>
     </sequence>
 </template>

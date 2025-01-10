@@ -18,8 +18,8 @@
 <template xmlns="http://ws.apache.org/ns/synapse" name="chat">
     <parameter name="system" description="System prompt"/>
     <parameter name="prompt" description="Prompt name"/>
-    <parameter name="output" description="Output property name"/>
-    <parameter name="outputType" description="Output type"/>
+    <parameter name="responseType" description="Response type"/>
+    <parameter name="responseVariable" description="Response variable name"/>
 
     <parameter name="modelName" description="Model name"/>
     <parameter name="temperature" description="Temperature"/>

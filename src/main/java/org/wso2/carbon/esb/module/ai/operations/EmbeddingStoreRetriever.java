@@ -32,7 +32,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         Integer maxResults = getMediatorParameter(mc, "maxResults", Integer.class, false);
         Double minScore = getMediatorParameter(mc, "minScore", Double.class, false);
         String filterString = getMediatorParameter(mc, "filter", String.class, true);
-        String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
+        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
         TextEmbedding textEmbedding = parseAndValidateInput(input);
         if (textEmbedding == null) {
@@ -48,7 +48,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
             Embedding embedding = new Embedding(textEmbedding.getEmbedding());
             List<EmbeddingMatch<TextSegment>> matches = vectorStore.search(embedding, maxResults, minScore, null);
             String jsonMatches = gson.toJson(matches);
-            mc.setProperty(outputProperty, jsonMatches);
+            mc.setProperty(responseVariable, jsonMatches);
         } catch (Exception e) {
             handleException("Failed to retrieve embedding", e, mc);
         }

@@ -43,11 +43,12 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "outputProperty",
-                    "displayName": "Output property",
+                    "name": "responseVariable",
+                    "displayName": "Response Variable Name",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
+                    "deriveResponseVariable": true,
                     "helpTip": "Define the output property"
                   }
                 }

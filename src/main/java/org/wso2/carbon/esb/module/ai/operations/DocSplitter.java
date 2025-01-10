@@ -29,7 +29,7 @@ public class DocSplitter extends AbstractAIMediator {
         String strategy = getMediatorParameter(mc, "strategy", String.class, false);
         Integer maxSegmentSize = getMediatorParameter(mc, "maxSegmentSize", Integer.class, true);
         Integer maxOverlapSize = getMediatorParameter(mc, "maxOverlapSize", Integer.class, true);
-        String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
+        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
         maxSegmentSize = (maxSegmentSize == null) ? 1000 : maxSegmentSize;
         maxOverlapSize = (maxOverlapSize == null) ? 200 : maxOverlapSize;
@@ -52,6 +52,6 @@ public class DocSplitter extends AbstractAIMediator {
         List<TextSegment> segments = Objects.requireNonNull(splitter).split(new Document(input));
 
         String jsonSegments = gson.toJson(segments);
-        mc.setProperty(outputProperty, jsonSegments);
+        mc.setProperty(responseVariable, jsonSegments);
     }
 }

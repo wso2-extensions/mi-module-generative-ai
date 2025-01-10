@@ -32,7 +32,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, "input", String.class, false);
         String model = getMediatorParameter(mc, "model", String.class, false);
-        String outputProperty = getMediatorParameter(mc, "outputProperty", String.class, false);
+        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
         String connectionName = getProperty(mc, "connectionName", String.class, false);
 
         List<TextSegment> inputs = parseAndValidateInput(input);
@@ -55,10 +55,10 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         // If input is a single string, return a single TextEmbedding object
         // Otherwise, return a JSON array of TextEmbedding objects
         if (textEmbeddings.size() == 1) {
-            mc.setProperty(outputProperty, gson.toJson(textEmbeddings.get(0)));
+            mc.setProperty(responseVariable, gson.toJson(textEmbeddings.get(0)));
             return;
         }
-        mc.setProperty(outputProperty, gson.toJson(textEmbeddings));
+        mc.setProperty(responseVariable, gson.toJson(textEmbeddings));
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {
