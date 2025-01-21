@@ -1,5 +1,6 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
+import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
@@ -34,7 +35,8 @@ public class DocParser extends AbstractAIMediator {
     enum PARSER {
         TEXT,
         PDF_BOX,
-        POI
+        POI,
+        HTML_TO_TEXT
     }
 
     @Override
@@ -44,7 +46,7 @@ public class DocParser extends AbstractAIMediator {
     @Override
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, "input", String.class, false);
-        String contentType = getMediatorParameter(mc, "contentType", String.class, false);
+        String contentType = getMediatorParameter(mc, "type", String.class, false);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
         PARSER parser = null;
@@ -56,6 +58,10 @@ public class DocParser extends AbstractAIMediator {
         switch (parser) {
             case TEXT:
                 docParser = new TextDocumentParser();
+                inputStream = new ByteArrayInputStream(input.getBytes());
+                break;
+            case HTML_TO_TEXT:
+                docParser = new HTMLToTextParser();
                 inputStream = new ByteArrayInputStream(input.getBytes());
                 break;
             case PDF_BOX:
@@ -70,15 +76,19 @@ public class DocParser extends AbstractAIMediator {
                 handleException("Unsupported content type: " + contentType, mc);
         }
 
-        String document = docParser.parse(inputStream).text();
-        mc.setProperty(responseVariable, document);
+        Document doc= docParser.parse(inputStream);
+        if (doc == null) {
+            handleException("Error parsing document", mc);
+        }
+        mc.setProperty(responseVariable, doc.text());
     }
 
     private PARSER determineParser(String contentType) {
         return switch (contentType.toLowerCase()) {
-            case "text", "json", "xml", "html", "markdown" -> PARSER.TEXT;
-            case "pdf" -> PARSER.PDF_BOX;
-            case "doc", "docx", "ppt", "pptx", "xls", "xlsx" -> PARSER.POI;
+            case "markdown-to-text" -> PARSER.TEXT;
+            case "html-to-text"-> PARSER.HTML_TO_TEXT;
+            case "pdf-to-text" -> PARSER.PDF_BOX;
+            case "doc-to-text", "docx-to-text", "ppt-to-text", "pptx-to-txt", "xls-to-text", "xlsx-to-text" -> PARSER.POI;
             default -> null;
         };
     }
@@ -89,7 +99,8 @@ public class DocParser extends AbstractAIMediator {
             handleException("Content type cannot be determined", mc);
         }
         return switch (payloadType.toString().toLowerCase()) {
-            case TEXT_TYPE, JSON_TYPE, XML_TYPE, HTML_TYPE, MARKDOWN_TYPE -> PARSER.TEXT;
+            case TEXT_TYPE, MARKDOWN_TYPE -> PARSER.TEXT;
+            case HTML_TYPE -> PARSER.HTML_TO_TEXT;
             case PDF_TYPE -> PARSER.PDF_BOX;
             case DOC_TYPE, DOCX_TYPE, PPT_TYPE, PPTX_TYPE, XLS_TYPE, XLSX_TYPE -> PARSER.POI;
             default -> null;

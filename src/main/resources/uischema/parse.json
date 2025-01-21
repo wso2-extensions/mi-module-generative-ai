@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "operationName": "parse",
   "title": "Load documents",
-  "help": "<h1>Define LLM prompts</h1><b>Define LLM prompts</b><br><br><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> More Help </a></li></ul>",
+  "help": "<h1>Parser</h1><ul><li><a href=\"https://ei.docs.wso2.com/en/latest/micro-integrator/references/connectors/file-connector/file-connector-config/\"> Docs </a></li></ul>",
   "elements": [
     {
       "type": "attributeGroup",
@@ -28,11 +28,11 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "contentType",
-                    "displayName": "Content Type",
+                    "name": "type",
+                    "displayName": "Type",
                     "inputType": "combo",
-                    "comboValues": ["auto", "pdf", "text", "html", "xml", "json", "markdown", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
-                    "defaultValue": "auto",
+                    "comboValues": ["auto", "pdf-to-text", "markdown-to-text", "html-to-text", "html-to-markdown", "doc-to-text", "docx-to-text", "xls-to-text", "xlsx-to-text", "ppt-to-text", "pptx-to-text"],
+                    "defaultValue": "pdf-to-text",
                     "required": "true",
                     "helpTip": "Select the content type of the input"
                   }
