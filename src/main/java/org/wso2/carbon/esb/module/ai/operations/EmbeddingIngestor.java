@@ -1,20 +1,31 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
-import com.google.gson.*;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Embedding ingestion operation
+ *
+ * Inputs:
+ * - input: JSON array of TextEmbedding objects
+ * - connectionName: Name of the connection to the vector store
+ * - responseVariable: Variable name to store the output
+ *
+ * Outputs:
+ * - SUCCESS: true or false
+ */
 public class EmbeddingIngestor extends AbstractAIMediator {
-
-    private static final Gson gson = new Gson();
 
     @Override
     public void initialize(MessageContext mc) {
@@ -38,18 +49,18 @@ public class EmbeddingIngestor extends AbstractAIMediator {
         } catch (Exception e) {
             handleException("Failed to ingest embedding", e, mc);
         } finally {
-            mc.setProperty(responseVariable, "true");
+            handleResponse(mc, responseVariable, null, null, Map.of("SUCCESS", "true"));
         }
     }
 
     private List<TextEmbedding> parseAndValidateInput(String input) {
         try {
             Type listType = new TypeToken<List<TextEmbedding>>() {}.getType();
-            List<TextEmbedding> textEmbeddings = gson.fromJson(input, listType);
+            List<TextEmbedding> textEmbeddings = Utils.fromJson(input, listType);
             return validateTextEmbeddings(textEmbeddings);
         } catch (JsonSyntaxException e) {
             try {
-                TextEmbedding singleEmbedding = gson.fromJson(input, TextEmbedding.class);
+                TextEmbedding singleEmbedding = Utils.fromJson(input, TextEmbedding.class);
                 List<TextEmbedding> textEmbeddings = new ArrayList<>();
                 textEmbeddings.add(singleEmbedding);
                 return validateTextEmbeddings(textEmbeddings);

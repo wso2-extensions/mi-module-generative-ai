@@ -16,8 +16,9 @@
    under the License.
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="prompt">
-    <parameter name="name" description="Prompt name"/>
     <parameter name="prompt" description="Define LLM prompts here"/>
+    <parameter name="responseVariable" description="Response variable name"/>
+    <parameter name="overwriteBody" description="Replace the Message Body in Message Context with the response of the operation."/>
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.operations.Prompt"/>
     </sequence>

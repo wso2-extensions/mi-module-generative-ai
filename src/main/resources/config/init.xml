@@ -68,29 +68,11 @@
 
 		<switch source="get-property('connectionType')">
 
-			<case regex="OPEN_AI">
-				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
-			</case>
-			<case regex="AZURE_OPEN_AI">
-				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
-			</case>
-			<case regex="ANTHROPIC">
-				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
-			</case>
-			<case regex="MISTRAL_AI">
+			<case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
 
-			<case regex="MI_VECTOR_STORE">
-				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
-			</case>
-			<case regex="CHROMA_DB">
-				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
-			</case>
-			<case regex="PINECONE">
-				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
-			</case>
-			<case regex="POSTGRE_SQL">
+			<case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|POSTGRE_SQL">
 				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
 			</case>
 

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Output Schema for prompt operation",
+  "description": "Output schema for the prompt operation in the connector.",
+  "properties": {
+    "payload": {
+      "type": "string",
+      "description": "Parsed prompt"
+    }
+  },
+  "required": [
+    "payload"
+  ],
+  "additionalProperties": false
+}

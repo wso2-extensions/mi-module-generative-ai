@@ -1,8 +1,14 @@
 package org.wso2.carbon.esb.module.ai;
 
+import com.google.gson.JsonParser;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.data.connector.ConnectorResponse;
+import org.apache.synapse.data.connector.DefaultConnectorResponse;
 import org.wso2.carbon.connector.core.AbstractConnector;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -78,5 +84,36 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             handleException(String.format("Property %s is not set", propertyName), messageContext);
         }
         return property;
+    }
+
+    protected  void handleResponse(MessageContext messageContext, String responseVariable, Object payload, Map<String, Object> headers, Map<String, Object> attributes) {
+        ConnectorResponse response = new DefaultConnectorResponse();
+        if (payload == null) {
+            // Empty json object
+            payload = Map.of();
+        }
+        if (headers == null) {
+            headers = Map.of();
+        }
+        if (attributes == null) {
+            attributes = Map.of();
+        }
+
+        Object output;
+        if (payload instanceof List) {
+            String jsonArray = Utils.toJson(payload);
+            output = JsonParser.parseString(jsonArray).getAsJsonArray();
+        } else if (payload instanceof String || payload instanceof Boolean || payload instanceof Long || payload instanceof Double) {
+            output = payload;
+        } else {
+            // Convert Java object to JSON string
+            String jsonString = Utils.toJson(payload);
+            output = JsonParser.parseString(jsonString).getAsJsonObject();
+        }
+
+        response.setPayload(output);
+        response.setHeaders(headers);
+        response.setAttributes(attributes);
+        messageContext.setVariable(responseVariable, response);
     }
 }

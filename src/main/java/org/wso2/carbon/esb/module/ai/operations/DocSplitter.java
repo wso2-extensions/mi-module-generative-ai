@@ -1,6 +1,5 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
-import com.google.gson.Gson;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.splitter.DocumentByRegexSplitter;
@@ -15,9 +14,20 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Document splitting operation
+ *
+ * Inputs:
+ * - input: String
+ * - strategy: Splitting strategy (Recursive, ByParagraph, BySentence)
+ * - maxSegmentSize: Maximum segment size
+ * - maxOverlapSize: Maximum overlap size
+ * - responseVariable: Variable name to store the output
+ *
+ * Outputs:
+ * - List of TextSegment objects
+ */
 public class DocSplitter extends AbstractAIMediator {
-
-    private static final Gson gson = new Gson();
 
     @Override
     public void initialize(MessageContext mc) {
@@ -50,8 +60,9 @@ public class DocSplitter extends AbstractAIMediator {
         }
 
         List<TextSegment> segments = Objects.requireNonNull(splitter).split(new Document(input));
-
-        String jsonSegments = gson.toJson(segments);
-        mc.setProperty(responseVariable, jsonSegments);
+        if (segments == null) {
+            handleException("Failed to split the document", mc);
+        }
+        handleResponse(mc, responseVariable, segments, null, null);
     }
 }

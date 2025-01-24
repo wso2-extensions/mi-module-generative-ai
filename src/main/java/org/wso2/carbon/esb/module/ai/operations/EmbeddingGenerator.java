@@ -1,8 +1,5 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import dev.langchain4j.data.document.Metadata;
@@ -14,15 +11,26 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class EmbeddingGenerator extends AbstractAIMediator {
 
-    private static final Gson gson = new Gson();
+/**
+ *  Embedding generation operation
+ *
+ *  Inputs:
+ *  - input: String or JSON array of Strings objects
+ *  - model: Name of the embedding model
+ *  - responseVariable: Variable name to store the output
+ *  - connectionName: Name of the connection to the LLM
+ *
+ *  Outputs:
+ *  - TextEmbedding object or JSON array of TextEmbedding objects
+ */
+public class EmbeddingGenerator extends AbstractAIMediator {
 
     @Override
     public void initialize(MessageContext mc) {
@@ -30,6 +38,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
+
         String input = getMediatorParameter(mc, "input", String.class, false);
         String model = getMediatorParameter(mc, "model", String.class, false);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
@@ -46,19 +55,14 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         try {
             Response<List<Embedding>> embedding = embeddingModel.embedAll(inputs);
             for (int i = 0; i < inputs.size(); i++) {
-                textEmbeddings.add(new TextEmbedding(inputs.get(i).text(), embedding.content().get(i).vector(), new Metadata()));
+                textEmbeddings.add(new TextEmbedding(inputs.get(i).text(), embedding.content().get(i).vector(), inputs.get(i).metadata()));
             }
         } catch (Exception e) {
             handleException("Failed to generate embedding", e, mc);
         }
 
-        // If input is a single string, return a single TextEmbedding object
-        // Otherwise, return a JSON array of TextEmbedding objects
-        if (textEmbeddings.size() == 1) {
-            mc.setProperty(responseVariable, gson.toJson(textEmbeddings.get(0)));
-            return;
-        }
-        mc.setProperty(responseVariable, gson.toJson(textEmbeddings));
+        // If multiple inputs were provided, return a JSON array of TextEmbedding objects
+        handleResponse(mc, responseVariable, textEmbeddings, null, null);
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {
@@ -66,7 +70,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         try {
             // Try to parse input as a JSON array of TextSegment objects
             Type listType = new TypeToken<List<TextSegment>>() {}.getType();
-            textSegments = gson.fromJson(input, listType);
+            textSegments = Utils.fromJson(input, listType);
 
             // If parsing as JSON array fails, treat input as a single string
             if (textSegments == null || textSegments.isEmpty()) {

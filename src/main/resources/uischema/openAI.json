@@ -36,6 +36,17 @@
                     "required": "true",
                     "helpTip": "OpenAI Key"
                   }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "baseUrl",
+                    "displayName": "Base url",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "https://api.openai.com/v1",
+                    "required": "false",
+                    "helpTip": "Base url"
+                  }
                 }
               ]
             }

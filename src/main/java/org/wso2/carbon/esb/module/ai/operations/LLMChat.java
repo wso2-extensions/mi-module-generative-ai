@@ -34,6 +34,7 @@ import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -41,8 +42,26 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * LLM Chat mediator
- * @author Isuru Wijesiri
+ * Language model chat operation
+ *
+ * Inputs:
+ * - modelName: Name of the language model
+ * - temperature: Sampling temperature
+ * - maxTokens: Maximum tokens to generate
+ * - topP: Top P value
+ * - frequencyPenalty: Frequency penalty
+ * - seed: Random seed
+ * - system: System message
+ * - prompt: User message
+ * - knowledge: JSON array of TextSegment objects
+ * - history: JSON array of ChatMessage objects
+ * - maxHistory: Maximum history size
+ * - responseVariable: Variable name to store the output
+ * - responseType: Output type (String, Integer, Float, Boolean)
+ * - connectionName: Name of the connection to the LLM
+ *
+ * Outputs:
+ * - Response based on the output type
  */
 public class LLMChat extends AbstractAIMediator {
 
@@ -65,14 +84,14 @@ public class LLMChat extends AbstractAIMediator {
     private Integer seed;
     private String system;
     private String responseVariable;
-    private String responseType;
+    private String outputType;
     private String connectionName;
 
     @Override
     public void initialize(MessageContext mc) {
         // Load mediator configurations from template
         responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
-        responseType = getMediatorParameter(mc, "responseType", String.class, false);
+        outputType = getMediatorParameter(mc, "outputType", String.class, false);
 
         // Load configurations from template and message context
         modelName = getMediatorParameter(mc, "modelName", String.class, false);
@@ -125,9 +144,9 @@ public class LLMChat extends AbstractAIMediator {
                 .build();
 
         try {
-            Object answer = getChatResponse(responseType, prompt, knowledgeRetriever, chatMemory);
+            Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
             if (answer != null) {
-                mc.setProperty(responseVariable, gson.toJson(answer));
+                handleResponse(mc, responseVariable, answer, null, null);
             } else {
                 log.error("Invalid output type");
                 handleException("Invalid output type", mc);
@@ -141,7 +160,7 @@ public class LLMChat extends AbstractAIMediator {
     private List<EmbeddingMatch<TextSegment>> parseAndValidateKnowledge(String knowledge) {
         try {
             Type listType = new TypeToken<List<EmbeddingMatch<TextSegment>>>() {}.getType();
-            List<EmbeddingMatch<TextSegment>> embeddingMatches = gson.fromJson(knowledge, listType);
+            List<EmbeddingMatch<TextSegment>> embeddingMatches = Utils.fromJson(knowledge, listType);
 
             // Validate the parsed list
             if (embeddingMatches != null) {

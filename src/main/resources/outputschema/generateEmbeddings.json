@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Output Schema for parse operation",
+  "description": "Output schema for the parse operation in the connector.",
+  "properties": {
+    "payload": {
+      "type": "array",
+      "description": "Array of TextEmbeddings",
+      "items": {
+        "type": "object",
+        "description": "TextEmbedding",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "File chunk"
+          },
+          "embedding": {
+            "type": "array",
+            "description": "Embedding",
+            "items": {
+              "type": "number"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata",
+            "properties": {
+              "index": {
+                "type": "integer",
+                "description": "Chunk number"
+              }
+            },
+            "required": [
+              "index"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "text",
+          "embedding",
+          "metadata"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "payload"
+  ],
+  "additionalProperties": false
+}

@@ -18,6 +18,9 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.util.InlineExpressionUtil;
+import org.aspectj.bridge.IMessageContext;
+import org.jaxen.JaxenException;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
 /**
@@ -26,18 +29,20 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
  */
 public class Prompt extends AbstractAIMediator {
 
-    String promptName;
-    String prompt;
+    @Override
+    public void initialize(MessageContext mc) {}
 
     @Override
-    public void initialize(MessageContext mc) {
-        // Load mediator configurations
-        promptName = getMediatorParameter(mc, "name", String.class, false);
-        prompt = getMediatorParameter(mc, "prompt", String.class, false);
-    }
+    public void execute(MessageContext mc) {
+        String prompt = getMediatorParameter(mc, "prompt", String.class, false);
+        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
-    @Override
-    public void execute(MessageContext mc){
-        mc.setProperty(promptName, prompt);
+        try {
+            String parsedPrompt = InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, prompt);
+            handleResponse(mc, responseVariable, parsedPrompt, null, null);
+        } catch (JaxenException e) {
+            handleException("Failed to parse prompt", e, mc);
+        }
+        // mc.setProperty(responseVariable, prompt);
     }
 }

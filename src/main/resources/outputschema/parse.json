@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Output Schema for parse operation",
+  "description": "Output schema for the parse operation in the connector.",
+  "properties": {
+    "payload": {
+      "type": "string",
+      "description": "Parsed file"
+      }
+    },
+  "required": [
+    "payload"
+  ],
+  "additionalProperties": false
+}

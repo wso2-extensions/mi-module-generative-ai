@@ -12,6 +12,17 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
 
+/**
+ * Parsing operation
+ *
+ * Inputs:
+ * - input: String or JSON array of String objects
+ * - parserType: Type of the parser
+ * - responseVariable: Variable name to store the output
+ *
+ * Outputs:
+ * - Parsed text
+ */
 public class DocParser extends AbstractAIMediator {
 
     // Text content types
@@ -40,17 +51,17 @@ public class DocParser extends AbstractAIMediator {
     }
 
     @Override
-    public void initialize(MessageContext mc) {
-    }
+    public void initialize(MessageContext mc) {}
 
     @Override
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, "input", String.class, false);
-        String contentType = getMediatorParameter(mc, "type", String.class, false);
+        String parserType = getMediatorParameter(mc, "type", String.class, false);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
         PARSER parser = null;
-        parser = contentType.equalsIgnoreCase("auto") ? autoDetectParser(mc) : determineParser(contentType);
+        parser = parserType.equalsIgnoreCase("auto") ? autoDetectParser(mc) : determineParser(parserType);
+
         input = input.equalsIgnoreCase("payload") ? mc.getEnvelope().getBody().getFirstElement().getText() : input;
 
         DocumentParser docParser = null;
@@ -73,14 +84,15 @@ public class DocParser extends AbstractAIMediator {
                 inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
                 break;
             default:
-                handleException("Unsupported content type: " + contentType, mc);
+                handleException("Unsupported content type: " + parserType, mc);
         }
 
         Document doc= docParser.parse(inputStream);
         if (doc == null) {
             handleException("Error parsing document", mc);
         }
-        mc.setProperty(responseVariable, doc.text());
+
+        handleResponse(mc, responseVariable, doc.text(), null, null);
     }
 
     private PARSER determineParser(String contentType) {

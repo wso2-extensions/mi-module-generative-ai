@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Output Schema for split operation",
+  "description": "Output schema for the split operation in the connector.",
+  "properties": {
+    "payload": {
+      "type": "array",
+      "description": "Array of TextSegments",
+      "items": {
+        "type": "object",
+        "description": "TextSegment",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "File chunk"
+          },
+          "metadata": {
+            "type": "Object",
+            "description": "Metadata",
+            "properties": {
+              "index": {
+                "type": "integer",
+                "description": "Chunk number"
+              }
+            },
+            "required": [
+              "index"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "text",
+          "metadata"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "payload"
+  ],
+  "additionalProperties": false
+}

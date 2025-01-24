@@ -39,7 +39,15 @@
                     "required": "true",
                     "helpTip": "An array of JSON objects in the format of {\"text\":\"test\",\"embedding\":\"[array of numbers]\"}"
                   }
-                },
+                }
+              ]
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Response",
+              "elements": [
                 {
                   "type": "attribute",
                   "value": {
@@ -49,7 +57,18 @@
                     "defaultValue": "",
                     "required": "true",
                     "deriveResponseVariable": true,
-                    "helpTip": "Define the output property"
+                    "helpTip": "Define the response variable"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "overwriteBody",
+                    "displayName": "Overwrite Message Body",
+                    "inputType": "checkbox",
+                    "defaultValue": "false",
+                    "helpTip": "Replace the Message Body in Message Context with the response of the operation (This will remove the payload from the above variable).",
+                    "required": "false"
                   }
                 }
               ]

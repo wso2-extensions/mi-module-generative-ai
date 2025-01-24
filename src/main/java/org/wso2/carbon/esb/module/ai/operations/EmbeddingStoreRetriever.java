@@ -1,6 +1,5 @@
 package org.wso2.carbon.esb.module.ai.operations;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
@@ -10,16 +9,29 @@ import dev.langchain4j.store.embedding.filter.FilterParser;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.utils.StringFilterParser;
-import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.util.List;
 
+/**
+ * Embedding store retrieval operation
+ *
+ * Inputs:
+ * - connectionName: Name of the connection to the vector store
+ * - input: TextEmbedding object
+ * - maxResults: Maximum number of results to return
+ * - minScore: Minimum score for the results
+ * - filter: Filter string
+ * - responseVariable: Variable name to store the output
+ *
+ * Outputs:
+ * - List of EmbeddingMatch objects
+ */
 public class EmbeddingStoreRetriever extends AbstractAIMediator {
 
     FilterParser filterParser = new StringFilterParser();
-    private static final Gson gson = new Gson();
 
     @Override
     public void initialize(MessageContext mc) {
@@ -34,9 +46,9 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         String filterString = getMediatorParameter(mc, "filter", String.class, true);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
-        TextEmbedding textEmbedding = parseAndValidateInput(input);
-        if (textEmbedding == null) {
-            handleException("Invalid input format. Expected a JSON object of TextEmbedding.", mc);
+        Embedding embedding = parseAndValidateInput(input);
+        if (embedding == null) {
+            handleException("Invalid input format. Expected a vector ( Array of numbers )", mc);
             return;
         }
 
@@ -45,25 +57,22 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
 
         VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
         try {
-            Embedding embedding = new Embedding(textEmbedding.getEmbedding());
             List<EmbeddingMatch<TextSegment>> matches = vectorStore.search(embedding, maxResults, minScore, null);
-            String jsonMatches = gson.toJson(matches);
-            mc.setProperty(responseVariable, jsonMatches);
+            handleResponse(mc, responseVariable, matches, null, null);
         } catch (Exception e) {
             handleException("Failed to retrieve embedding", e, mc);
         }
     }
 
-    private TextEmbedding parseAndValidateInput(String input) {
+    private Embedding parseAndValidateInput(String input) {
         try {
-            TextEmbedding textEmbedding = gson.fromJson(input, TextEmbedding.class);
-            if (textEmbedding == null || textEmbedding.getEmbedding() == null || textEmbedding.getEmbedding().length == 0) {
+            float[] embeddingArray = Utils.fromJson(input, float[].class);
+            if (embeddingArray == null || embeddingArray.length == 0) {
                 return null;
             }
-            return textEmbedding;
+            return new Embedding(embeddingArray);
         } catch (JsonSyntaxException e) {
             return null;
         }
     }
 }
-
