@@ -16,7 +16,7 @@ import java.util.Base64;
  * Parsing operation
  *
  * Inputs:
- * - input: String or JSON array of String objects
+ * - input: String
  * - parserType: Type of the parser
  * - responseVariable: Variable name to store the output
  *
@@ -63,7 +63,7 @@ public class DocParser extends AbstractAIMediator {
         parser = parserType.equalsIgnoreCase("auto") ? autoDetectParser(mc) : determineParser(parserType);
 
         input = input.equalsIgnoreCase("payload") ? mc.getEnvelope().getBody().getFirstElement().getText() : input;
-
+        
         DocumentParser docParser = null;
         ByteArrayInputStream inputStream = null;
         switch (parser) {

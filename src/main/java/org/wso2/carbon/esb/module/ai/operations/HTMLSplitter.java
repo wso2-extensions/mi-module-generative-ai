@@ -17,5 +17,4 @@ public class HTMLSplitter implements DocumentSplitter {
     public List<TextSegment> split(Document document) {
         return List.of();
     }
-
 }

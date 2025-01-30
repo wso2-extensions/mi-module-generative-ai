@@ -34,8 +34,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
     FilterParser filterParser = new StringFilterParser();
 
     @Override
-    public void initialize(MessageContext mc) {
-    }
+    public void initialize(MessageContext mc) {}
 
     @Override
     public void execute(MessageContext mc) {

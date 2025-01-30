@@ -33,8 +33,7 @@ import java.util.List;
 public class EmbeddingGenerator extends AbstractAIMediator {
 
     @Override
-    public void initialize(MessageContext mc) {
-    }
+    public void initialize(MessageContext mc) {}
 
     @Override
     public void execute(MessageContext mc) {

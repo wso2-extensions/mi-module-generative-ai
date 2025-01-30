@@ -28,8 +28,7 @@ import java.util.Map;
 public class EmbeddingIngestor extends AbstractAIMediator {
 
     @Override
-    public void initialize(MessageContext mc) {
-    }
+    public void initialize(MessageContext mc) {}
 
     @Override
     public void execute(MessageContext mc) {
