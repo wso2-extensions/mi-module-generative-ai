@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.esb.module</groupId>
     <artifactId>org.wso2.carbon.esb.module.ai</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-alpha1</version>
     <packaging>jar</packaging>
     <name>Low Code AI app builder module</name>
     <url>https://wso2.com/</url>
@@ -43,10 +43,13 @@
         <bouncycastle.version>1.55</bouncycastle.version>
         <rampart.apache.version>1.6.1-wso2v18</rampart.apache.version>
         <rampart.wso2.version>1.6.1.wso2v18</rampart.wso2.version>
-        <langchain4j.version>0.35.0</langchain4j.version>
+        <langchain4j.version>1.0.0-alpha1</langchain4j.version>
         <!-- Use the same Postgres version as Langchain4j-->
-        <postgresql.version>42.7.3</postgresql.version>
+        <postgresql.version>42.7.4</postgresql.version>
         <module.core.version>1.0.2</module.core.version>
+        <mi.registry.version>4.3.0</mi.registry.version>
+        <jsoup.version>1.18.3</jsoup.version>
+        <flexmark.version>0.64.8</flexmark.version>
         <skip-tests>true</skip-tests>
     </properties>
 
@@ -252,17 +255,17 @@
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.registry</artifactId>
-            <version>4.2.0</version>
+            <version>${mi.registry.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.18.3</version>
+            <version>${jsoup.version}</version>
         </dependency>
         <dependency>
             <groupId>com.vladsch.flexmark</groupId>
             <artifactId>flexmark-all</artifactId>
-            <version>0.64.8</version>
+            <version>${flexmark.version}</version>
         </dependency>
     </dependencies>
     <build>
