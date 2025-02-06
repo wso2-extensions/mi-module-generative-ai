@@ -228,7 +228,10 @@ public class LLMChat extends AbstractAIMediator {
                 .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT)
                 .chatMemory(chatMemory);
         if (knowledge != null) {
-            return service.contentRetriever(knowledge).build();
+            service = service.contentRetriever(knowledge);
+        }
+        if (chatMemory != null) {
+            service = service.chatMemory(chatMemory);
         }
         return service.build();
     }
