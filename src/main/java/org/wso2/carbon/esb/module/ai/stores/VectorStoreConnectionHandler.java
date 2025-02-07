@@ -30,7 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VectorStoreConnectionHandler {
 
     private final static ConcurrentHashMap<String, ConnectionParams> connections = new ConcurrentHashMap<>();
-    private final static ConcurrentHashMap<String, VectorStore> vectorStores = new ConcurrentHashMap<>();
 
     public static void addConnection(String connectionName, ConnectionParams connectionParams) {
         connections.computeIfAbsent(connectionName, k -> connectionParams);
@@ -39,65 +38,58 @@ public class VectorStoreConnectionHandler {
     public static VectorStore getVectorStore(String connectionName, MessageContext mc) throws VectorStoreException {
         VectorStore vectorStore = null;
         ConnectionParams connectionParams = connections.get(connectionName);
-        String key = connectionName + "|" + connectionParams.getConnectionType();
-        switch (connectionParams.getConnectionType()) {
 
+        switch (connectionParams.getConnectionType()) {
             case "MI_VECTOR_STORE":
                 Boolean persistence = connectionParams.getConnectionProperty("persistence").equals("Enable");
-                vectorStore = vectorStores.computeIfAbsent(key, k -> {
-                    MicroIntegratorRegistry microIntegratorRegistry =
-                            (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
-                    return new MIVectorStore(connectionName, persistence, microIntegratorRegistry);
-                });
+                MicroIntegratorRegistry microIntegratorRegistry = (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
+                vectorStore = new MIVectorStore(connectionName, persistence, microIntegratorRegistry);
                 break;
 
             case "CHROMA_DB":
-                vectorStore = vectorStores.computeIfAbsent(key, k -> new ChromaDB(
+                vectorStore = new ChromaDB(
                         connectionParams.getConnectionProperty("url"),
-                        connectionParams.getConnectionProperty("collection")));
+                        connectionParams.getConnectionProperty("collection")
+                );
                 break;
 
             case "PINECONE":
-                vectorStore = vectorStores.computeIfAbsent(key, k -> {
-                    try {
-                        return new Pinecone(
-                                connectionParams.getConnectionProperty("apiKey"),
-                                connectionParams.getConnectionProperty("namespace"),
-                                connectionParams.getConnectionProperty("cloud"),
-                                connectionParams.getConnectionProperty("region"),
-                                connectionParams.getConnectionProperty("index"),
-                                Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
-                    } catch (Exception e) {
-                        throw new VectorStoreException(Errors.PINECONE_CONNECTION_ERROR, e);
-                    }
-                });
+                try {
+                    vectorStore = new Pinecone(
+                            connectionParams.getConnectionProperty("apiKey"),
+                            connectionParams.getConnectionProperty("namespace"),
+                            connectionParams.getConnectionProperty("cloud"),
+                            connectionParams.getConnectionProperty("region"),
+                            connectionParams.getConnectionProperty("index"),
+                            Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
+                } catch (Exception e) {
+                    throw new VectorStoreException(Errors.PINECONE_CONNECTION_ERROR, e);
+                }
                 break;
 
             case "POSTGRE_SQL":
-                vectorStore = vectorStores.computeIfAbsent(key, k -> {
-                    try {
-                        boolean status = PGVector.testConnection(
-                                connectionParams.getConnectionProperty("host"),
-                                Integer.parseInt(connectionParams.getConnectionProperty("port")),
-                                connectionParams.getConnectionProperty("database"),
-                                connectionParams.getConnectionProperty("user"),
-                                connectionParams.getConnectionProperty("password"));
-                        if (!status) {
-                            throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR);
-                        }
-
-                        return new PGVector(
-                                connectionParams.getConnectionProperty("host"),
-                                connectionParams.getConnectionProperty("port"),
-                                connectionParams.getConnectionProperty("database"),
-                                connectionParams.getConnectionProperty("user"),
-                                connectionParams.getConnectionProperty("password"),
-                                connectionParams.getConnectionProperty("table"),
-                                Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
-                    } catch (Exception e) {
-                        throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR, e);
+                try {
+                    boolean status = PGVector.testConnection(
+                            connectionParams.getConnectionProperty("host"),
+                            Integer.parseInt(connectionParams.getConnectionProperty("port")),
+                            connectionParams.getConnectionProperty("database"),
+                            connectionParams.getConnectionProperty("user"),
+                            connectionParams.getConnectionProperty("password"));
+                    if (!status) {
+                        throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR);
                     }
-                });
+
+                    vectorStore = new PGVector(
+                            connectionParams.getConnectionProperty("host"),
+                            connectionParams.getConnectionProperty("port"),
+                            connectionParams.getConnectionProperty("database"),
+                            connectionParams.getConnectionProperty("user"),
+                            connectionParams.getConnectionProperty("password"),
+                            connectionParams.getConnectionProperty("table"),
+                            Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
+                } catch (Exception e) {
+                    throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR, e);
+                }
                 break;
 
             default:
