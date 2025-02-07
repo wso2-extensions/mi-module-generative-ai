@@ -79,6 +79,6 @@ public class DocSplitter extends AbstractAIMediator {
         if (segments == null) {
             handleException("Failed to split the document", mc);
         }
-        handleResponse(mc, responseVariable, overwriteBody, segments, null, null);
+        handleConnectorResponse(mc, responseVariable, overwriteBody, segments, null, null);
     }
 }

@@ -20,7 +20,10 @@ package org.wso2.carbon.esb.module.ai.stores;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
+import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.connections.ConnectionParams;
+import org.wso2.carbon.esb.module.ai.exception.VectorStoreException;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,11 +36,12 @@ public class VectorStoreConnectionHandler {
         connections.computeIfAbsent(connectionName, k -> connectionParams);
     }
 
-    public static VectorStore getVectorStore(String connectionName, MessageContext mc) {
+    public static VectorStore getVectorStore(String connectionName, MessageContext mc) throws VectorStoreException {
         VectorStore vectorStore = null;
         ConnectionParams connectionParams = connections.get(connectionName);
         String key = connectionName + "|" + connectionParams.getConnectionType();
         switch (connectionParams.getConnectionType()) {
+
             case "MI_VECTOR_STORE":
                 Boolean persistence = connectionParams.getConnectionProperty("persistence").equals("Enable");
                 vectorStore = vectorStores.computeIfAbsent(key, k -> {
@@ -46,20 +50,29 @@ public class VectorStoreConnectionHandler {
                     return new MIVectorStore(connectionName, persistence, microIntegratorRegistry);
                 });
                 break;
+
             case "CHROMA_DB":
                 vectorStore = vectorStores.computeIfAbsent(key, k -> new ChromaDB(
                         connectionParams.getConnectionProperty("url"),
                         connectionParams.getConnectionProperty("collection")));
                 break;
+
             case "PINECONE":
-                vectorStore = vectorStores.computeIfAbsent(key, k -> new Pinecone(
-                        connectionParams.getConnectionProperty("apiKey"),
-                        connectionParams.getConnectionProperty("namespace"),
-                        connectionParams.getConnectionProperty("cloud"),
-                        connectionParams.getConnectionProperty("region"),
-                        connectionParams.getConnectionProperty("index"),
-                        Integer.parseInt(connectionParams.getConnectionProperty("dimension"))));
+                vectorStore = vectorStores.computeIfAbsent(key, k -> {
+                    try {
+                        return new Pinecone(
+                                connectionParams.getConnectionProperty("apiKey"),
+                                connectionParams.getConnectionProperty("namespace"),
+                                connectionParams.getConnectionProperty("cloud"),
+                                connectionParams.getConnectionProperty("region"),
+                                connectionParams.getConnectionProperty("index"),
+                                Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
+                    } catch (Exception e) {
+                        throw new VectorStoreException(Errors.PINECONE_CONNECTION_ERROR, e);
+                    }
+                });
                 break;
+
             case "POSTGRE_SQL":
                 vectorStore = vectorStores.computeIfAbsent(key, k -> {
                     try {
@@ -70,7 +83,7 @@ public class VectorStoreConnectionHandler {
                                 connectionParams.getConnectionProperty("user"),
                                 connectionParams.getConnectionProperty("password"));
                         if (!status) {
-                            throw new SynapseException("Error connecting to PGVector");
+                            throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR);
                         }
 
                         return new PGVector(
@@ -82,10 +95,11 @@ public class VectorStoreConnectionHandler {
                                 connectionParams.getConnectionProperty("table"),
                                 Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
                     } catch (Exception e) {
-                        throw new SynapseException("Error creating PGVector connection", e);
+                        throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR, e);
                     }
                 });
                 break;
+
             default:
                 break;
         }

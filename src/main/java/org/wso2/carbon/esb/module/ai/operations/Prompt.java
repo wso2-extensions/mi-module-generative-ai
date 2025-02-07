@@ -40,7 +40,7 @@ public class Prompt extends AbstractAIMediator {
 
         try {
             String parsedPrompt = InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, prompt);
-            handleResponse(mc, responseVariable, overwriteBody, parsedPrompt, null, null);
+            handleConnectorResponse(mc, responseVariable, overwriteBody, parsedPrompt, null, null);
         } catch (JaxenException e) {
             handleException("Failed to parse prompt", e, mc);
         }

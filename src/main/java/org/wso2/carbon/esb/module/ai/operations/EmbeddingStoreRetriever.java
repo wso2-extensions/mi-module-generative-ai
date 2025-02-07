@@ -26,6 +26,8 @@ import dev.langchain4j.store.embedding.filter.Filter;
 import dev.langchain4j.store.embedding.filter.FilterParser;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
+import org.wso2.carbon.esb.module.ai.exception.VectorStoreException;
 import org.wso2.carbon.esb.module.ai.utils.StringFilterParser;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
@@ -73,13 +75,16 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         // TODO: Implement filter parsing
         Filter filter = null;
 
-        VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
+        List<EmbeddingMatch<TextSegment>> matches = List.of();
         try {
-            List<EmbeddingMatch<TextSegment>> matches = vectorStore.search(embedding, maxResults, minScore, null);
-            handleResponse(mc, responseVariable, overwriteBody, matches, null, null);
+            VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
+            matches = vectorStore.search(embedding, maxResults, minScore, filter);
+        } catch (VectorStoreException e) {
+            handleConnectorException(e.getError(), mc, e);
         } catch (Exception e) {
-            handleException("Failed to retrieve embedding", e, mc);
+            handleConnectorException(Errors.EMBEDDING_RETRIEVAL_ERROR, mc, e);
         }
+        handleConnectorResponse(mc, responseVariable, overwriteBody, matches, null, null);
     }
 
     private Embedding parseAndValidateInput(String input) {

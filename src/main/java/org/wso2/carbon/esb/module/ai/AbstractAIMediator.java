@@ -21,6 +21,7 @@ package org.wso2.carbon.esb.module.ai;
 import com.google.gson.JsonParser;
 import org.apache.axis2.AxisFault;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.data.connector.ConnectorResponse;
@@ -108,7 +109,7 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         }
     }
 
-    protected  void handleResponse(
+    protected  void handleConnectorResponse(
             MessageContext messageContext, String responseVariable, Boolean overwriteBody, Object payload,
             Map<String, Object> headers, Map<String, Object> attributes) {
 
@@ -151,5 +152,13 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         response.setHeaders(headers);
         response.setAttributes(attributes);
         messageContext.setVariable(responseVariable, response);
+    }
+
+    public void handleConnectorException(Errors code, MessageContext mc, Throwable e) {
+        this.log.error(code.getMessage(), e);
+
+        mc.setProperty("ERROR_CODE", code.getCode());
+        mc.setProperty("ERROR_MESSAGE", code.getMessage());
+        throw new SynapseException(code.getMessage(), e);
     }
 }

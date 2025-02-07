@@ -148,7 +148,7 @@ public class LLMChat extends AbstractAIMediator {
         try {
             Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
             if (answer != null) {
-                handleResponse(mc, responseVariable, overwriteBody, answer, null, null);
+                handleConnectorResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {
                 log.error("Invalid output type");
                 handleException("Invalid output type", mc);

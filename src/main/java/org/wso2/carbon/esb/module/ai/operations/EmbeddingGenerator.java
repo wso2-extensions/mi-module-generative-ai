@@ -79,7 +79,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         }
 
         // If multiple inputs were provided, return a JSON array of TextEmbedding objects
-        handleResponse(mc, responseVariable, overwriteBody, textEmbeddings, null, null);
+        handleConnectorResponse(mc, responseVariable, overwriteBody, textEmbeddings, null, null);
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {

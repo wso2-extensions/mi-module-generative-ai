@@ -22,6 +22,8 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
+import org.wso2.carbon.esb.module.ai.exception.VectorStoreException;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
@@ -59,13 +61,15 @@ public class EmbeddingIngestor extends AbstractAIMediator {
             return;
         }
 
-        VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
         try {
+            VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
             vectorStore.add(textEmbeddings);
+        } catch (VectorStoreException e) {
+            handleConnectorException(e.getError(), mc, e);
         } catch (Exception e) {
-            handleException("Failed to ingest embedding", e, mc);
+            handleConnectorException(Errors.EMBEDDING_INJECTION_ERROR, mc, e);
         } finally {
-            handleResponse(mc, responseVariable, overwriteBody, null, null, Map.of("SUCCESS", "true"));
+            handleConnectorResponse(mc, responseVariable, overwriteBody, null, null, Map.of("SUCCESS", "true"));
         }
     }
 
