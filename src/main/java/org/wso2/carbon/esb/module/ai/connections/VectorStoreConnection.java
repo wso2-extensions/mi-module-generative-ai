@@ -23,56 +23,43 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class VectorStoreConnection extends AbstractConnector implements ManagedLifecycle {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        String connectionType = messageContext.getProperty("connectionType").toString();
-        String connectionName = messageContext.getProperty("connectionName").toString();
-
-        String persistence = messageContext.getProperty("persistence") != null ? messageContext.getProperty("persistence").toString() : null;
-        String url = messageContext.getProperty("url") != null ? messageContext.getProperty("url").toString() : null;
-        String collection = messageContext.getProperty("collection") != null ? messageContext.getProperty("collection").toString() : null;
-
-        String apiKey = messageContext.getProperty("apiKey") != null ? messageContext.getProperty("apiKey").toString() : null;
-        String cloud = messageContext.getProperty("cloud") != null ? messageContext.getProperty("cloud").toString() : null;
-        String region = messageContext.getProperty("region") != null ? messageContext.getProperty("region").toString() : null;
-        String index = messageContext.getProperty("index") != null ? messageContext.getProperty("index").toString() : null;
-        String namespace = messageContext.getProperty("namespace") != null ? messageContext.getProperty("namespace").toString() : null;
-        String dimension = messageContext.getProperty("dimension") != null ? messageContext.getProperty("dimension").toString() : null;
-
-        String host = messageContext.getProperty("host") != null ? messageContext.getProperty("host").toString() : null;
-        String port = messageContext.getProperty("port") != null ? messageContext.getProperty("port").toString() : null;
-        String database = messageContext.getProperty("database") != null ? messageContext.getProperty("database").toString() : null;
-        String user = messageContext.getProperty("user") != null ? messageContext.getProperty("user").toString() : "";
-        String password = messageContext.getProperty("password") != null ? messageContext.getProperty("password").toString() : null;
-        String table = messageContext.getProperty("table") != null ? messageContext.getProperty("table").toString() : null;
+        String connectionType = getProperty(messageContext, Constants.CONNECTION_TYPE);
+        String connectionName = getProperty(messageContext, Constants.CONNECTION_NAME);
 
         HashMap<String, String> connectionProperties = new HashMap<>();
-        connectionProperties.put("persistence", persistence);
-        connectionProperties.put("url", url);
-        connectionProperties.put("collection", collection);
+        connectionProperties.put(Constants.PERSISTENCE, getProperty(messageContext, Constants.PERSISTENCE));
+        connectionProperties.put(Constants.URL, getProperty(messageContext, Constants.URL));
+        connectionProperties.put(Constants.COLLECTION, getProperty(messageContext, Constants.COLLECTION));
 
-        connectionProperties.put("apiKey", apiKey);
-        connectionProperties.put("cloud", cloud);
-        connectionProperties.put("region", region);
-        connectionProperties.put("index", index);
-        connectionProperties.put("namespace", namespace);
-        connectionProperties.put("dimension", dimension);
+        connectionProperties.put(Constants.API_KEY, getProperty(messageContext, Constants.API_KEY));
+        connectionProperties.put(Constants.CLOUD, getProperty(messageContext, Constants.CLOUD));
+        connectionProperties.put(Constants.REGION, getProperty(messageContext, Constants.REGION));
+        connectionProperties.put(Constants.INDEX, getProperty(messageContext, Constants.INDEX));
+        connectionProperties.put(Constants.NAMESPACE, getProperty(messageContext, Constants.NAMESPACE));
+        connectionProperties.put(Constants.DIMENSION, getProperty(messageContext, Constants.DIMENSION));
 
-        connectionProperties.put("host", host);
-        connectionProperties.put("port", port);
-        connectionProperties.put("database", database);
-        connectionProperties.put("user", user);
-        connectionProperties.put("password", password);
-        connectionProperties.put("table", table);
+        connectionProperties.put(Constants.HOST, getProperty(messageContext, Constants.HOST));
+        connectionProperties.put(Constants.PORT, getProperty(messageContext, Constants.PORT));
+        connectionProperties.put(Constants.DATABASE, getProperty(messageContext, Constants.DATABASE));
+        connectionProperties.put(Constants.USER, getProperty(messageContext, Constants.USER));
+        connectionProperties.put(Constants.PASSWORD, getProperty(messageContext, Constants.PASSWORD));
+        connectionProperties.put(Constants.TABLE, getProperty(messageContext, Constants.TABLE));
 
         VectorStoreConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));
+
+        // Clear the apiKey property for security reasons
+        messageContext.setProperty(Constants.API_KEY, null);
     }
 
     @Override
@@ -81,5 +68,9 @@ public class VectorStoreConnection extends AbstractConnector implements ManagedL
 
     @Override
     public void destroy() {
+    }
+
+    public String getProperty(MessageContext messageContext, String key) {
+        return messageContext.getProperty(key) != null ? messageContext.getProperty(key).toString() : null;
     }
 }

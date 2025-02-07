@@ -31,7 +31,7 @@
                     "name": "type",
                     "displayName": "Type",
                     "inputType": "combo",
-                    "comboValues": ["auto", "pdf-to-text", "markdown-to-text", "html-to-text", "doc-to-text", "docx-to-text", "xls-to-text", "xlsx-to-text", "ppt-to-text", "pptx-to-text"],
+                    "comboValues": ["pdf-to-text", "markdown-to-text", "html-to-text", "doc-to-text", "docx-to-text", "xls-to-text", "xlsx-to-text", "ppt-to-text", "pptx-to-text"],
                     "defaultValue": "pdf-to-text",
                     "required": "true",
                     "helpTip": "Select the content type of the input"

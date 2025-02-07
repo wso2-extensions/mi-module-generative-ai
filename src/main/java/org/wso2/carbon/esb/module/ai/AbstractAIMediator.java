@@ -96,14 +96,6 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         }
     }
 
-    protected Object getObjetFromMC(MessageContext messageContext, String propertyName, boolean isOptional) {
-        Object property = messageContext.getProperty(propertyName);
-        if (property == null && !isOptional) {
-            handleException(String.format("Property %s is not set", propertyName), messageContext);
-        }
-        return property;
-    }
-
     protected  void handleResponse(MessageContext messageContext, String responseVariable, Object payload, Map<String, Object> headers, Map<String, Object> attributes) {
         ConnectorResponse response = new DefaultConnectorResponse();
         if (payload == null) {

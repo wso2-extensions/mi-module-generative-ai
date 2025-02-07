@@ -23,29 +23,28 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LLMConnection extends AbstractConnector implements ManagedLifecycle {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        String apiKey = messageContext.getProperty("apiKey").toString();
-        String connectionType = messageContext.getProperty("connectionType").toString();
-        String connectionName = messageContext.getProperty("connectionName").toString();
-
-        String deploymentName = messageContext.getProperty("deploymentName") != null ? messageContext.getProperty("persistence").toString() : null;
-        String endpoint = messageContext.getProperty("endpoint") != null ? messageContext.getProperty("url").toString() : null;
+        String connectionType = getProperty(messageContext, Constants.CONNECTION_TYPE);
+        String connectionName = getProperty(messageContext, Constants.CONNECTION_NAME);
 
         HashMap<String, String> connectionProperties = new HashMap<>();
-        connectionProperties.put("apiKey", apiKey);
-        connectionProperties.put("deploymentName", deploymentName);
-        connectionProperties.put("endpoint", endpoint);
+        connectionProperties.put(Constants.API_KEY, getProperty(messageContext, Constants.API_KEY));
+        connectionProperties.put(Constants.DEPLOYMENT_NAME, getProperty(messageContext, Constants.DEPLOYMENT_NAME));
+        connectionProperties.put(Constants.ENDPOINT, getProperty(messageContext, Constants.ENDPOINT));
 
         LLMConnectionHandler.addConnection(connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));
+
         // Clear the apiKey property for security reasons
-        messageContext.setProperty("apiKey", "");
+        messageContext.setProperty(Constants.API_KEY, null);
     }
 
     @Override
@@ -54,5 +53,9 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
 
     @Override
     public void destroy() {
+    }
+
+    public String getProperty(MessageContext messageContext, String key) {
+        return messageContext.getProperty(key) != null ? messageContext.getProperty(key).toString() : null;
     }
 }
