@@ -22,7 +22,7 @@ import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
-import org.wso2.carbon.esb.module.ai.Constants;
+import org.wso2.carbon.esb.module.ai.ConnectorConstants;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 
 import java.util.HashMap;
@@ -31,33 +31,33 @@ public class VectorStoreConnection extends AbstractConnector implements ManagedL
 
     @Override
     public void connect(MessageContext messageContext) {
-        String connectionType = getProperty(messageContext, Constants.CONNECTION_TYPE);
-        String connectionName = getProperty(messageContext, Constants.CONNECTION_NAME);
+        String connectionType = getProperty(messageContext, ConnectorConstants.CONNECTION_TYPE);
+        String connectionName = getProperty(messageContext, ConnectorConstants.CONNECTION_NAME);
 
         HashMap<String, String> connectionProperties = new HashMap<>();
-        connectionProperties.put(Constants.PERSISTENCE, getProperty(messageContext, Constants.PERSISTENCE));
-        connectionProperties.put(Constants.URL, getProperty(messageContext, Constants.URL));
-        connectionProperties.put(Constants.COLLECTION, getProperty(messageContext, Constants.COLLECTION));
+        connectionProperties.put(ConnectorConstants.PERSISTENCE, getProperty(messageContext, ConnectorConstants.PERSISTENCE));
+        connectionProperties.put(ConnectorConstants.URL, getProperty(messageContext, ConnectorConstants.URL));
+        connectionProperties.put(ConnectorConstants.COLLECTION, getProperty(messageContext, ConnectorConstants.COLLECTION));
 
-        connectionProperties.put(Constants.API_KEY, getProperty(messageContext, Constants.API_KEY));
-        connectionProperties.put(Constants.CLOUD, getProperty(messageContext, Constants.CLOUD));
-        connectionProperties.put(Constants.REGION, getProperty(messageContext, Constants.REGION));
-        connectionProperties.put(Constants.INDEX, getProperty(messageContext, Constants.INDEX));
-        connectionProperties.put(Constants.NAMESPACE, getProperty(messageContext, Constants.NAMESPACE));
-        connectionProperties.put(Constants.DIMENSION, getProperty(messageContext, Constants.DIMENSION));
+        connectionProperties.put(ConnectorConstants.API_KEY, getProperty(messageContext, ConnectorConstants.API_KEY));
+        connectionProperties.put(ConnectorConstants.CLOUD, getProperty(messageContext, ConnectorConstants.CLOUD));
+        connectionProperties.put(ConnectorConstants.REGION, getProperty(messageContext, ConnectorConstants.REGION));
+        connectionProperties.put(ConnectorConstants.INDEX, getProperty(messageContext, ConnectorConstants.INDEX));
+        connectionProperties.put(ConnectorConstants.NAMESPACE, getProperty(messageContext, ConnectorConstants.NAMESPACE));
+        connectionProperties.put(ConnectorConstants.DIMENSION, getProperty(messageContext, ConnectorConstants.DIMENSION));
 
-        connectionProperties.put(Constants.HOST, getProperty(messageContext, Constants.HOST));
-        connectionProperties.put(Constants.PORT, getProperty(messageContext, Constants.PORT));
-        connectionProperties.put(Constants.DATABASE, getProperty(messageContext, Constants.DATABASE));
-        connectionProperties.put(Constants.USER, getProperty(messageContext, Constants.USER));
-        connectionProperties.put(Constants.PASSWORD, getProperty(messageContext, Constants.PASSWORD));
-        connectionProperties.put(Constants.TABLE, getProperty(messageContext, Constants.TABLE));
+        connectionProperties.put(ConnectorConstants.HOST, getProperty(messageContext, ConnectorConstants.HOST));
+        connectionProperties.put(ConnectorConstants.PORT, getProperty(messageContext, ConnectorConstants.PORT));
+        connectionProperties.put(ConnectorConstants.DATABASE, getProperty(messageContext, ConnectorConstants.DATABASE));
+        connectionProperties.put(ConnectorConstants.USER, getProperty(messageContext, ConnectorConstants.USER));
+        connectionProperties.put(ConnectorConstants.PASSWORD, getProperty(messageContext, ConnectorConstants.PASSWORD));
+        connectionProperties.put(ConnectorConstants.TABLE, getProperty(messageContext, ConnectorConstants.TABLE));
 
         VectorStoreConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));
 
         // Clear the apiKey property for security reasons
-        messageContext.setProperty(Constants.API_KEY, null);
+        messageContext.setProperty(ConnectorConstants.API_KEY, null);
     }
 
     @Override

@@ -25,7 +25,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import org.wso2.carbon.esb.module.ai.Constants;
+import org.wso2.carbon.esb.module.ai.ConnectorConstants;
 import org.wso2.carbon.esb.module.ai.connections.ConnectionParams;
 
 import java.util.Objects;
@@ -55,7 +55,7 @@ public class LLMConnectionHandler {
                          .topP(topP)
                          .frequencyPenalty(frequencyPenalty)
                          .seed(seed)
-                         .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
+                         .apiKey(connectionParams.getConnectionProperty(ConnectorConstants.API_KEY))
                          .build();
                  break;
             case "AZURE_OPEN_AI":
@@ -66,9 +66,9 @@ public class LLMConnectionHandler {
                         .topP(topP)
                         .frequencyPenalty(frequencyPenalty)
                         .seed(Long.valueOf(seed))
-                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
-                        .deploymentName(connectionParams.getConnectionProperty(Constants.DEPLOYMENT_NAME))
-                        .endpoint(connectionParams.getConnectionProperty(Constants.ENDPOINT))
+                        .apiKey(connectionParams.getConnectionProperty(ConnectorConstants.API_KEY))
+                        .deploymentName(connectionParams.getConnectionProperty(ConnectorConstants.DEPLOYMENT_NAME))
+                        .endpoint(connectionParams.getConnectionProperty(ConnectorConstants.ENDPOINT))
                         .build();
                 break;
             case "ANTHROPIC":
@@ -77,7 +77,7 @@ public class LLMConnectionHandler {
                         .temperature(temperature)
                         .maxTokens(maxTokens)
                         .topP(topP)
-                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
+                        .apiKey(connectionParams.getConnectionProperty(ConnectorConstants.API_KEY))
                         .build();
                 break;
             case "MISTRAL_AI":
@@ -86,7 +86,7 @@ public class LLMConnectionHandler {
                         .temperature(temperature)
                         .maxTokens(maxTokens)
                         .topP(topP)
-                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
+                        .apiKey(connectionParams.getConnectionProperty(ConnectorConstants.API_KEY))
                         .build();
                 break;
             default:
@@ -102,7 +102,7 @@ public class LLMConnectionHandler {
             case "OPEN_AI":
                 // Null values of LLM params will be handled by LangChain4j
                 embeddingModel = OpenAiEmbeddingModel.builder()
-                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
+                        .apiKey(connectionParams.getConnectionProperty(ConnectorConstants.API_KEY))
                         .modelName(modelName)
                         .build();
             case "ANTHROPIC":

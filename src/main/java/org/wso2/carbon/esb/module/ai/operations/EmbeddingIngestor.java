@@ -51,6 +51,7 @@ public class EmbeddingIngestor extends AbstractAIMediator {
         String connectionName = getProperty(mc, "connectionName", String.class, false);
         String embeddings = getMediatorParameter(mc, "input", String.class, false);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        Boolean overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
 
         List<TextEmbedding> textEmbeddings = parseAndValidateInput(embeddings);
         if (textEmbeddings == null) {
@@ -64,7 +65,7 @@ public class EmbeddingIngestor extends AbstractAIMediator {
         } catch (Exception e) {
             handleException("Failed to ingest embedding", e, mc);
         } finally {
-            handleResponse(mc, responseVariable, null, null, Map.of("SUCCESS", "true"));
+            handleResponse(mc, responseVariable, overwriteBody, null, null, Map.of("SUCCESS", "true"));
         }
     }
 

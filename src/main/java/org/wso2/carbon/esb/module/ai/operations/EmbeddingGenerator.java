@@ -57,6 +57,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         String input = getMediatorParameter(mc, "input", String.class, false);
         String model = getMediatorParameter(mc, "model", String.class, false);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        Boolean overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
         String connectionName = getProperty(mc, "connectionName", String.class, false);
 
         List<TextSegment> inputs = parseAndValidateInput(input);
@@ -78,7 +79,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         }
 
         // If multiple inputs were provided, return a JSON array of TextEmbedding objects
-        handleResponse(mc, responseVariable, textEmbeddings, null, null);
+        handleResponse(mc, responseVariable, overwriteBody, textEmbeddings, null, null);
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {

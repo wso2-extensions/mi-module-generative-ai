@@ -83,6 +83,7 @@ public class LLMChat extends AbstractAIMediator {
     private Integer seed;
     private String system;
     private String responseVariable;
+    private Boolean overwriteBody;
     private String outputType;
     private String connectionName;
 
@@ -90,6 +91,7 @@ public class LLMChat extends AbstractAIMediator {
     public void initialize(MessageContext mc) {
         // Load mediator configurations from template
         responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
         outputType = getMediatorParameter(mc, "outputType", String.class, false);
 
         // Load configurations from template and message context
@@ -146,7 +148,7 @@ public class LLMChat extends AbstractAIMediator {
         try {
             Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
             if (answer != null) {
-                handleResponse(mc, responseVariable, answer, null, null);
+                handleResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {
                 log.error("Invalid output type");
                 handleException("Invalid output type", mc);

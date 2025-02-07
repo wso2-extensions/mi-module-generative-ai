@@ -62,6 +62,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         // TODO: Implement filter parsing
         String filterString = getMediatorParameter(mc, "filter", String.class, true);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        Boolean overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
 
         Embedding embedding = parseAndValidateInput(input);
         if (embedding == null) {
@@ -75,7 +76,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
         try {
             List<EmbeddingMatch<TextSegment>> matches = vectorStore.search(embedding, maxResults, minScore, null);
-            handleResponse(mc, responseVariable, matches, null, null);
+            handleResponse(mc, responseVariable, overwriteBody, matches, null, null);
         } catch (Exception e) {
             handleException("Failed to retrieve embedding", e, mc);
         }

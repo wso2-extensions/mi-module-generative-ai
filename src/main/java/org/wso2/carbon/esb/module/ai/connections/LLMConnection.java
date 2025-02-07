@@ -22,7 +22,7 @@ import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
-import org.wso2.carbon.esb.module.ai.Constants;
+import org.wso2.carbon.esb.module.ai.ConnectorConstants;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 
 import java.util.HashMap;
@@ -31,20 +31,20 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
 
     @Override
     public void connect(MessageContext messageContext) {
-        String connectionType = getProperty(messageContext, Constants.CONNECTION_TYPE);
-        String connectionName = getProperty(messageContext, Constants.CONNECTION_NAME);
+        String connectionType = getProperty(messageContext, ConnectorConstants.CONNECTION_TYPE);
+        String connectionName = getProperty(messageContext, ConnectorConstants.CONNECTION_NAME);
 
         HashMap<String, String> connectionProperties = new HashMap<>();
-        connectionProperties.put(Constants.API_KEY, getProperty(messageContext, Constants.API_KEY));
-        connectionProperties.put(Constants.DEPLOYMENT_NAME, getProperty(messageContext, Constants.DEPLOYMENT_NAME));
-        connectionProperties.put(Constants.ENDPOINT, getProperty(messageContext, Constants.ENDPOINT));
+        connectionProperties.put(ConnectorConstants.API_KEY, getProperty(messageContext, ConnectorConstants.API_KEY));
+        connectionProperties.put(ConnectorConstants.DEPLOYMENT_NAME, getProperty(messageContext, ConnectorConstants.DEPLOYMENT_NAME));
+        connectionProperties.put(ConnectorConstants.ENDPOINT, getProperty(messageContext, ConnectorConstants.ENDPOINT));
 
         LLMConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties)
         );
 
         // Clear the apiKey property for security reasons
-        messageContext.setProperty(Constants.API_KEY, null);
+        messageContext.setProperty(ConnectorConstants.API_KEY, null);
     }
 
     @Override

@@ -19,11 +19,15 @@
 package org.wso2.carbon.esb.module.ai;
 
 import com.google.gson.JsonParser;
+import org.apache.axis2.AxisFault;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.commons.json.JsonUtil;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.data.connector.ConnectorResponse;
 import org.apache.synapse.data.connector.DefaultConnectorResponse;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
+import org.apache.axis2.Constants;
 
 import java.util.List;
 import java.util.Map;
@@ -105,7 +109,7 @@ public abstract class AbstractAIMediator extends AbstractConnector {
     }
 
     protected  void handleResponse(
-            MessageContext messageContext, String responseVariable, Object payload,
+            MessageContext messageContext, String responseVariable, Boolean overwriteBody, Object payload,
             Map<String, Object> headers, Map<String, Object> attributes) {
 
         ConnectorResponse response = new DefaultConnectorResponse();
@@ -121,19 +125,29 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         }
 
         Object output;
+        String jsonString = Utils.toJson(payload);
         if (payload instanceof List) {
-            String jsonArray = Utils.toJson(payload);
-            output = JsonParser.parseString(jsonArray).getAsJsonArray();
+            output = JsonParser.parseString(jsonString).getAsJsonArray();
         } else if (payload instanceof String || payload instanceof Boolean ||
                         payload instanceof Long || payload instanceof Double) {
             output = payload;
         } else {
             // Convert Java object to JSON string
-            String jsonString = Utils.toJson(payload);
             output = JsonParser.parseString(jsonString).getAsJsonObject();
         }
 
-        response.setPayload(output);
+        if (overwriteBody != null && overwriteBody) {
+            org.apache.axis2.context.MessageContext axisMsgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+            try {
+                JsonUtil.getNewJsonPayload(axisMsgCtx, jsonString, true, true);
+            } catch (AxisFault e) {
+                handleException("Error setting response payload", e, messageContext);
+            }
+            axisMsgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE, ConnectorConstants.JSON_CONTENT_TYPE);
+            axisMsgCtx.setProperty(Constants.Configuration.CONTENT_TYPE, ConnectorConstants.JSON_CONTENT_TYPE);
+        }else {
+            response.setPayload(output);
+        }
         response.setHeaders(headers);
         response.setAttributes(attributes);
         messageContext.setVariable(responseVariable, response);

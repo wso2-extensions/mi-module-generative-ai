@@ -55,6 +55,7 @@ public class DocSplitter extends AbstractAIMediator {
         Integer maxSegmentSize = getMediatorParameter(mc, "maxSegmentSize", Integer.class, true);
         Integer maxOverlapSize = getMediatorParameter(mc, "maxOverlapSize", Integer.class, true);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        Boolean overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
 
         maxSegmentSize = (maxSegmentSize == null) ? 1000 : maxSegmentSize;
         maxOverlapSize = (maxOverlapSize == null) ? 200 : maxOverlapSize;
@@ -78,6 +79,6 @@ public class DocSplitter extends AbstractAIMediator {
         if (segments == null) {
             handleException("Failed to split the document", mc);
         }
-        handleResponse(mc, responseVariable, segments, null, null);
+        handleResponse(mc, responseVariable, overwriteBody, segments, null, null);
     }
 }

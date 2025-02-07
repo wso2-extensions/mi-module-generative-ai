@@ -18,7 +18,9 @@
 
 package org.wso2.carbon.esb.module.ai;
 
-public class Constants {
+public class ConnectorConstants {
+    // Content types
+    public final static String JSON_CONTENT_TYPE = "application/json";
 
     // Vector store connection properties
     public static final String CONNECTION_TYPE = "connectionType";
