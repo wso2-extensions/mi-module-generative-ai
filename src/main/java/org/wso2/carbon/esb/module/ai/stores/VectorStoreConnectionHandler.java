@@ -19,11 +19,9 @@
 package org.wso2.carbon.esb.module.ai.stores;
 
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.SynapseException;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.connections.ConnectionParams;
-import org.wso2.carbon.esb.module.ai.exception.VectorStoreException;
-import org.wso2.carbon.esb.module.ai.utils.Utils;
+import org.wso2.carbon.esb.module.ai.exceptions.VectorStoreException;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 import java.util.concurrent.ConcurrentHashMap;
 

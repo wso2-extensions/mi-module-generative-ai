@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Errors;
-import org.wso2.carbon.esb.module.ai.exception.VectorStoreException;
+import org.wso2.carbon.esb.module.ai.exceptions.VectorStoreException;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
@@ -57,7 +57,7 @@ public class EmbeddingIngestor extends AbstractAIMediator {
 
         List<TextEmbedding> textEmbeddings = parseAndValidateInput(embeddings);
         if (textEmbeddings == null) {
-            handleException("Invalid input format. Expected a JSON array of TextEmbedding objects.", mc);
+            handleConnectorException(Errors.INVALID_INPUT_FOR_EMBEDDING_INGESTION, mc);
             return;
         }
 

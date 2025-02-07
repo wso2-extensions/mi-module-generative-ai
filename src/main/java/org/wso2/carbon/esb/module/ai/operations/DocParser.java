@@ -25,6 +25,9 @@ import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentPa
 import dev.langchain4j.data.document.parser.apache.poi.ApachePoiDocumentParser;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
+import org.wso2.carbon.esb.module.ai.exceptions.ParsingException;
+import org.wso2.carbon.esb.module.ai.Constants;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
@@ -63,7 +66,7 @@ public class DocParser extends AbstractAIMediator {
         PARSER parser;
         parser = determineParser(parserType);
         if (parser == null) {
-            handleException("Unsupported content type: " + parserType, mc);
+            handleConnectorException(Errors.UNSUPPORTED_PARSER_TYPE, mc);
         }
 
         input = input.equalsIgnoreCase("payload") ? mc.getEnvelope().getBody().getFirstElement().getText() : input;
@@ -88,12 +91,20 @@ public class DocParser extends AbstractAIMediator {
                 inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
                 break;
             default:
-                handleException("Unsupported content type: " + parserType, mc);
+                handleConnectorException(Errors.UNSUPPORTED_PARSER_INPUT, mc);
         }
 
-        Document doc= docParser.parse(inputStream);
+        Document doc = null;
+        try {
+            doc = docParser.parse(inputStream);
+        } catch (ParsingException e) {
+            handleConnectorException(e.getError(), mc, e);
+        } catch (Exception e) {
+            handleConnectorException(Errors.PARSE_ERROR, mc, e);
+        }
+
         if (doc == null) {
-            handleException("Error parsing document", mc);
+            handleConnectorException(Errors.PARSE_ERROR, mc);
         }
 
         handleConnectorResponse(mc, responseVariable, overwriteBody, Objects.requireNonNull(doc).text(), null, null);
@@ -101,10 +112,11 @@ public class DocParser extends AbstractAIMediator {
 
     private PARSER determineParser(String contentType) {
         return switch (contentType.toLowerCase()) {
-            case "markdown-to-text" -> PARSER.TEXT;
-            case "html-to-text"-> PARSER.HTML_TO_TEXT;
-            case "pdf-to-text" -> PARSER.PDF_BOX;
-            case "doc-to-text", "docx-to-text", "ppt-to-text", "pptx-to-txt", "xls-to-text", "xlsx-to-text" -> PARSER.POI;
+            case Constants.MD_TO_TEXT -> PARSER.TEXT;
+            case Constants.HTML_TO_TEXT-> PARSER.HTML_TO_TEXT;
+            case Constants.PDF_TO_TEXT -> PARSER.PDF_BOX;
+            case Constants.DOC_TO_TEXT, Constants.DOCX_TO_TEXT, Constants.PPT_TO_TEXT,
+                 Constants.PPTX_TO_TEXT, Constants.XLS_TO_TEXT, Constants.XLSX_TO_TEXT -> PARSER.POI;
             default -> null;
         };
     }

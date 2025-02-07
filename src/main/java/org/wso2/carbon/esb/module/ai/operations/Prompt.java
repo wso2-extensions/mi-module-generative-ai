@@ -22,6 +22,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.util.InlineExpressionUtil;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
 
 /**
  * Prompt mediator
@@ -42,7 +43,7 @@ public class Prompt extends AbstractAIMediator {
             String parsedPrompt = InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, prompt);
             handleConnectorResponse(mc, responseVariable, overwriteBody, parsedPrompt, null, null);
         } catch (JaxenException e) {
-            handleException("Failed to parse prompt", e, mc);
+            handleConnectorException(Errors.ERROR_PARSE_PROMPT, mc, e);
         }
         // mc.setProperty(responseVariable, prompt);
     }

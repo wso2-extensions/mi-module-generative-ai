@@ -27,6 +27,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
@@ -62,20 +63,20 @@ public class EmbeddingGenerator extends AbstractAIMediator {
 
         List<TextSegment> inputs = parseAndValidateInput(input);
         if (inputs == null) {
-            handleException("Invalid input format. Expected a string or a JSON array of strings.", mc);
+            handleConnectorException(Errors.INVALID_INPUT_FOR_EMBEDDING_GENERATION, mc);
             return;
         }
 
-        EmbeddingModel embeddingModel = LLMConnectionHandler.getEmbeddingModel(connectionName, model);
         List<TextEmbedding> textEmbeddings = new ArrayList<>();
         try {
+            EmbeddingModel embeddingModel = LLMConnectionHandler.getEmbeddingModel(connectionName, model);
             Response<List<Embedding>> embedding = embeddingModel.embedAll(inputs);
             for (int i = 0; i < inputs.size(); i++) {
                 textEmbeddings.add(new TextEmbedding(inputs.get(i).text(),
                         embedding.content().get(i).vector(), inputs.get(i).metadata()));
             }
         } catch (Exception e) {
-            handleException("Failed to generate embedding", e, mc);
+            handleConnectorException(Errors.EMBEDDING_GENERATION_ERROR, mc);
         }
 
         // If multiple inputs were provided, return a JSON array of TextEmbedding objects

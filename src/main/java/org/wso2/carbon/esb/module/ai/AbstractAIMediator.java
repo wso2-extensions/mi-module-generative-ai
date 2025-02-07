@@ -28,7 +28,6 @@ import org.apache.synapse.data.connector.ConnectorResponse;
 import org.apache.synapse.data.connector.DefaultConnectorResponse;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
-import org.apache.axis2.Constants;
 
 import java.util.List;
 import java.util.Map;
@@ -144,8 +143,8 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             } catch (AxisFault e) {
                 handleException("Error setting response payload", e, messageContext);
             }
-            axisMsgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE, ConnectorConstants.JSON_CONTENT_TYPE);
-            axisMsgCtx.setProperty(Constants.Configuration.CONTENT_TYPE, ConnectorConstants.JSON_CONTENT_TYPE);
+            axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.MESSAGE_TYPE, Constants.JSON_CONTENT_TYPE);
+            axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.CONTENT_TYPE, Constants.JSON_CONTENT_TYPE);
         }else {
             response.setPayload(output);
         }
@@ -160,5 +159,13 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         mc.setProperty("ERROR_CODE", code.getCode());
         mc.setProperty("ERROR_MESSAGE", code.getMessage());
         throw new SynapseException(code.getMessage(), e);
+    }
+
+    public void handleConnectorException(Errors code, MessageContext mc) {
+        this.log.error(code.getMessage());
+
+        mc.setProperty("ERROR_CODE", code.getCode());
+        mc.setProperty("ERROR_MESSAGE", code.getMessage());
+        throw new SynapseException(code.getMessage());
     }
 }

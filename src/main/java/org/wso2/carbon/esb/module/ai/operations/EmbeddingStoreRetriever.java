@@ -27,7 +27,7 @@ import dev.langchain4j.store.embedding.filter.FilterParser;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Errors;
-import org.wso2.carbon.esb.module.ai.exception.VectorStoreException;
+import org.wso2.carbon.esb.module.ai.exceptions.VectorStoreException;
 import org.wso2.carbon.esb.module.ai.utils.StringFilterParser;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
@@ -68,7 +68,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
 
         Embedding embedding = parseAndValidateInput(input);
         if (embedding == null) {
-            handleException("Invalid input format. Expected a vector ( Array of numbers )", mc);
+            handleConnectorException(Errors.INVALID_INPUT_FOR_EMBEDDING_RETRIEVAL, mc);
             return;
         }
 

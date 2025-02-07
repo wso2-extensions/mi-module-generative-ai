@@ -21,6 +21,8 @@ package org.wso2.carbon.esb.module.ai.operations;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
 import org.jsoup.Jsoup;
+import org.wso2.carbon.esb.module.ai.Errors;
+import org.wso2.carbon.esb.module.ai.exceptions.ParsingException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,14 +31,14 @@ import java.nio.charset.StandardCharsets;
 
 public class HTMLToTextParser implements DocumentParser {
     @Override
-    public Document parse(InputStream inputStream) {
+    public Document parse(InputStream inputStream) throws ParsingException {
         org.jsoup.nodes.Document jsoupDocument;
 
         try {
             // Parse the input stream with UTF-8 encoding
             jsoupDocument = Jsoup.parse(inputStream, StandardCharsets.UTF_8.name(), "");
         } catch (IOException e) {
-            throw new RuntimeException("Error parsing HTML input stream", e);
+            throw new ParsingException(Errors.HTML_TO_TEXT_ERROR, e);
         }
 
         return jsoupDocument.body() != null ? new Document(jsoupDocument.body().text()) : null;

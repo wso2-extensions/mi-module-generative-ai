@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.esb.module.ai;
 
-public class ConnectorConstants {
+public class Constants {
     // Content types
     public final static String JSON_CONTENT_TYPE = "application/json";
 
@@ -51,6 +51,8 @@ public class ConnectorConstants {
     public static final String PDF_TO_TEXT = "pdf-to-text";
     public static final String DOC_TO_TEXT = "doc-to-text";
     public static final String DOCX_TO_TEXT = "docx-to-text";
-    public static final String PPT_TO_TEXT = "docx-to-text";
-    public static final String PPTX_TO_TEXT = "docx-to-text";
+    public static final String PPT_TO_TEXT = "ppt-to-text";
+    public static final String PPTX_TO_TEXT = "pptx-to-text";
+    public static final String XLS_TO_TEXT = "xls-to-text";
+    public static final String XLSX_TO_TEXT = "xlsx-to-text";
 }

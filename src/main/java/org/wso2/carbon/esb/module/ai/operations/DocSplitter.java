@@ -27,6 +27,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,13 +73,20 @@ public class DocSplitter extends AbstractAIMediator {
                 splitter = new DocumentBySentenceSplitter(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
                 break;
             default:
-                handleException("Invalid strategy: " + strategy, mc);
+                handleConnectorException(Errors.INVALID_SPLITTING_STRATEGY, mc);
         }
 
-        List<TextSegment> segments = Objects.requireNonNull(splitter).split(new Document(input));
-        if (segments == null) {
-            handleException("Failed to split the document", mc);
+        List<TextSegment> segments = null;
+        try {
+            segments = Objects.requireNonNull(splitter).split(new Document(input));
+        } catch (Exception e) {
+            handleConnectorException(Errors.FAILED_TO_SPLIT, mc, e);
         }
+
+        if (segments == null) {
+            handleConnectorException(Errors.FAILED_TO_SPLIT, mc);
+        }
+
         handleConnectorResponse(mc, responseVariable, overwriteBody, segments, null, null);
     }
 }

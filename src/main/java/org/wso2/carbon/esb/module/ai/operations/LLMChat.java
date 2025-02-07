@@ -34,6 +34,7 @@ import dev.langchain4j.service.Result;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
 
@@ -118,7 +119,7 @@ public class LLMChat extends AbstractAIMediator {
         if (knowledge != null) {
             List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateKnowledge(knowledge);
             if (parsedKnowledge == null) {
-                handleException("Invalid input format. Expected a JSON array of Objects.", mc);
+                handleConnectorException(Errors.INVALID_INPUT_FOR_CHAT_KNOWLEDGE, mc);
                 return;
             }
 
@@ -133,7 +134,7 @@ public class LLMChat extends AbstractAIMediator {
         if (chatHistory != null) {
             List<ChatMessage> chatMessages = parseAndValidateChatHistory(chatHistory);
             if (chatMessages == null) {
-                handleException("Invalid chat history format. Expected a JSON array of ChatMessage objects. Use OpenAI format", mc);
+                handleConnectorException(Errors.INVALID_INPUT_FOR_CHAT_MEMORY, mc);
                 return;
             }
             if (maxHistory == null) {
@@ -150,12 +151,10 @@ public class LLMChat extends AbstractAIMediator {
             if (answer != null) {
                 handleConnectorResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {
-                log.error("Invalid output type");
-                handleException("Invalid output type", mc);
+                handleConnectorException(Errors.INVALID_OUTPUT_TYPE, mc);
             }
         } catch (Exception e) {
-            log.error("Error while LLM chat completion", e);
-            handleException("Error while LLM chat completion", e, mc);
+            handleConnectorException(Errors.CHAT_COMPLETION_ERROR, mc, e);
         }
     }
 

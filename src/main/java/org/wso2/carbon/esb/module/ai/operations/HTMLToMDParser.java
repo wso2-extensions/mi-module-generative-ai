@@ -20,8 +20,11 @@ package org.wso2.carbon.esb.module.ai.operations;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
+import org.apache.synapse.SynapseException;
 import org.jsoup.Jsoup;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import org.wso2.carbon.esb.module.ai.Errors;
+import org.wso2.carbon.esb.module.ai.exceptions.ParsingException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 
 public class HTMLToMDParser implements DocumentParser {
     @Override
-    public Document parse(InputStream inputStream) {
+    public Document parse(InputStream inputStream) throws SynapseException {
         org.jsoup.nodes.Document jsoupDocument;
         String markdown = null;
         try {
@@ -37,7 +40,7 @@ public class HTMLToMDParser implements DocumentParser {
             jsoupDocument = Jsoup.parse(inputStream, StandardCharsets.UTF_8.name(), "");
             markdown = FlexmarkHtmlConverter.builder().build().convert(jsoupDocument.html());
         } catch (IOException e) {
-            throw new RuntimeException("Error parsing HTML input stream", e);
+            throw new ParsingException(Errors.HTML_TO_MARKDOWN_ERROR, e);
         }
 
         return markdown != null ? new Document(markdown) : null;
