@@ -114,7 +114,7 @@ public class LLMChat extends AbstractAIMediator {
         String chatHistory = getMediatorParameter(mc, "history", String.class, true);
         Integer maxHistory = getMediatorParameter(mc, "maxHistory", Integer.class, true);
 
-        List<Content> knowledgeTexts;
+        ContentRetriever knowledgeRetriever = null;
         if (knowledge != null) {
             List<EmbeddingMatch<TextSegment>> parsedKnowledge = parseAndValidateKnowledge(knowledge);
             if (parsedKnowledge == null) {
@@ -123,26 +123,27 @@ public class LLMChat extends AbstractAIMediator {
             }
 
             // Extract text segments from the parsed knowledge and convert to content
-            knowledgeTexts = parsedKnowledge.stream()
+            List<Content> knowledgeTexts = parsedKnowledge.stream()
                     .map(match -> new Content(match.embedded()))
                     .toList();
-        } else {
-            knowledgeTexts = null;
+            knowledgeRetriever = query -> knowledgeTexts;
         }
-        ContentRetriever knowledgeRetriever = query -> knowledgeTexts;
 
-        List<ChatMessage> chatMessages = null;
+        ChatMemory chatMemory = null;
         if (chatHistory != null) {
-            chatMessages = parseAndValidateChatHistory(chatHistory);
+            List<ChatMessage> chatMessages = parseAndValidateChatHistory(chatHistory);
             if (chatMessages == null) {
                 handleException("Invalid chat history format. Expected a JSON array of ChatMessage objects. Use OpenAI format", mc);
                 return;
             }
+            if (maxHistory == null) {
+                maxHistory = chatMessages.size();
+            }
+            chatMemory = TemporaryChatMemory.builder()
+                    .from(chatMessages)
+                    .maxMessages(maxHistory)
+                    .build();
         }
-        ChatMemory chatMemory = TemporaryChatMemory.builder()
-                .from(chatMessages)
-                .maxMessages(maxHistory)
-                .build();
 
         try {
             Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
@@ -210,25 +211,24 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(String outputType, String prompt, ContentRetriever knowledge, ChatMemory chatMemory) {
+    private Object getChatResponse(String outputType, String prompt, ContentRetriever knowledgeRetriever, ChatMemory chatMemory) {
         return switch (outputType.toLowerCase()) {
-            case "string" -> getAgent(StringAgent.class, knowledge, chatMemory).chat(prompt);
-            case "integer" -> getAgent(IntegerAgent.class, knowledge, chatMemory).chat(prompt);
-            case "float" -> getAgent(FloatAgent.class, knowledge, chatMemory).chat(prompt);
-            case "boolean" -> getAgent(BooleanAgent.class, knowledge, chatMemory).chat(prompt);
+            case "string" -> getAgent(StringAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
+            case "integer" -> getAgent(IntegerAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
+            case "float" -> getAgent(FloatAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
+            case "boolean" -> getAgent(BooleanAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
             default -> null;
         };
     }
 
-    private <T> T getAgent(Class<T> agentType, ContentRetriever knowledge, ChatMemory chatMemory) {
+    private <T> T getAgent(Class<T> agentType, ContentRetriever knowledgeRetriever, ChatMemory chatMemory) {
         ChatLanguageModel model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
         AiServices<T> service = AiServices
                 .builder(agentType)
                 .chatLanguageModel(model)
-                .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT)
-                .chatMemory(chatMemory);
-        if (knowledge != null) {
-            service = service.contentRetriever(knowledge);
+                .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT);
+        if (knowledgeRetriever != null) {
+            service = service.contentRetriever(knowledgeRetriever);
         }
         if (chatMemory != null) {
             service = service.chatMemory(chatMemory);
