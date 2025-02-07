@@ -47,7 +47,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         execute(messageContext);
     }
 
-    protected <T> T getMediatorParameter(MessageContext messageContext, String parameterName, Class<T> type, boolean isOptional) {
+    protected <T> T getMediatorParameter(
+            MessageContext messageContext, String parameterName, Class<T> type, boolean isOptional) {
+
         Object parameter = getParameter(messageContext, parameterName);
         if (!isOptional && (parameter == null || parameter.toString().isEmpty())) {
             handleException(String.format("Parameter %s is not provided", parameterName), messageContext);
@@ -58,13 +60,17 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         try {
             return parse(Objects.requireNonNull(parameter).toString(), type);
         } catch (IllegalArgumentException e) {
-            handleException(String.format("Parameter %s is not of type %s", parameterName, type.getName()), messageContext);
+            handleException(String.format(
+                    "Parameter %s is not of type %s", parameterName, type.getName()
+            ), messageContext);
         }
 
         return null;
     }
 
-    protected <T> T getProperty(MessageContext messageContext, String propertyName, Class<T> type, boolean isOptional) {
+    protected <T> T getProperty(
+            MessageContext messageContext, String propertyName, Class<T> type, boolean isOptional) {
+
         Object property = messageContext.getProperty(propertyName);
         if (!isOptional && (property == null || property.toString().isEmpty())) {
             handleException(String.format("Property %s is not set", propertyName), messageContext);
@@ -75,7 +81,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         try {
             return parse(Objects.requireNonNull(property).toString(), type);
         } catch (IllegalArgumentException e) {
-            handleException(String.format("Property %s is not of type %s", propertyName, type.getName()), messageContext);
+            handleException(String.format(
+                    "Property %s is not of type %s", propertyName, type.getName()
+            ), messageContext);
         }
 
         return null;
@@ -96,7 +104,10 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         }
     }
 
-    protected  void handleResponse(MessageContext messageContext, String responseVariable, Object payload, Map<String, Object> headers, Map<String, Object> attributes) {
+    protected  void handleResponse(
+            MessageContext messageContext, String responseVariable, Object payload,
+            Map<String, Object> headers, Map<String, Object> attributes) {
+
         ConnectorResponse response = new DefaultConnectorResponse();
         if (payload == null) {
             // Empty json object
@@ -113,7 +124,8 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         if (payload instanceof List) {
             String jsonArray = Utils.toJson(payload);
             output = JsonParser.parseString(jsonArray).getAsJsonArray();
-        } else if (payload instanceof String || payload instanceof Boolean || payload instanceof Long || payload instanceof Double) {
+        } else if (payload instanceof String || payload instanceof Boolean ||
+                        payload instanceof Long || payload instanceof Double) {
             output = payload;
         } else {
             // Convert Java object to JSON string

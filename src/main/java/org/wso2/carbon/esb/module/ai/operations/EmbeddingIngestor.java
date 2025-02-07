@@ -34,12 +34,10 @@ import java.util.Map;
 
 /**
  * Embedding ingestion operation
- *
  * Inputs:
  * - input: JSON array of TextEmbedding objects
  * - connectionName: Name of the connection to the vector store
  * - responseVariable: Variable name to store the output
- *
  * Outputs:
  * - SUCCESS: true or false
  */

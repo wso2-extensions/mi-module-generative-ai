@@ -33,14 +33,12 @@ import java.util.Objects;
 
 /**
  * Document splitting operation
- *
  * Inputs:
  * - input: String
  * - strategy: Splitting strategy (Recursive, ByParagraph, BySentence)
  * - maxSegmentSize: Maximum segment size
  * - maxOverlapSize: Maximum overlap size
  * - responseVariable: Variable name to store the output
- *
  * Outputs:
  * - List of TextSegment objects
  */

@@ -28,7 +28,8 @@ public class ConnectionParams {
     String connectionType;
     HashMap<String, String> connectionProperties;
 
-    public ConnectionParams(String connectionName, String connectionType, HashMap<String, String> connectionProperties) {
+    public ConnectionParams(
+            String connectionName, String connectionType, HashMap<String, String> connectionProperties) {
         this.connectionName = connectionName;
         this.connectionType = connectionType;
         this.connectionProperties = connectionProperties;

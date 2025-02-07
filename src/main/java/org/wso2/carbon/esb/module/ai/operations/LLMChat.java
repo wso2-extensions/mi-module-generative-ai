@@ -44,7 +44,6 @@ import java.util.Map;
 
 /**
  * Language model chat operation
- *
  * Inputs:
  * - modelName: Name of the language model
  * - temperature: Sampling temperature
@@ -60,7 +59,6 @@ import java.util.Map;
  * - responseVariable: Variable name to store the output
  * - responseType: Output type (String, Integer, Float, Boolean)
  * - connectionName: Name of the connection to the LLM
- *
  * Outputs:
  * - Response based on the output type
  */

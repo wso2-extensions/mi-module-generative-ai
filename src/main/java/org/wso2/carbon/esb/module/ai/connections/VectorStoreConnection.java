@@ -22,17 +22,15 @@ import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
-import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.stores.VectorStoreConnectionHandler;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class VectorStoreConnection extends AbstractConnector implements ManagedLifecycle {
 
     @Override
-    public void connect(MessageContext messageContext) throws ConnectException {
+    public void connect(MessageContext messageContext) {
         String connectionType = getProperty(messageContext, Constants.CONNECTION_TYPE);
         String connectionName = getProperty(messageContext, Constants.CONNECTION_NAME);
 

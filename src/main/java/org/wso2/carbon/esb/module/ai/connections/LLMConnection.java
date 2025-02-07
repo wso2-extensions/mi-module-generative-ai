@@ -22,17 +22,15 @@ import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.connector.core.AbstractConnector;
-import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class LLMConnection extends AbstractConnector implements ManagedLifecycle {
 
     @Override
-    public void connect(MessageContext messageContext) throws ConnectException {
+    public void connect(MessageContext messageContext) {
         String connectionType = getProperty(messageContext, Constants.CONNECTION_TYPE);
         String connectionName = getProperty(messageContext, Constants.CONNECTION_NAME);
 
@@ -41,7 +39,9 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
         connectionProperties.put(Constants.DEPLOYMENT_NAME, getProperty(messageContext, Constants.DEPLOYMENT_NAME));
         connectionProperties.put(Constants.ENDPOINT, getProperty(messageContext, Constants.ENDPOINT));
 
-        LLMConnectionHandler.addConnection(connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));
+        LLMConnectionHandler.addConnection(
+                connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties)
+        );
 
         // Clear the apiKey property for security reasons
         messageContext.setProperty(Constants.API_KEY, null);

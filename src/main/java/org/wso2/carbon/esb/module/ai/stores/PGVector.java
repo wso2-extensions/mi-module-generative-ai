@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class PGVector extends VectorStore {
-        public PGVector(String host, String port, String database, String user, String password, String table, Integer dimension) throws Exception {
+        public PGVector(String host, String port, String database, String user, String password, String table, Integer dimension) {
                 super(PgVectorEmbeddingStore.builder()
                                 .host(host)
                                 .port(Integer.valueOf(port))

@@ -24,20 +24,18 @@ import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
 import dev.langchain4j.data.document.parser.apache.poi.ApachePoiDocumentParser;
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
+import java.util.Objects;
 
 /**
  * Parsing operation
- *
  * Inputs:
  * - input: String
  * - parserType: Type of the parser
  * - responseVariable: Variable name to store the output
- *
  * Outputs:
  * - Parsed text
  */
@@ -57,16 +55,21 @@ public class DocParser extends AbstractAIMediator {
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, "input", String.class, false);
         String parserType = getMediatorParameter(mc, "type", String.class, false);
-        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
+        String responseVariable = getMediatorParameter(
+                mc, "responseVariable", String.class, false
+        );
 
-        PARSER parser = null;
+        PARSER parser;
         parser = determineParser(parserType);
+        if (parser == null) {
+            handleException("Unsupported content type: " + parserType, mc);
+        }
 
         input = input.equalsIgnoreCase("payload") ? mc.getEnvelope().getBody().getFirstElement().getText() : input;
 
         DocumentParser docParser = null;
         ByteArrayInputStream inputStream = null;
-        switch (parser) {
+        switch (Objects.requireNonNull(parser)) {
             case TEXT:
                 docParser = new TextDocumentParser();
                 inputStream = new ByteArrayInputStream(input.getBytes());
@@ -92,7 +95,7 @@ public class DocParser extends AbstractAIMediator {
             handleException("Error parsing document", mc);
         }
 
-        handleResponse(mc, responseVariable, doc.text(), null, null);
+        handleResponse(mc, responseVariable, Objects.requireNonNull(doc).text(), null, null);
     }
 
     private PARSER determineParser(String contentType) {

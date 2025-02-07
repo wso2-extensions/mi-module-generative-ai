@@ -38,13 +38,11 @@ import java.util.List;
 
 /**
  *  Embedding generation operation
- *
  *  Inputs:
  *  - input: String or JSON array of Strings objects
  *  - model: Name of the embedding model
  *  - responseVariable: Variable name to store the output
  *  - connectionName: Name of the connection to the LLM
- *
  *  Outputs:
  *  - TextEmbedding object or JSON array of TextEmbedding objects
  */
@@ -72,7 +70,8 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         try {
             Response<List<Embedding>> embedding = embeddingModel.embedAll(inputs);
             for (int i = 0; i < inputs.size(); i++) {
-                textEmbeddings.add(new TextEmbedding(inputs.get(i).text(), embedding.content().get(i).vector(), inputs.get(i).metadata()));
+                textEmbeddings.add(new TextEmbedding(inputs.get(i).text(),
+                        embedding.content().get(i).vector(), inputs.get(i).metadata()));
             }
         } catch (Exception e) {
             handleException("Failed to generate embedding", e, mc);
@@ -83,7 +82,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {
-        List<TextSegment> textSegments = new ArrayList<>();
+        List<TextSegment> textSegments;
         try {
             // Try to parse input as a JSON array of TextSegment objects
             Type listType = new TypeToken<List<TextSegment>>() {}.getType();

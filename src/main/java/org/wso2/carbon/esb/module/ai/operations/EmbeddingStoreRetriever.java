@@ -35,7 +35,6 @@ import java.util.List;
 
 /**
  * Embedding store retrieval operation
- *
  * Inputs:
  * - connectionName: Name of the connection to the vector store
  * - input: TextEmbedding object
@@ -43,12 +42,12 @@ import java.util.List;
  * - minScore: Minimum score for the results
  * - filter: Filter string
  * - responseVariable: Variable name to store the output
- *
  * Outputs:
  * - List of EmbeddingMatch objects
  */
 public class EmbeddingStoreRetriever extends AbstractAIMediator {
 
+    // TODO: Implement filter parsing
     FilterParser filterParser = new StringFilterParser();
 
     @Override
@@ -60,6 +59,7 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         String input = getMediatorParameter(mc, "input", String.class, false);
         Integer maxResults = getMediatorParameter(mc, "maxResults", Integer.class, false);
         Double minScore = getMediatorParameter(mc, "minScore", Double.class, false);
+        // TODO: Implement filter parsing
         String filterString = getMediatorParameter(mc, "filter", String.class, true);
         String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
 
@@ -69,8 +69,8 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
             return;
         }
 
+        // TODO: Implement filter parsing
         Filter filter = null;
-        // Filter parsing is yet to be implemented
 
         VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
         try {
