@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "TextEmbedding",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "File chunk"
+    },
+    "embedding": {
+      "type": "array",
+      "description": "Embedding",
+      "items": {
+        "type": "number"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "description": "Chunk number"
+        }
+      },
+      "required": [
+        "index"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "text",
+    "embedding",
+    "metadata"
+  ],
+  "additionalProperties": false
+}

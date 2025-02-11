@@ -29,7 +29,7 @@ import org.wso2.carbon.esb.module.ai.Errors;
  * Prompt mediator
  * @author Isuru Wijesiri
  */
-public class Prompt extends AbstractAIMediator {
+public class PromptTemplate extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
