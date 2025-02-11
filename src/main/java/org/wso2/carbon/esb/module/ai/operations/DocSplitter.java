@@ -87,6 +87,6 @@ public class DocSplitter extends AbstractAIMediator {
             handleConnectorException(Errors.FAILED_TO_SPLIT, mc);
         }
 
-        handleConnectorResponse(mc, responseVariable, overwriteBody, segments, null, null);
+        handleConnectorResponse(mc, segments, null, null);
     }
 }

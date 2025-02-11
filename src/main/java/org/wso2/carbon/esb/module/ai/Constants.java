@@ -55,4 +55,11 @@ public class Constants {
     public static final String PPTX_TO_TEXT = "pptx-to-text";
     public static final String XLS_TO_TEXT = "xls-to-text";
     public static final String XLSX_TO_TEXT = "xlsx-to-text";
+
+    public static final String INPUT = "input";
+    public static final String TYPE = "type";
+
+    // Output Constants
+    public static final String RESPONSE_VARIABLE = "responseVariable";
+    public static final String OVERWRITE_BODY = "overwriteBody";
 }

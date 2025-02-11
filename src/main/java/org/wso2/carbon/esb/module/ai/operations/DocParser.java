@@ -56,20 +56,14 @@ public class DocParser extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
-        String input = getMediatorParameter(mc, "input", String.class, false);
-        String parserType = getMediatorParameter(mc, "type", String.class, false);
-        String responseVariable = getMediatorParameter(
-                mc, "responseVariable", String.class, false
-        );
-        Boolean overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
+        String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
+        String parserType = getMediatorParameter(mc, Constants.TYPE, String.class, false);
 
         PARSER parser;
         parser = determineParser(parserType);
         if (parser == null) {
             handleConnectorException(Errors.UNSUPPORTED_PARSER_TYPE, mc);
         }
-
-        input = input.equalsIgnoreCase("payload") ? mc.getEnvelope().getBody().getFirstElement().getText() : input;
 
         DocumentParser docParser = null;
         ByteArrayInputStream inputStream = null;
@@ -107,7 +101,7 @@ public class DocParser extends AbstractAIMediator {
             handleConnectorException(Errors.PARSE_ERROR, mc);
         }
 
-        handleConnectorResponse(mc, responseVariable, overwriteBody, Objects.requireNonNull(doc).text(), null, null);
+        handleConnectorResponse(mc, Objects.requireNonNull(doc).text(), null, null);
     }
 
     private PARSER determineParser(String contentType) {
