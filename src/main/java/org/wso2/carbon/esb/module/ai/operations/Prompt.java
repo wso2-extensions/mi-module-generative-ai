@@ -31,9 +31,6 @@ import org.wso2.carbon.esb.module.ai.Errors;
 public class Prompt extends AbstractAIMediator {
 
     @Override
-    public void initialize(MessageContext mc) {}
-
-    @Override
     public void execute(MessageContext mc) {
         String prompt = getMediatorParameter(mc, "prompt", String.class, false);
 
@@ -43,6 +40,5 @@ public class Prompt extends AbstractAIMediator {
         } catch (JaxenException e) {
             handleConnectorException(Errors.ERROR_PARSE_PROMPT, mc, e);
         }
-        // mc.setProperty(responseVariable, prompt);
     }
 }

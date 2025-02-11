@@ -46,10 +46,6 @@ import java.util.Objects;
 public class DocSplitter extends AbstractAIMediator {
 
     @Override
-    public void initialize(MessageContext mc) {
-    }
-
-    @Override
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, "input", String.class, false);
         String strategy = getMediatorParameter(mc, "strategy", String.class, false);

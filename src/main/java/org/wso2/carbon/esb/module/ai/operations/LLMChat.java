@@ -83,30 +83,25 @@ public class LLMChat extends AbstractAIMediator {
     private Double frequencyPenalty;
     private Integer seed;
     private String system;
-    private String outputType;
     private String connectionName;
 
     @Override
-    public void initialize(MessageContext mc) {
-        // Load mediator configurations from template
-        outputType = getMediatorParameter(mc, "outputType", String.class, false);
+    public void execute(MessageContext mc) {
+        connectionName = getProperty(mc, "connectionName", String.class, false);
 
-        // Load configurations from template and message context
+        String prompt = getMediatorParameter(mc, "prompt", String.class, false);
         modelName = getMediatorParameter(mc, "modelName", String.class, false);
+        String outputType = getMediatorParameter(mc, "outputType", String.class, false);
+
+        // Advanced configurations
+        system = getMediatorParameter(mc, "system", String.class, false);
         temperature = getMediatorParameter(mc, "temperature", Double.class, true);
         maxTokens = getMediatorParameter(mc, "maxTokens", Integer.class, true);
         topP = getMediatorParameter(mc, "topP", Double.class, true);
         frequencyPenalty = getMediatorParameter(mc, "frequencyPenalty", Double.class, true);
         seed = getMediatorParameter(mc, "seed", Integer.class, true);
 
-        system = getMediatorParameter(mc, "system", String.class, false);
-
-        connectionName = getProperty(mc, "connectionName", String.class, false);
-    }
-
-    @Override
-    public void execute(MessageContext mc) {
-        String prompt = getMediatorParameter(mc, "prompt", String.class, false);
+        // Additional configurations
         String knowledge = getMediatorParameter(mc, "knowledge", String.class, true);
         String chatHistory = getMediatorParameter(mc, "history", String.class, true);
         Integer maxHistory = getMediatorParameter(mc, "maxHistory", Integer.class, true);

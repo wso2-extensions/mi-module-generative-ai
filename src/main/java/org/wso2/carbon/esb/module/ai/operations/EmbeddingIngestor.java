@@ -46,9 +46,6 @@ import java.util.Map;
 public class EmbeddingIngestor extends AbstractAIMediator {
 
     @Override
-    public void initialize(MessageContext mc) {}
-
-    @Override
     public void execute(MessageContext mc) {
         String connectionName = getProperty(mc, "connectionName", String.class, false);
         String embeddings = getMediatorParameter(mc, "input", String.class, false);

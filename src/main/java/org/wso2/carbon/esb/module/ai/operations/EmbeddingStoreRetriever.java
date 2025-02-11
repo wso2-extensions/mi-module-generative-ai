@@ -53,9 +53,6 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
     FilterParser filterParser = new StringFilterParser();
 
     @Override
-    public void initialize(MessageContext mc) {}
-
-    @Override
     public void execute(MessageContext mc) {
         String connectionName = getProperty(mc, "connectionName", String.class, false);
         String input = getMediatorParameter(mc, "input", String.class, false);

@@ -52,9 +52,6 @@ public class DocParser extends AbstractAIMediator {
     }
 
     @Override
-    public void initialize(MessageContext mc) {}
-
-    @Override
     public void execute(MessageContext mc) {
         String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
         String parserType = getMediatorParameter(mc, Constants.TYPE, String.class, false);

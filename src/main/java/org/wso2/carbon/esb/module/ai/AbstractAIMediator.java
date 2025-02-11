@@ -41,8 +41,6 @@ public abstract class AbstractAIMediator extends AbstractConnector {
     String responseVariable;
     Boolean overwriteBody;
 
-    private Boolean initialized = false;
-    abstract public void initialize(MessageContext messageContext);
     abstract public void execute(MessageContext messageContext);
 
     @Override
@@ -52,10 +50,6 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         );
         overwriteBody = getMediatorParameter(messageContext, Constants.OVERWRITE_BODY, Boolean.class, false);
 
-        if (!initialized) {
-            initialize(messageContext);
-            initialized = true;
-        }
         execute(messageContext);
     }
 
