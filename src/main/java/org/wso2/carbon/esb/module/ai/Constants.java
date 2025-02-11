@@ -62,4 +62,36 @@ public class Constants {
     // Output Constants
     public static final String RESPONSE_VARIABLE = "responseVariable";
     public static final String OVERWRITE_BODY = "overwriteBody";
+
+    // Splitter Constants
+    public static final String STRATEGY = "strategy";
+    public static final String MAX_SEGMENT_SIZE = "maxSegmentSize";
+    public static final String MAX_OVERLAP_SIZE = "maxOverlapSize";
+
+    // Splitting strategies
+    public static final String RECURSIVE = "Recursive";
+    public static final String BY_PARAGRAPH = "ByParagraph";
+    public static final String BY_SENTENCE = "BySentence";
+
+    // Embedding generation constants
+    public static final String MODEL = "model";
+
+    // Embedding store retrieval constants
+    public static final String MAX_RESULTS = "maxResults";
+    public static final String MIN_SCORE = "minScore";
+    public static final String FILTER = "filter";
+
+    // LLM Chat Constants
+    public static final String PROMPT = "prompt";
+    public static final String MODEL_NAME = "modelName";
+    public static final String OUTPUT_TYPE = "outputType";
+    public static final String SYSTEM = "system";
+    public static final String TEMPERATURE = "temperature";
+    public static final String MAX_TOKENS = "maxTokens";
+    public static final String TOP_P = "topP";
+    public static final String FREQUENCY_PENALTY = "frequencyPenalty";
+    public static final String SEED = "seed";
+    public static final String KNOWLEDGE = "knowledge";
+    public static final String HISTORY = "history";
+    public static final String MAX_HISTORY = "maxHistory";
 }

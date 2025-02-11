@@ -22,6 +22,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.util.InlineExpressionUtil;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 
 /**
@@ -32,7 +33,7 @@ public class Prompt extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
-        String prompt = getMediatorParameter(mc, "prompt", String.class, false);
+        String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
 
         try {
             String parsedPrompt = InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, prompt);

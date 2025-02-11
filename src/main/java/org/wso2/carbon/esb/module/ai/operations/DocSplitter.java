@@ -27,6 +27,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 
 import java.util.List;
@@ -39,7 +40,6 @@ import java.util.Objects;
  * - strategy: Splitting strategy (Recursive, ByParagraph, BySentence)
  * - maxSegmentSize: Maximum segment size
  * - maxOverlapSize: Maximum overlap size
- * - responseVariable: Variable name to store the output
  * Outputs:
  * - List of TextSegment objects
  */
@@ -47,25 +47,23 @@ public class DocSplitter extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
-        String input = getMediatorParameter(mc, "input", String.class, false);
-        String strategy = getMediatorParameter(mc, "strategy", String.class, false);
-        Integer maxSegmentSize = getMediatorParameter(mc, "maxSegmentSize", Integer.class, true);
-        Integer maxOverlapSize = getMediatorParameter(mc, "maxOverlapSize", Integer.class, true);
-        String responseVariable = getMediatorParameter(mc, "responseVariable", String.class, false);
-        Boolean overwriteBody = getMediatorParameter(mc, "overwriteBody", Boolean.class, false);
+        String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
+        String strategy = getMediatorParameter(mc, Constants.STRATEGY, String.class, false);
+        Integer maxSegmentSize = getMediatorParameter(mc, Constants.MAX_SEGMENT_SIZE, Integer.class, true);
+        Integer maxOverlapSize = getMediatorParameter(mc, Constants.MAX_OVERLAP_SIZE, Integer.class, true);
 
         maxSegmentSize = (maxSegmentSize == null) ? 1000 : maxSegmentSize;
         maxOverlapSize = (maxOverlapSize == null) ? 200 : maxOverlapSize;
 
         DocumentSplitter splitter = null;
         switch (strategy) {
-            case "Recursive":
+            case Constants.RECURSIVE:
                 splitter = DocumentSplitters.recursive(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
                 break;
-            case "ByParagraph":
+            case Constants.BY_PARAGRAPH:
                 splitter = new DocumentByParagraphSplitter(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
                 break;
-            case "BySentence":
+            case Constants.BY_SENTENCE:
                 splitter = new DocumentBySentenceSplitter(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
                 break;
             default:

@@ -34,6 +34,7 @@ import dev.langchain4j.service.Result;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
@@ -57,8 +58,6 @@ import java.util.Map;
  * - knowledge: JSON array of TextSegment objects
  * - history: JSON array of ChatMessage objects
  * - maxHistory: Maximum history size
- * - responseVariable: Variable name to store the output
- * - responseType: Output type (String, Integer, Float, Boolean)
  * - connectionName: Name of the connection to the LLM
  * Outputs:
  * - Response based on the output type
@@ -87,24 +86,24 @@ public class LLMChat extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
-        connectionName = getProperty(mc, "connectionName", String.class, false);
+        connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
-        String prompt = getMediatorParameter(mc, "prompt", String.class, false);
-        modelName = getMediatorParameter(mc, "modelName", String.class, false);
-        String outputType = getMediatorParameter(mc, "outputType", String.class, false);
+        String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
+        modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
+        String outputType = getMediatorParameter(mc, Constants.OUTPUT_TYPE, String.class, false);
 
         // Advanced configurations
-        system = getMediatorParameter(mc, "system", String.class, false);
-        temperature = getMediatorParameter(mc, "temperature", Double.class, true);
-        maxTokens = getMediatorParameter(mc, "maxTokens", Integer.class, true);
-        topP = getMediatorParameter(mc, "topP", Double.class, true);
-        frequencyPenalty = getMediatorParameter(mc, "frequencyPenalty", Double.class, true);
-        seed = getMediatorParameter(mc, "seed", Integer.class, true);
+        system = getMediatorParameter(mc, Constants.SYSTEM, String.class, false);
+        temperature = getMediatorParameter(mc, Constants.TEMPERATURE, Double.class, true);
+        maxTokens = getMediatorParameter(mc, Constants.MAX_TOKENS, Integer.class, true);
+        topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
+        frequencyPenalty = getMediatorParameter(mc, Constants.FREQUENCY_PENALTY, Double.class, true);
+        seed = getMediatorParameter(mc, Constants.SEED, Integer.class, true);
 
         // Additional configurations
-        String knowledge = getMediatorParameter(mc, "knowledge", String.class, true);
-        String chatHistory = getMediatorParameter(mc, "history", String.class, true);
-        Integer maxHistory = getMediatorParameter(mc, "maxHistory", Integer.class, true);
+        String knowledge = getMediatorParameter(mc, Constants.KNOWLEDGE, String.class, true);
+        String chatHistory = getMediatorParameter(mc, Constants.HISTORY, String.class, true);
+        Integer maxHistory = getMediatorParameter(mc, Constants.MAX_HISTORY, Integer.class, true);
 
         ContentRetriever knowledgeRetriever = null;
         if (knowledge != null) {

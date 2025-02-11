@@ -38,7 +38,6 @@ import java.util.Objects;
  * Inputs:
  * - input: String
  * - parserType: Type of the parser
- * - responseVariable: Variable name to store the output
  * Outputs:
  * - Parsed text
  */

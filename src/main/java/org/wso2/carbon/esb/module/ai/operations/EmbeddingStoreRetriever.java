@@ -26,6 +26,7 @@ import dev.langchain4j.store.embedding.filter.Filter;
 import dev.langchain4j.store.embedding.filter.FilterParser;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.exceptions.VectorStoreException;
 import org.wso2.carbon.esb.module.ai.utils.StringFilterParser;
@@ -43,7 +44,6 @@ import java.util.List;
  * - maxResults: Maximum number of results to return
  * - minScore: Minimum score for the results
  * - filter: Filter string
- * - responseVariable: Variable name to store the output
  * Outputs:
  * - List of EmbeddingMatch objects
  */
@@ -54,12 +54,12 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
-        String connectionName = getProperty(mc, "connectionName", String.class, false);
-        String input = getMediatorParameter(mc, "input", String.class, false);
-        Integer maxResults = getMediatorParameter(mc, "maxResults", Integer.class, false);
-        Double minScore = getMediatorParameter(mc, "minScore", Double.class, false);
+        String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
+        String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
+        Integer maxResults = getMediatorParameter(mc, Constants.MAX_RESULTS, Integer.class, false);
+        Double minScore = getMediatorParameter(mc, Constants.MIN_SCORE, Double.class, false);
         // TODO: Implement filter parsing
-        String filterString = getMediatorParameter(mc, "filter", String.class, true);
+        String filterString = getMediatorParameter(mc, Constants.FILTER, String.class, true);
 
         Embedding embedding = parseAndValidateInput(input);
         if (embedding == null) {

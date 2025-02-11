@@ -27,6 +27,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.models.TextEmbedding;
@@ -42,7 +43,6 @@ import java.util.List;
  *  Inputs:
  *  - input: String or JSON array of Strings objects
  *  - model: Name of the embedding model
- *  - responseVariable: Variable name to store the output
  *  - connectionName: Name of the connection to the LLM
  *  Outputs:
  *  - TextEmbedding object or JSON array of TextEmbedding objects
@@ -52,9 +52,9 @@ public class EmbeddingGenerator extends AbstractAIMediator {
     @Override
     public void execute(MessageContext mc) {
 
-        String input = getMediatorParameter(mc, "input", String.class, false);
-        String model = getMediatorParameter(mc, "model", String.class, false);
-        String connectionName = getProperty(mc, "connectionName", String.class, false);
+        String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
+        String model = getMediatorParameter(mc, Constants.MODEL, String.class, false);
+        String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
         List<TextSegment> inputs = parseAndValidateInput(input);
         if (inputs == null) {

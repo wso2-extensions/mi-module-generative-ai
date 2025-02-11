@@ -22,6 +22,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.exceptions.VectorStoreException;
 import org.wso2.carbon.esb.module.ai.stores.VectorStore;
@@ -39,7 +40,6 @@ import java.util.Map;
  * Inputs:
  * - input: JSON array of TextEmbedding objects
  * - connectionName: Name of the connection to the vector store
- * - responseVariable: Variable name to store the output
  * Outputs:
  * - SUCCESS: true or false
  */
@@ -47,8 +47,8 @@ public class EmbeddingIngestor extends AbstractAIMediator {
 
     @Override
     public void execute(MessageContext mc) {
-        String connectionName = getProperty(mc, "connectionName", String.class, false);
-        String embeddings = getMediatorParameter(mc, "input", String.class, false);
+        String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
+        String embeddings = getMediatorParameter(mc, Constants.INPUT, String.class, false);
 
         List<TextEmbedding> textEmbeddings = parseAndValidateInput(embeddings);
         if (textEmbeddings == null) {
