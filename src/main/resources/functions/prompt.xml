@@ -20,6 +20,6 @@
     <parameter name="responseVariable" description="Response variable name"/>
     <parameter name="overwriteBody" description="Replace the Message Body in Message Context with the response of the operation."/>
     <sequence>
-        <class name="org.wso2.carbon.esb.module.ai.operations.Prompt"/>
+        <class name="org.wso2.carbon.esb.module.ai.operations.PromptTemplate"/>
     </sequence>
 </template>
