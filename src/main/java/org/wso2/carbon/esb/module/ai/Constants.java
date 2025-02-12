@@ -40,10 +40,19 @@ public class Constants {
     public static final String USER = "user";
     public static final String PASSWORD = "password";
     public static final String TABLE = "table";
+    public static final String ENABLE = "Enable";
+    public static final String MI_VECTOR_STORE = "MI_VECTOR_STORE";
+    public static final String CHROMA_DB = "CHROMA_DB";
+    public static final String PINECONE = "PINECONE";
+    public static final String POSTGRE_SQL = "POSTGRE_SQL";
 
     // LLM connection properties
     public static final String DEPLOYMENT_NAME = "deploymentName";
     public static final String ENDPOINT = "endpoint";
+    public static final String OPEN_AI = "OPEN_AI";
+    public static final String MISTRAL_AI = "MISTRAL_AI";
+    public static final String ANTHROPIC = "ANTHROPIC";
+    public static final String AZURE_OPEN_AI = "AZURE_OPEN_AI";
 
     // Parser Constants
     public static final String MD_TO_TEXT = "markdown-to-text";

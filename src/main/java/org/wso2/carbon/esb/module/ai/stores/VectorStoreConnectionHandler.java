@@ -19,6 +19,7 @@
 package org.wso2.carbon.esb.module.ai.stores;
 
 import org.apache.synapse.MessageContext;
+import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.connections.ConnectionParams;
 import org.wso2.carbon.esb.module.ai.exceptions.VectorStoreException;
@@ -38,53 +39,53 @@ public class VectorStoreConnectionHandler {
         ConnectionParams connectionParams = connections.get(connectionName);
 
         switch (connectionParams.getConnectionType()) {
-            case "MI_VECTOR_STORE":
-                Boolean persistence = connectionParams.getConnectionProperty("persistence").equals("Enable");
+            case Constants.MI_VECTOR_STORE:
+                Boolean persistence = connectionParams.getConnectionProperty(Constants.PERSISTENCE).equals(Constants.ENABLE);
                 MicroIntegratorRegistry microIntegratorRegistry = (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
                 vectorStore = new MIVectorStore(connectionName, persistence, microIntegratorRegistry);
                 break;
 
-            case "CHROMA_DB":
+            case Constants.CHROMA_DB:
                 vectorStore = new ChromaDB(
-                        connectionParams.getConnectionProperty("url"),
-                        connectionParams.getConnectionProperty("collection")
+                        connectionParams.getConnectionProperty(Constants.URL),
+                        connectionParams.getConnectionProperty(Constants.COLLECTION)
                 );
                 break;
 
-            case "PINECONE":
+            case Constants.PINECONE:
                 try {
                     vectorStore = new Pinecone(
-                            connectionParams.getConnectionProperty("apiKey"),
-                            connectionParams.getConnectionProperty("namespace"),
-                            connectionParams.getConnectionProperty("cloud"),
-                            connectionParams.getConnectionProperty("region"),
-                            connectionParams.getConnectionProperty("index"),
-                            Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
+                            connectionParams.getConnectionProperty(Constants.URL),
+                            connectionParams.getConnectionProperty(Constants.NAMESPACE),
+                            connectionParams.getConnectionProperty(Constants.CLOUD),
+                            connectionParams.getConnectionProperty(Constants.REGION),
+                            connectionParams.getConnectionProperty(Constants.INDEX),
+                            Integer.parseInt(connectionParams.getConnectionProperty(Constants.DIMENSION)));
                 } catch (Exception e) {
                     throw new VectorStoreException(Errors.PINECONE_CONNECTION_ERROR, e);
                 }
                 break;
 
-            case "POSTGRE_SQL":
+            case Constants.POSTGRE_SQL:
                 try {
                     boolean status = PGVector.testConnection(
-                            connectionParams.getConnectionProperty("host"),
-                            Integer.parseInt(connectionParams.getConnectionProperty("port")),
-                            connectionParams.getConnectionProperty("database"),
-                            connectionParams.getConnectionProperty("user"),
-                            connectionParams.getConnectionProperty("password"));
+                            connectionParams.getConnectionProperty(Constants.HOST),
+                            Integer.parseInt(connectionParams.getConnectionProperty(Constants.PORT)),
+                            connectionParams.getConnectionProperty(Constants.DATABASE),
+                            connectionParams.getConnectionProperty(Constants.USER),
+                            connectionParams.getConnectionProperty(Constants.PASSWORD));
                     if (!status) {
                         throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR);
                     }
 
                     vectorStore = new PGVector(
-                            connectionParams.getConnectionProperty("host"),
-                            connectionParams.getConnectionProperty("port"),
-                            connectionParams.getConnectionProperty("database"),
-                            connectionParams.getConnectionProperty("user"),
-                            connectionParams.getConnectionProperty("password"),
-                            connectionParams.getConnectionProperty("table"),
-                            Integer.parseInt(connectionParams.getConnectionProperty("dimension")));
+                            connectionParams.getConnectionProperty(Constants.HOST),
+                            connectionParams.getConnectionProperty(Constants.PORT),
+                            connectionParams.getConnectionProperty(Constants.DATABASE),
+                            connectionParams.getConnectionProperty(Constants.USER),
+                            connectionParams.getConnectionProperty(Constants.PASSWORD),
+                            connectionParams.getConnectionProperty(Constants.TABLE),
+                            Integer.parseInt(connectionParams.getConnectionProperty(Constants.DIMENSION)));
                 } catch (Exception e) {
                     throw new VectorStoreException(Errors.POSTGRE_SQL_CONNECTION_ERROR, e);
                 }

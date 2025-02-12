@@ -46,7 +46,7 @@ public class LLMConnectionHandler {
         ChatLanguageModel chatModel = null;
         ConnectionParams connectionParams = connectionMap.remove(connectionName);
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
-            case "OPEN_AI":
+            case Constants.OPEN_AI:
                 // Null values of LLM params will be handled by LangChain4j
                  chatModel =  OpenAiChatModel.builder()
                          .modelName(modelName)
@@ -58,7 +58,7 @@ public class LLMConnectionHandler {
                          .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
                          .build();
                  break;
-            case "AZURE_OPEN_AI":
+            case Constants.AZURE_OPEN_AI:
                 // Null values of LLM params will be handled by LangChain4j
                 chatModel =  AzureOpenAiChatModel.builder()
                         .temperature(temperature)
@@ -71,7 +71,7 @@ public class LLMConnectionHandler {
                         .endpoint(connectionParams.getConnectionProperty(Constants.ENDPOINT))
                         .build();
                 break;
-            case "ANTHROPIC":
+            case Constants.ANTHROPIC:
                 chatModel = AnthropicChatModel.builder()
                         .modelName(modelName)
                         .temperature(temperature)
@@ -80,7 +80,7 @@ public class LLMConnectionHandler {
                         .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
                         .build();
                 break;
-            case "MISTRAL_AI":
+            case Constants.MISTRAL_AI:
                 chatModel = MistralAiChatModel.builder()
                         .modelName(modelName)
                         .temperature(temperature)
@@ -105,9 +105,6 @@ public class LLMConnectionHandler {
                         .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
                         .modelName(modelName)
                         .build();
-            case "ANTHROPIC":
-                // To be implemented
-                break;
             default:
                 break;
         }
