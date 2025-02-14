@@ -55,7 +55,7 @@ public class VectorStoreConnectionHandler {
             case Constants.PINECONE:
                 try {
                     vectorStore = new Pinecone(
-                            connectionParams.getConnectionProperty(Constants.URL),
+                            connectionParams.getConnectionProperty(Constants.API_KEY),
                             connectionParams.getConnectionProperty(Constants.NAMESPACE),
                             connectionParams.getConnectionProperty(Constants.CLOUD),
                             connectionParams.getConnectionProperty(Constants.REGION),
