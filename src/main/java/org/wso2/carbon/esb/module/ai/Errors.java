@@ -20,30 +20,34 @@ package org.wso2.carbon.esb.module.ai;
 
 public enum Errors {
 
+    // Connection related errors
+    LLM_CONNECTION_ERROR("AI-LLM-0001", "Error creating LLM connection"),
+    EMBEDDING_MODEL_CONNECTION_ERROR("AI-EMB-0001", "Error creating embedding model connection"),
+
     // Embedding ingestion related errors
     INVALID_INPUT_FOR_EMBEDDING_INGESTION(
-            "AI-EI-0002",
+            "AI-EMB-INGESTOR-0002",
             "Invalid input format. Expected a JSON array of TextEmbedding objects"
     ),
-    EMBEDDING_INJECTION_ERROR("AI-EI-0001", "Embedding injection error occurred"),
+    EMBEDDING_INJECTION_ERROR("AI-EMB-INGESTOR-0001", "Embedding injection error occurred"),
 
     // Embedding retrieval related errors
     INVALID_INPUT_FOR_EMBEDDING_RETRIEVAL(
-            "AI-ER-0002",
+            "AI-EMB-RETRIEVER-0002",
             "Invalid input format. Expected a vector ( Array of numbers )"
     ),
-    EMBEDDING_RETRIEVAL_ERROR("AI-ER-0001", "Embedding retrieval error occurred"),
+    EMBEDDING_RETRIEVAL_ERROR("AI-EMB-RETRIEVER-0001", "Embedding retrieval error occurred"),
 
     // Vector store related errors
     PINECONE_CONNECTION_ERROR("AI-PC-0001", "Error creating Pinecone connection"),
     POSTGRE_SQL_CONNECTION_ERROR("AI-PS-0001", "Error creating Postgres connection"),
 
     // Parser related errors
-    PARSE_ERROR("AI-PE-0001", "Error parsing the input"),
-    UNSUPPORTED_PARSER_INPUT("AI-PE-0002", "Unsupported parser input"),
-    UNSUPPORTED_PARSER_TYPE("AI-PE-0003", "Unsupported parser type"),
-    HTML_TO_TEXT_ERROR("AI-PE-0004", "Error converting HTML to text"),
-    HTML_TO_MARKDOWN_ERROR("AI-PE-0005", "Error converting HTML to markdown"),
+    PARSE_ERROR("AI-PARSER-0001", "Error parsing the input"),
+    UNSUPPORTED_PARSER_INPUT("AI-PARSER-0002", "Unsupported parser input"),
+    UNSUPPORTED_PARSER_TYPE("AI-PARSER-0003", "Unsupported parser type"),
+    HTML_TO_TEXT_ERROR("AI-PARSER-0004", "Error converting HTML to text"),
+    HTML_TO_MARKDOWN_ERROR("AI-PARSER-0005", "Error converting HTML to markdown"),
 
     // Splitter related errors
     INVALID_SPLITTING_STRATEGY("AI-SS-0001", "Invalid splitting strategy"),

@@ -16,7 +16,7 @@
               "displayName": "OpenAI Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "OPEN_AI", "ANTHROPIC", "AZURE_OPEN_AI", "MISTRAL_AI"
+                "OPEN_AI", "ANTHROPIC", "AZURE_OPEN_AI", "MISTRAL_AI", "DEEPSEEK"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",

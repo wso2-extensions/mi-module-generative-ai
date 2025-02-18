@@ -49,10 +49,12 @@ public class Constants {
     // LLM connection properties
     public static final String DEPLOYMENT_NAME = "deploymentName";
     public static final String ENDPOINT = "endpoint";
+    public static final String BASE_URL = "baseUrl";
     public static final String OPEN_AI = "OPEN_AI";
     public static final String MISTRAL_AI = "MISTRAL_AI";
     public static final String ANTHROPIC = "ANTHROPIC";
     public static final String AZURE_OPEN_AI = "AZURE_OPEN_AI";
+    public static final String DEEPSEEK = "DEEPSEEK";
 
     // Parser Constants
     public static final String MD_TO_TEXT = "markdown-to-text";

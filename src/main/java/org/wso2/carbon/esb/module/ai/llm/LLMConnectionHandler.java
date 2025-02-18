@@ -47,8 +47,10 @@ public class LLMConnectionHandler {
         ConnectionParams connectionParams = connectionMap.remove(connectionName);
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
             case Constants.OPEN_AI:
+            case Constants.DEEPSEEK:
                 // Null values of LLM params will be handled by LangChain4j
                  chatModel =  OpenAiChatModel.builder()
+                         .baseUrl(connectionParams.getConnectionProperty(Constants.BASE_URL))
                          .modelName(modelName)
                          .temperature(temperature)
                          .maxTokens(maxTokens)

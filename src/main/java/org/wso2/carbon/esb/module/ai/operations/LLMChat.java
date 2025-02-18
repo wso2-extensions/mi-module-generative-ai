@@ -83,6 +83,7 @@ public class LLMChat extends AbstractAIMediator {
     private Integer seed;
     private String system;
     private String connectionName;
+    private ChatLanguageModel model;
 
     @Override
     public void execute(MessageContext mc) {
@@ -99,6 +100,17 @@ public class LLMChat extends AbstractAIMediator {
         topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
         frequencyPenalty = getMediatorParameter(mc, Constants.FREQUENCY_PENALTY, Double.class, true);
         seed = getMediatorParameter(mc, Constants.SEED, Integer.class, true);
+
+        try {
+            model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
+            if (model == null) {
+                handleConnectorException(Errors.LLM_CONNECTION_ERROR, mc);
+                return;
+            }
+        } catch (Exception e) {
+            handleConnectorException(Errors.LLM_CONNECTION_ERROR, mc, e);
+            return;
+        }
 
         // Additional configurations
         String knowledge = getMediatorParameter(mc, Constants.KNOWLEDGE, String.class, true);
@@ -211,7 +223,6 @@ public class LLMChat extends AbstractAIMediator {
     }
 
     private <T> T getAgent(Class<T> agentType, ContentRetriever knowledgeRetriever, ChatMemory chatMemory) {
-        ChatLanguageModel model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
         AiServices<T> service = AiServices
                 .builder(agentType)
                 .chatLanguageModel(model)

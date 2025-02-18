@@ -65,6 +65,10 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         List<TextEmbedding> textEmbeddings = new ArrayList<>();
         try {
             EmbeddingModel embeddingModel = LLMConnectionHandler.getEmbeddingModel(connectionName, model);
+            if (embeddingModel == null) {
+                handleConnectorException(Errors.EMBEDDING_MODEL_CONNECTION_ERROR, mc);
+                return;
+            }
             Response<List<Embedding>> embedding = embeddingModel.embedAll(inputs);
             for (int i = 0; i < inputs.size(); i++) {
                 textEmbeddings.add(new TextEmbedding(inputs.get(i).text(),

@@ -38,6 +38,7 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
         connectionProperties.put(Constants.API_KEY, getProperty(messageContext, Constants.API_KEY));
         connectionProperties.put(Constants.DEPLOYMENT_NAME, getProperty(messageContext, Constants.DEPLOYMENT_NAME));
         connectionProperties.put(Constants.ENDPOINT, getProperty(messageContext, Constants.ENDPOINT));
+        connectionProperties.put(Constants.BASE_URL, getProperty(messageContext, Constants.BASE_URL));
 
         LLMConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties)

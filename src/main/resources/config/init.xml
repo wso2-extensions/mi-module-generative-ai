@@ -33,6 +33,7 @@
 
 	<parameter name="deploymentName" description="Deployment name of Azure Open AI"/>
 	<parameter name="endpoint" description="Endpoint of Azure Open AI"/>
+	<parameter name="baseUrl" description="Base URL of the AI service API"/>
 
 	<parameter name="host" description="Host of the database"/>
 	<parameter name="port" description="Port of the database"/>
@@ -58,6 +59,7 @@
 
 		<property name="deploymentName" expression="$func:deploymentName"/>
 		<property name="endpoint" expression="$func:endpoint"/>
+		<property name="baseUrl" expression="$func:baseUrl"/>
 
 		<property name="host" expression="$func:host"/>
 		<property name="port" expression="$func:port"/>
@@ -68,7 +70,7 @@
 
 		<switch source="get-property('connectionType')">
 
-			<case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI">
+			<case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
 				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
 			</case>
 
