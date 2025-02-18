@@ -1,0 +1,102 @@
+{
+  "connectorName": "ai",
+  "connectionName": "PINECONE",
+  "title": "Pinecone connection config",
+  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "PINECONE",
+        "required": "true",
+        "helpTip": "A name for the vector store connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "API Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Pinecone Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "index",
+                    "displayName": "Index",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "wso2-mi",
+                    "required": "true",
+                    "helpTip": "Give the index"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "namespace",
+                    "displayName": "Namespace",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "ai",
+                    "required": "true",
+                    "helpTip": "Give the namespace"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "cloud",
+                    "displayName": "Cloud",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "AWS",
+                    "required": "true",
+                    "helpTip": "Give the cloud"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "region",
+                    "displayName": "Region",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "us-east-1",
+                    "required": "true",
+                    "helpTip": "Give the region"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "dimension",
+                    "displayName": "Dimension of embeddings",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "1536",
+                    "required": "true",
+                    "helpTip": "Give the dimension of the embeddings"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

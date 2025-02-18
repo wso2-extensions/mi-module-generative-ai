@@ -1,0 +1,48 @@
+{
+  "connectorName": "ai",
+  "connectionName": "MI_VECTOR_STORE",
+  "title": "MI In-Memory Vector Store",
+  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "MI_VECTOR_STORE_1",
+        "required": "true",
+        "helpTip": "A name for the vector store connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "persistence",
+                    "displayName": "Persist to MI registry",
+                    "inputType": "combo",
+                    "comboValues": ["Enable", "Disable"],
+                    "defaultValue": "Enable",
+                    "required": "true",
+                    "helpTip": "Persist the vector store to the MI registry"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

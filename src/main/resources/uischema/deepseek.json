@@ -1,0 +1,58 @@
+{
+  "connectorName": "ai",
+  "connectionName": "DEEPSEEK",
+  "title": "DEEPSEEK Connection Config",
+  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "DEEPSEEK_CONNECTION",
+        "required": "true",
+        "helpTip": "The name for the DEEPSEEK connection",
+        "validation": "nameWithoutSpecialCharacters"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "Deepseek API Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Deepseek API Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "baseUrl",
+                    "displayName": "Base url",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "https://api.deepseek.com",
+                    "required": "false",
+                    "helpTip": "Base Url"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Output Schema for the search store operation",
+  "description": "Output schema for the search store operation in the connector.",
+  "properties": {
+    "payload": {
+      "type": "array",
+      "description": "Array of embedding matches",
+      "items": {
+        "type": "object",
+        "description": "EmbeddingMatch",
+        "properties": {
+          "score": {
+            "type": "number",
+            "description": "Similarity score"
+          },
+          "embeddingId": {
+            "type": "string",
+            "description": "Embedding ID"
+          },
+          "embedding": {
+            "type": "array",
+            "description": "Embedding",
+            "items": {
+              "type": "number"
+            }
+          },
+          "embedded": {
+            "type": "object",
+            "description": "Embedded text",
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Text"
+              },
+              "metadata": {
+                "type": "object",
+                "description": "Metadata",
+                "properties": {
+                  "index": {
+                    "type": "integer",
+                    "description": "Chunk number"
+                  }
+                },
+                "required": [
+                  "index"
+                ],
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "required": [
+          "score",
+          "embeddingId",
+          "embedding",
+          "embedded"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "payload"
+  ],
+  "additionalProperties": false
+}

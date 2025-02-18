@@ -1,0 +1,47 @@
+{
+  "connectorName": "ai",
+  "connectionName": "MISTRAL_AI",
+  "title": "MistralAI Connection Config",
+  "help": "<h1>AI Connector</h1> <b>The MistralAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "MISTRAL_AI_CONNECTION_1",
+        "required": "true",
+        "helpTip": "The name for the MistralAI connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "MistralAI Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "MistralAI Key"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
