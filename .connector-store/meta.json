@@ -1,0 +1,107 @@
+{
+  "name": "AI",
+  "owner": "WSO2",
+  "product": "MI",
+  "category": "Developer Tools",
+  "documentationUrl": "https://mi.docs.wso2.com/en/4.4.0/",
+  "mavenGroupId": "org.wso2.integration.connector",
+  "mavenArtifactId": "mi-connector-ai",
+  "description": "The AI module allows you to integrate with AI services and develop AI applications.",
+  "status": "Active",
+  "rank": 5,
+  "type": "Connector",
+  "releases": [
+    {
+      "tagName": "v0.1.0",
+      "products": [
+        "MI 4.4.0"
+      ],
+      "operations": [
+        {
+          "name":"init",
+          "description":"Config operation",
+          "isHidden":true
+        },
+        {
+          "name":"prompt",
+          "description":"Define a prompt template.",
+          "isHidden":false
+        },
+        {
+          "name":"chat",
+          "description":"Invoke a LLM service.",
+          "isHidden":false
+        },
+        {
+          "name":"parse",
+          "description":"Parse a given text to desired format.",
+          "isHidden":false
+        },
+        {
+          "name":"split",
+          "description":"Split a given text to chunks.",
+          "isHidden":false
+        },
+        {
+          "name":"generateEmbeddings",
+          "description":"Generate embeddings for a given text.",
+          "isHidden":false
+        },
+        {
+          "name":"addToStore",
+          "description":"Add text and its embeddings to a selected vector store.",
+          "isHidden":false
+        },
+        {
+          "name":"searchStore",
+          "description":"Search for similar texts in a selected vector store.",
+          "isHidden":false
+        }
+      ],
+      "connections": [
+        {
+          "name": "ANTHROPIC",
+          "description": "Connection for interacting with the Anthropic AI service."
+        },
+        {
+          "name": "AZURE_OPEN_AI",
+          "description": "Connection for interacting with the Azure OpenAI service."
+        },
+        {
+          "name": "MISTRAL_AI",
+          "description": "Connection for interacting with the MistralAI service."
+        },
+        {
+          "name": "DEEPSEEK",
+          "description": "Connection for interacting with the DeepSeek service."
+        },
+        {
+          "name": "OPEN_AI",
+          "description": "Connection for interacting with the OpenAI service."
+        },
+        {
+          "name": "MI_VECTOR_STORE",
+          "description": "Connection for interacting with the MI In-Registry vector store."
+        },
+        {
+          "name": "PINECONE",
+          "description": "Connection for interacting with the Pinecone vector store."
+        },
+        {
+          "name": "POSTGRE_SQL",
+          "description": "Connection for interacting with the PostgreSQL vector database."
+        },
+        {
+          "name": "CHROMA_DB",
+          "description": "Connection for interacting with the ChromaDB vector database."
+        }
+      ],
+      "isHidden": false
+    }
+  ],
+  "labels": [
+    "ai",
+    "generative-ai",
+    "vector-store"
+  ]
+}
