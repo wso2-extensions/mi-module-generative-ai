@@ -32,12 +32,12 @@ import org.wso2.carbon.esb.module.ai.Errors;
 public class PromptTemplate extends AbstractAIMediator {
 
     @Override
-    public void execute(MessageContext mc) {
+    public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
         String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
 
         try {
             String parsedPrompt = InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, prompt);
-            handleConnectorResponse(mc, parsedPrompt, null, null);
+            handleConnectorResponse(mc, responseVariable, overwriteBody, parsedPrompt, null, null);
         } catch (JaxenException e) {
             handleConnectorException(Errors.ERROR_PARSE_PROMPT, mc, e);
         }

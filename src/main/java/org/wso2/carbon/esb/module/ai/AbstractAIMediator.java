@@ -38,19 +38,16 @@ import java.util.Objects;
  */
 public abstract class AbstractAIMediator extends AbstractConnector {
 
-    String responseVariable;
-    Boolean overwriteBody;
-
-    abstract public void execute(MessageContext messageContext);
+    abstract public void execute(MessageContext messageContext, String responseVariable, Boolean overwriteBody);
 
     @Override
     public void connect(MessageContext messageContext){
-        responseVariable = getMediatorParameter(
+        String responseVariable = getMediatorParameter(
                 messageContext, Constants.RESPONSE_VARIABLE, String.class, false
         );
-        overwriteBody = getMediatorParameter(messageContext, Constants.OVERWRITE_BODY, Boolean.class, false);
-
-        execute(messageContext);
+        Boolean overwriteBody = getMediatorParameter(
+                messageContext, Constants.OVERWRITE_BODY, Boolean.class, false);
+        execute(messageContext, responseVariable, overwriteBody);
     }
 
     protected <T> T getMediatorParameter(
@@ -110,8 +107,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         }
     }
 
-    protected void handleConnectorResponse(MessageContext messageContext, Object payload,
-            Map<String, Object> headers, Map<String, Object> attributes) {
+    protected void handleConnectorResponse(MessageContext messageContext, String responseVariable,
+                                           Boolean overwriteBody, Object payload,
+                                           Map<String, Object> headers, Map<String, Object> attributes) {
 
         ConnectorResponse response = new DefaultConnectorResponse();
         if (payload == null) {
