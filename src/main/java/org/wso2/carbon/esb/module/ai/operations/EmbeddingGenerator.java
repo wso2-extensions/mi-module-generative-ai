@@ -50,7 +50,7 @@ import java.util.List;
 public class EmbeddingGenerator extends AbstractAIMediator {
 
     @Override
-    public void execute(MessageContext mc) {
+    public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
 
         String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
         String model = getMediatorParameter(mc, Constants.MODEL, String.class, false);
@@ -79,7 +79,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         }
 
         // If multiple inputs were provided, return a JSON array of TextEmbedding objects
-        handleConnectorResponse(mc, textEmbeddings, null, null);
+        handleConnectorResponse(mc, responseVariable, overwriteBody, textEmbeddings, null, null);
     }
 
     private List<TextSegment> parseAndValidateInput(String input) {

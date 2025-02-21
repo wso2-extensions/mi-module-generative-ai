@@ -46,7 +46,7 @@ import java.util.Map;
 public class EmbeddingIngestor extends AbstractAIMediator {
 
     @Override
-    public void execute(MessageContext mc) {
+    public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
         String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
         String embeddings = getMediatorParameter(mc, Constants.INPUT, String.class, false);
 
@@ -64,7 +64,8 @@ public class EmbeddingIngestor extends AbstractAIMediator {
         } catch (Exception e) {
             handleConnectorException(Errors.EMBEDDING_INJECTION_ERROR, mc, e);
         } finally {
-            handleConnectorResponse(mc, null, null, Map.of("SUCCESS", "true"));
+            handleConnectorResponse(mc, responseVariable, overwriteBody,
+                    null, null, Map.of("SUCCESS", "true"));
         }
     }
 

@@ -86,7 +86,7 @@ public class LLMChat extends AbstractAIMediator {
     private ChatLanguageModel model;
 
     @Override
-    public void execute(MessageContext mc) {
+    public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
         connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
         String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
@@ -151,7 +151,7 @@ public class LLMChat extends AbstractAIMediator {
         try {
             Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
             if (answer != null) {
-                handleConnectorResponse(mc, answer, null, null);
+                handleConnectorResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {
                 handleConnectorException(Errors.INVALID_OUTPUT_TYPE, mc);
             }

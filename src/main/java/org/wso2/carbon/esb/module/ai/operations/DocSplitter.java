@@ -46,7 +46,7 @@ import java.util.Objects;
 public class DocSplitter extends AbstractAIMediator {
 
     @Override
-    public void execute(MessageContext mc) {
+    public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
         String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
         String strategy = getMediatorParameter(mc, Constants.STRATEGY, String.class, false);
         Integer maxSegmentSize = getMediatorParameter(mc, Constants.MAX_SEGMENT_SIZE, Integer.class, true);
@@ -81,6 +81,6 @@ public class DocSplitter extends AbstractAIMediator {
             handleConnectorException(Errors.FAILED_TO_SPLIT, mc);
         }
 
-        handleConnectorResponse(mc, segments, null, null);
+        handleConnectorResponse(mc, responseVariable, overwriteBody, segments, null, null);
     }
 }
