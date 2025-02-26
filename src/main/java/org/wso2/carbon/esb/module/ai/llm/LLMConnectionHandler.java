@@ -45,6 +45,10 @@ public class LLMConnectionHandler {
 
         ChatLanguageModel chatModel = null;
         ConnectionParams connectionParams = connectionMap.remove(connectionName);
+        if (connectionParams == null) {
+            return null;
+        }
+
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
             case Constants.OPEN_AI:
             case Constants.DEEPSEEK:

@@ -39,8 +39,9 @@ public enum Errors {
     EMBEDDING_RETRIEVAL_ERROR("AI-EMB-RETRIEVER-0001", "Embedding retrieval error occurred"),
 
     // Vector store related errors
-    PINECONE_CONNECTION_ERROR("AI-PC-0001", "Error creating Pinecone connection"),
-    POSTGRE_SQL_CONNECTION_ERROR("AI-PS-0001", "Error creating Postgres connection"),
+    PINECONE_CONNECTION_ERROR("AI-VS-0001", "Error creating Pinecone connection"),
+    POSTGRE_SQL_CONNECTION_ERROR("AI-VS-0002", "Error creating Postgres connection"),
+    VECTOR_STORE_CONNECTION_ERROR("AI-VS-0003", "Vector store connection not found"),
 
     // Parser related errors
     PARSE_ERROR("AI-PARSER-0001", "Error parsing the input"),

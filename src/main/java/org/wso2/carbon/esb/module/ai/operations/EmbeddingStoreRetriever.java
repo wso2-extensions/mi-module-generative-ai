@@ -73,6 +73,10 @@ public class EmbeddingStoreRetriever extends AbstractAIMediator {
         List<EmbeddingMatch<TextSegment>> matches = List.of();
         try {
             VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
+            if (vectorStore == null) {
+                handleConnectorException(Errors.VECTOR_STORE_CONNECTION_ERROR, mc);
+                return;
+            }
             matches = vectorStore.search(embedding, maxResults, minScore, filter);
         } catch (VectorStoreException e) {
             handleConnectorException(e.getError(), mc, e);
