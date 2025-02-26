@@ -44,7 +44,7 @@ public class LLMConnectionHandler {
             Double topP, Double frequencyPenalty, Integer seed) {
 
         ChatLanguageModel chatModel = null;
-        ConnectionParams connectionParams = connectionMap.remove(connectionName);
+        ConnectionParams connectionParams = connectionMap.get(connectionName);
         if (connectionParams == null) {
             return null;
         }
