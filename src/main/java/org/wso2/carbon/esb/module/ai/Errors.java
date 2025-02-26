@@ -21,54 +21,54 @@ package org.wso2.carbon.esb.module.ai;
 public enum Errors {
 
     // Connection related errors
-    LLM_CONNECTION_ERROR("AI-LLM-0001", "Error creating LLM connection"),
-    EMBEDDING_MODEL_CONNECTION_ERROR("AI-EMB-0001", "Error creating embedding model connection"),
+    LLM_CONNECTION_ERROR("701101", "AI:ERROR_CREATING_LLM_CONNECTION"),
+    EMBEDDING_MODEL_CONNECTION_ERROR("701102", "AI:ERROR_CREATING_EMBEDDING_MODEL_CONNECTION"),
 
     // Embedding ingestion related errors
     INVALID_INPUT_FOR_EMBEDDING_INGESTION(
-            "AI-EMB-INGESTOR-0002",
-            "Invalid input format. Expected a JSON array of TextEmbedding objects"
+            "701111",
+            "AI:ERROR_INVALID_INPUT_FOR_EMBEDDING_INGESTION"
     ),
-    EMBEDDING_INJECTION_ERROR("AI-EMB-INGESTOR-0001", "Embedding injection error occurred"),
+    EMBEDDING_INJECTION_ERROR("701112", "AI:ERROR_EMBEDDING_INJECTION"),
 
     // Embedding retrieval related errors
     INVALID_INPUT_FOR_EMBEDDING_RETRIEVAL(
-            "AI-EMB-RETRIEVER-0002",
-            "Invalid input format. Expected a vector ( Array of numbers )"
+            "701121",
+            "AI:ERROR_INVALID_INPUT_FOR_EMBEDDING_RETRIEVAL"
     ),
-    EMBEDDING_RETRIEVAL_ERROR("AI-EMB-RETRIEVER-0001", "Embedding retrieval error occurred"),
+    EMBEDDING_RETRIEVAL_ERROR("701122", "AI:ERROR_EMBEDDING_RETRIEVAL"),
 
     // Vector store related errors
-    PINECONE_CONNECTION_ERROR("AI-VS-0001", "Error creating Pinecone connection"),
-    POSTGRE_SQL_CONNECTION_ERROR("AI-VS-0002", "Error creating Postgres connection"),
-    VECTOR_STORE_CONNECTION_ERROR("AI-VS-0003", "Vector store connection not found"),
+    PINECONE_CONNECTION_ERROR("701131", "AI:ERROR_PINECONE_CONNECTION"),
+    POSTGRE_SQL_CONNECTION_ERROR("701132", "AI:ERROR_POSTGRE_SQL_CONNECTION"),
+    VECTOR_STORE_CONNECTION_ERROR("701133", "AI:ERROR_VECTOR_STORE_CONNECTION"),
 
     // Parser related errors
-    PARSE_ERROR("AI-PARSER-0001", "Error parsing the input"),
-    UNSUPPORTED_PARSER_INPUT("AI-PARSER-0002", "Unsupported parser input"),
-    UNSUPPORTED_PARSER_TYPE("AI-PARSER-0003", "Unsupported parser type"),
-    HTML_TO_TEXT_ERROR("AI-PARSER-0004", "Error converting HTML to text"),
-    HTML_TO_MARKDOWN_ERROR("AI-PARSER-0005", "Error converting HTML to markdown"),
+    PARSE_ERROR("701141", "AI:ERROR_PARSE"),
+    UNSUPPORTED_PARSER_INPUT("701142", "AI:ERROR_UNSUPPORTED_PARSER_INPUT"),
+    UNSUPPORTED_PARSER_TYPE("701143", "AI:ERROR_UNSUPPORTED_PARSER_TYPE"),
+    HTML_TO_TEXT_ERROR("701144", "AI:ERROR_HTML_TO_TEXT"),
+    HTML_TO_MARKDOWN_ERROR("701145", "AI:ERROR_HTML_TO_MARKDOWN"),
 
     // Splitter related errors
-    INVALID_SPLITTING_STRATEGY("AI-SS-0001", "Invalid splitting strategy"),
-    FAILED_TO_SPLIT("AI-SS-0002", "Failed to split the input"),
+    INVALID_SPLITTING_STRATEGY("701151", "AI:ERROR_INVALID_SPLITTING_STRATEGY"),
+    FAILED_TO_SPLIT("701152", "AI:ERROR_FAILED_TO_SPLIT"),
 
     // Embedding generator related errors
-    EMBEDDING_GENERATION_ERROR("AI-EG-0001", "Failed to generate embedding"),
+    EMBEDDING_GENERATION_ERROR("701161", "AI:ERROR_EMBEDDING_GENERATION"),
     INVALID_INPUT_FOR_EMBEDDING_GENERATION(
-            "AI-EG-0002",
-            "Invalid input format. Expected a string or a JSON array of strings"
+            "701162",
+            "AI:ERROR_INVALID_INPUT_FOR_EMBEDDING_GENERATION"
     ),
 
     // Chat related errors
-    INVALID_INPUT_FOR_CHAT_KNOWLEDGE("AI-CH-0001", "Invalid input format. Expected a JSON array of Objects"),
-    INVALID_INPUT_FOR_CHAT_MEMORY("AI-CH-0002", "Invalid chat history format. Expected a JSON array of ChatMessage objects. Use OpenAI format"),
-    INVALID_OUTPUT_TYPE("AI-CH-0003", "Invalid output type selected"),
-    CHAT_COMPLETION_ERROR("AI-CH-0004", "Error occurred from LLM side"),
+    INVALID_INPUT_FOR_CHAT_KNOWLEDGE("701171", "AI:ERROR_INVALID_INPUT_FOR_CHAT_KNOWLEDGE"),
+    INVALID_INPUT_FOR_CHAT_MEMORY("701172", "AI:ERROR_INVALID_INPUT_FOR_CHAT_MEMORY"),
+    INVALID_OUTPUT_TYPE("701173", "AI:ERROR_INVALID_OUTPUT_TYPE"),
+    CHAT_COMPLETION_ERROR("701174", "AI:ERROR_CHAT_COMPLETION"),
 
     // Prompt related errors
-    ERROR_PARSE_PROMPT("AI-PR-0001", "Error parsing the prompt");
+    ERROR_PARSE_PROMPT("701181", "AI:ERROR_PARSE_PROMPT");
 
     private final String code;
     private final String message;
