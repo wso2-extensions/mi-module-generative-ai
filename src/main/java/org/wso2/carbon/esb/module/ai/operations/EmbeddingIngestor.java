@@ -58,6 +58,10 @@ public class EmbeddingIngestor extends AbstractAIMediator {
 
         try {
             VectorStore vectorStore = VectorStoreConnectionHandler.getVectorStore(connectionName, mc);
+            if (vectorStore == null) {
+                handleConnectorException(Errors.VECTOR_STORE_CONNECTION_ERROR, mc);
+                return;
+            }
             vectorStore.add(textEmbeddings);
         } catch (VectorStoreException e) {
             handleConnectorException(e.getError(), mc, e);

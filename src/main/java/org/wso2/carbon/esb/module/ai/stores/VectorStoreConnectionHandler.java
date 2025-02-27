@@ -35,8 +35,12 @@ public class VectorStoreConnectionHandler {
     }
 
     public static VectorStore getVectorStore(String connectionName, MessageContext mc) throws VectorStoreException {
+
         VectorStore vectorStore = null;
         ConnectionParams connectionParams = connections.get(connectionName);
+        if (connectionParams == null) {
+            return null;
+        }
 
         switch (connectionParams.getConnectionType()) {
             case Constants.MI_VECTOR_STORE:
