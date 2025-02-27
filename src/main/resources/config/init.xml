@@ -67,22 +67,5 @@
 		<property name="user" expression="$func:user"/>
 		<property name="password" expression="$func:password"/>
 		<property name="table" expression="$func:table"/>
-
-		<switch source="get-property('connectionType')">
-
-			<case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
-				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
-			</case>
-
-			<case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|POSTGRE_SQL">
-				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
-			</case>
-
-			<default>
-				<log level="full">
-					<property name="error" value="Unknown connection type"/>
-				</log>
-			</default>
-		</switch>
 	</sequence>
 </template>
