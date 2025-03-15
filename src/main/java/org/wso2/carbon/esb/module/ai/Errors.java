@@ -68,7 +68,10 @@ public enum Errors {
     CHAT_COMPLETION_ERROR("701174", "AI:ERROR_CHAT_COMPLETION"),
 
     // Prompt related errors
-    ERROR_PARSE_PROMPT("701181", "AI:ERROR_PARSE_PROMPT");
+    ERROR_PARSE_PROMPT("701181", "AI:ERROR_PARSE_PROMPT"),
+
+    // Agent related errors
+    EXCEEDED_SEQUENTIAL_TOOL_EXECUTIONS("701191", "AI:ERROR_EXCEEDED_SEQUENTIAL_TOOL_EXECUTIONS");
 
     private final String code;
     private final String message;
