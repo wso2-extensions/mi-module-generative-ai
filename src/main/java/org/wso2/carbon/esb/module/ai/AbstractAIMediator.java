@@ -27,6 +27,8 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.data.connector.ConnectorResponse;
 import org.apache.synapse.data.connector.DefaultConnectorResponse;
+import org.apache.synapse.util.InlineExpressionUtil;
+import org.jaxen.JaxenException;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
 
@@ -168,5 +170,15 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         mc.setProperty("ERROR_CODE", code.getCode());
         mc.setProperty("ERROR_MESSAGE", code.getMessage());
         throw new SynapseException(code.getMessage());
+    }
+
+    protected String parseInlineExpression(MessageContext mc, String inlineExpression) {
+
+        try {
+            return InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, inlineExpression);
+        } catch (JaxenException e) {
+            handleConnectorException(Errors.ERROR_PARSE_PROMPT, mc, e);
+        }
+        return inlineExpression;
     }
 }

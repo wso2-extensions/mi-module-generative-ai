@@ -240,7 +240,8 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         }
 
         String memoryId = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
-        String parsedPrompt = parsePrompt(mc);
+        String parsedPrompt =
+                parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
 
         ChatLanguageModel model = null;
         try {
@@ -304,17 +305,6 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             handleConnectorException(Errors.CHAT_COMPLETION_ERROR, mc, e);
         }
         return true;
-    }
-
-    private String parsePrompt(MessageContext mc) {
-
-        String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
-        try {
-            return InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, prompt);
-        } catch (JaxenException e) {
-            handleConnectorException(Errors.ERROR_PARSE_PROMPT, mc, e);
-        }
-        return prompt;
     }
 
     private boolean inferenceAgentAndExecuteTools(MessageContext mc, SynapseLog synLog, String agentID) {
