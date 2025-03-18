@@ -73,7 +73,7 @@
                 <ai.addToStore>
                     <input>{${vars.ADD_TO_KNOWLEDGE_INPUT}}</input>
                     <responseVariable>{${params.functionParams.responseVariable}}</responseVariable>
-                    <overwriteBody>{${params.functionParams.overwriteBody}}</overwriteBody>
+                    <overwriteBody>false</overwriteBody>
                 </ai.addToStore>
                 <property name="_VECTOR_STORE_CONFIG_KEY" scope="default" action="remove"/>
                 <property name="_EMBEDDING_CONFIG_KEY" scope="default" action="remove"/>

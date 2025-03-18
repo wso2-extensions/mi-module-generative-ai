@@ -53,7 +53,7 @@
                     <minScore>{${params.functionParams.minScore}}</minScore>
                     <!--                    <filter>{${params.functionParams.filter}}</filter>-->
                     <responseVariable>{${params.functionParams.responseVariable}}</responseVariable>
-                    <overwriteBody>{${params.functionParams.overwriteBody}}</overwriteBody>
+                    <overwriteBody>false</overwriteBody>
                 </ai.searchStore>
                 <class name="org.wso2.carbon.esb.module.ai.config.ResponseProcessor"/>
             </then>

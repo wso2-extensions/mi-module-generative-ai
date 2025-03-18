@@ -81,7 +81,7 @@
                     <prompt>{${vars.RAG_CHAT_PARSED_PROMPT}}</prompt>
                     <outputType>{${params.functionParams.outputType}}</outputType>
                     <responseVariable>{${params.functionParams.responseVariable}}</responseVariable>
-                    <overwriteBody>{${params.functionParams.overwriteBody}}</overwriteBody>
+                    <overwriteBody>false</overwriteBody>
                     <modelName>{${params.functionParams.modelName}}</modelName>
                     <temperature>{${params.functionParams.temperature}}</temperature>
                     <maxTokens>{${params.functionParams.maxTokens}}</maxTokens>
