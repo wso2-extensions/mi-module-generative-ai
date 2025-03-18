@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "title": "Output Schema for the search store operation",
-  "description": "Output schema for the search store operation in the connector.",
+  "title": "Output Schema for the getFromKnowledge operation",
+  "description": "Output schema for the getFromKnowledge operation in the connector.",
   "properties": {
     "payload": {
       "type": "array",

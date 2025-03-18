@@ -187,7 +187,7 @@ Inputs:
 - `overwriteBody`: Whether to overwrite the message body.
 
 Outputs:
-- Status of the operation as a json object of the [schema](src/main/resources/outputschema/addToStore.json).
+- Status of the operation as a json object of the [schema](src/main/resources/outputschema/addToKnowledge.json).
 > Note: Output has an empty payload. The status is stored in the attributes. You can access the status using the following expression `${vars.<responseVariable>.attributes.status}`.
 
 Following is an example configuration for adding embeddings to a vector store.
@@ -209,7 +209,7 @@ Inputs:
 - `overwriteBody`: Whether to overwrite the message body.
 
 Outputs:
-- Retrieved documents as a json object of the [schema](src/main/resources/outputschema/searchStore.json).
+- Retrieved documents as a json object of the [schema](src/main/resources/outputschema/getFromKnowledge.json).
 
 Following is an example configuration for retrieving embeddings from a vector store.
 ```xml

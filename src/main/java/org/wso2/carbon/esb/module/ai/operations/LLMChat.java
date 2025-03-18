@@ -21,9 +21,9 @@ package org.wso2.carbon.esb.module.ai.operations;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -74,33 +74,25 @@ public class LLMChat extends AbstractAIMediator {
 
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
 
-    // Chat configurations
-    private String modelName;
-    private Double temperature;
-    private Integer maxTokens;
-    private Double topP;
-    private Double frequencyPenalty;
-    private Integer seed;
-    private String system;
-    private String connectionName;
-    private ChatLanguageModel model;
-
     @Override
     public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
-        connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
-        String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
-        modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
+        String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
+
+        String prompt = parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
+
+        String modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
         String outputType = getMediatorParameter(mc, Constants.OUTPUT_TYPE, String.class, false);
 
         // Advanced configurations
-        system = getMediatorParameter(mc, Constants.SYSTEM, String.class, false);
-        temperature = getMediatorParameter(mc, Constants.TEMPERATURE, Double.class, true);
-        maxTokens = getMediatorParameter(mc, Constants.MAX_TOKENS, Integer.class, true);
-        topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
-        frequencyPenalty = getMediatorParameter(mc, Constants.FREQUENCY_PENALTY, Double.class, true);
-        seed = getMediatorParameter(mc, Constants.SEED, Integer.class, true);
+        String system = getMediatorParameter(mc, Constants.SYSTEM, String.class, false);
+        Double temperature = getMediatorParameter(mc, Constants.TEMPERATURE, Double.class, true);
+        Integer maxTokens = getMediatorParameter(mc, Constants.MAX_TOKENS, Integer.class, true);
+        Double topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
+        Double frequencyPenalty = getMediatorParameter(mc, Constants.FREQUENCY_PENALTY, Double.class, true);
+        Integer seed = getMediatorParameter(mc, Constants.SEED, Integer.class, true);
 
+        ChatLanguageModel model;
         try {
             model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
             if (model == null) {
@@ -132,6 +124,7 @@ public class LLMChat extends AbstractAIMediator {
             knowledgeRetriever = query -> knowledgeTexts;
         }
 
+        // TODO: add memory support
         ChatMemory chatMemory = null;
         if (chatHistory != null) {
             List<ChatMessage> chatMessages = parseAndValidateChatHistory(chatHistory);
@@ -149,7 +142,7 @@ public class LLMChat extends AbstractAIMediator {
         }
 
         try {
-            Object answer = getChatResponse(outputType, prompt, knowledgeRetriever, chatMemory);
+            Object answer = getChatResponse(model, outputType, prompt, knowledgeRetriever, chatMemory, system);
             if (answer != null) {
                 handleConnectorResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {
@@ -212,17 +205,25 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(String outputType, String prompt, ContentRetriever knowledgeRetriever, ChatMemory chatMemory) {
+    private Object getChatResponse(ChatLanguageModel model, String outputType, String prompt,
+                                   ContentRetriever knowledgeRetriever, ChatMemory chatMemory, String systemMessage) {
+
         return switch (outputType.toLowerCase()) {
-            case "string" -> getAgent(StringAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
-            case "integer" -> getAgent(IntegerAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
-            case "float" -> getAgent(FloatAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
-            case "boolean" -> getAgent(BooleanAgent.class, knowledgeRetriever, chatMemory).chat(prompt);
+            case "string" ->
+                    getAgent(model, StringAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
+            case "integer" ->
+                    getAgent(model, IntegerAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
+            case "float" ->
+                    getAgent(model, FloatAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
+            case "boolean" ->
+                    getAgent(model, BooleanAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
             default -> null;
         };
     }
 
-    private <T> T getAgent(Class<T> agentType, ContentRetriever knowledgeRetriever, ChatMemory chatMemory) {
+    private <T> T getAgent(ChatLanguageModel model, Class<T> agentType, ContentRetriever knowledgeRetriever,
+                           ChatMemory chatMemory, String system) {
+
         AiServices<T> service = AiServices
                 .builder(agentType)
                 .chatLanguageModel(model)
