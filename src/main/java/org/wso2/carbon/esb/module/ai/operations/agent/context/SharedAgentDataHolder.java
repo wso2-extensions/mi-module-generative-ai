@@ -1,4 +1,4 @@
-package org.wso2.carbon.esb.module.ai.operations.agent;
+package org.wso2.carbon.esb.module.ai.operations.agent.context;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
@@ -23,7 +23,7 @@ public class SharedAgentDataHolder extends SharedDataHolder {
     private String agentId;
     private AiServiceContext aiServiceContext;
     private String memoryId;
-    private List<ToolExecution> toolExecutions;
+    private final List<ToolExecution> toolExecutions;
     private TokenUsage tokenUsageAccumulator;
     private AtomicInteger executionsLeft;
     private ChatRequestParameters chatRequestParameters;
@@ -31,7 +31,7 @@ public class SharedAgentDataHolder extends SharedDataHolder {
     private List<ToolExecutionRequest> currentToolExecutionRequests;
     private String responseVariable;
     private boolean overwriteBody;
-    private ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
 
     public SharedAgentDataHolder() {
 
@@ -61,11 +61,6 @@ public class SharedAgentDataHolder extends SharedDataHolder {
     public List<ToolExecution> getToolExecutions() {
 
         return toolExecutions;
-    }
-
-    public void setToolExecutions(List<ToolExecution> toolExecutions) {
-
-        this.toolExecutions = toolExecutions;
     }
 
     public TokenUsage getTokenUsageAccumulator() {

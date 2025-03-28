@@ -26,8 +26,8 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.mediators.eip.EIPConstants;
-import org.apache.synapse.mediators.eip.aggregator.Aggregate;
 import org.wso2.carbon.esb.module.ai.Constants;
+import org.wso2.carbon.esb.module.ai.operations.agent.context.SharedAgentDataHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +37,12 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * An instance of this class is created to manage each aggregation group, and it holds
  * the aggregation properties and the messages collected during aggregation. This class also
- * times out itself after the timeout expires it
+ * times out itself after the timeout expires it.
+ * This is a copy of {@link org.apache.synapse.mediators.eip.aggregator.Aggregate} class.
  */
 public class ToolExecutionAggregate extends TimerTask {
 
-    private static final Log log = LogFactory.getLog(Aggregate.class);
+    private static final Log log = LogFactory.getLog(ToolExecutionAggregate.class);
 
     /**
      * The time in millis at which this aggregation should be considered as expired
@@ -51,16 +52,16 @@ public class ToolExecutionAggregate extends TimerTask {
      * The number of tool executions to be collected to consider this aggregation as complete
      */
     private int toolCount = -1;
-    private String correlation = null;
+    private String correlation;
     /**
      * The AggregateMediator that should be invoked on completion of the aggregation
      */
-    private Agent agentMediator;
+    private final Agent agentMediator;
     private List<MessageContext> messages = new ArrayList<>();
-    private ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
     private boolean completed = false;
-    private SynapseEnvironment synEnv;
-    private SharedAgentDataHolder sharedAgentDataHolder;
+    private final SynapseEnvironment synEnv;
+    private final SharedAgentDataHolder sharedAgentDataHolder;
 
     /**
      * Fault handler for the aggregate mediator

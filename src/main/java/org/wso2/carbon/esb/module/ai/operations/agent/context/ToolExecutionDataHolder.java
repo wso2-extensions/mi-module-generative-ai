@@ -1,19 +1,14 @@
-package org.wso2.carbon.esb.module.ai.operations.agent;
+package org.wso2.carbon.esb.module.ai.operations.agent.context;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.model.output.TokenUsage;
 import org.apache.synapse.mediators.Value;
-
-import java.util.List;
 
 public class ToolExecutionDataHolder {
 
     private String agentID;
-    private List<ToolExecutionRequest> toolExecutionRequests; // This is stored for reference.
-    private ToolExecutionRequest toolExecutionRequest; // This is the current tool execution request.
-    private TokenUsage tokenUsageAccumulator;
-    private ChatResponse chatResponse;
+
+    // Current tool execution request
+    private ToolExecutionRequest toolExecutionRequest;
     private Value resultExpression;
     private int totalToolExecutionCount;
     private int currentToolExecutionIndex;
@@ -26,26 +21,6 @@ public class ToolExecutionDataHolder {
     public void setToolExecutionRequest(ToolExecutionRequest toolExecutionRequest) {
 
         this.toolExecutionRequest = toolExecutionRequest;
-    }
-
-    public TokenUsage getTokenUsageAccumulator() {
-
-        return tokenUsageAccumulator;
-    }
-
-    public void setTokenUsageAccumulator(TokenUsage tokenUsageAccumulator) {
-
-        this.tokenUsageAccumulator = tokenUsageAccumulator;
-    }
-
-    public ChatResponse getChatResponse() {
-
-        return chatResponse;
-    }
-
-    public void setChatResponse(ChatResponse chatResponse) {
-
-        this.chatResponse = chatResponse;
     }
 
     public Value getResultExpression() {
@@ -76,16 +51,6 @@ public class ToolExecutionDataHolder {
     public void setCurrentToolExecutionIndex(int currentToolExecutionIndex) {
 
         this.currentToolExecutionIndex = currentToolExecutionIndex;
-    }
-
-    public List<ToolExecutionRequest> getToolExecutionRequests() {
-
-        return toolExecutionRequests;
-    }
-
-    public void setToolExecutionRequests(List<ToolExecutionRequest> toolExecutionRequests) {
-
-        this.toolExecutionRequests = toolExecutionRequests;
     }
 
     public String getAgentID() {

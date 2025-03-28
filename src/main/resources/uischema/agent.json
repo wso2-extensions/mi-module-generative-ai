@@ -195,6 +195,17 @@
                     "required": "false",
                     "helpTip": "Seed"
                   }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "toolExecutionTimeout",
+                    "displayName": "Tool Execution Timeout",
+                    "inputType": "string",
+                    "defaultValue": "10",
+                    "required": "false",
+                    "helpTip": "Tool Execution Timeout in seconds"
+                  }
                 }
               ]
             }

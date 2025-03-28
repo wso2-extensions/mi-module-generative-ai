@@ -2,19 +2,15 @@ package org.wso2.carbon.esb.module.ai.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
-import org.apache.synapse.config.xml.ValueFactory;
-import org.apache.synapse.mediators.Value;
-import org.apache.synapse.mediators.template.ResolvedInvokeParam;
-import org.apache.synapse.mediators.template.TemplateParam;
-import org.apache.synapse.util.xpath.SynapseExpression;
-import org.wso2.carbon.esb.module.ai.Constants;
-import org.wso2.carbon.esb.module.ai.operations.agent.Tool;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.service.AiServiceContext;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,21 +23,6 @@ public class AgentUtils {
     private static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
     private static final Pattern TRAILING_COMMA_PATTERN = Pattern.compile(",(\\s*[}\\]])");
-
-    public static JsonObjectSchema generateParameterSchema(List<TemplateParam> templateParams) {
-
-        JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
-        for (TemplateParam templateParam : templateParams) {
-            String paramName = templateParam.getName();
-            boolean isMandatory = templateParam.isMandatory();
-            String parameterDescription = templateParam.getDescription();
-            builder.addStringProperty(paramName, parameterDescription != null ? parameterDescription : paramName);
-            if (isMandatory) {
-                builder.required(paramName);
-            }
-        }
-        return builder.build();
-    }
 
     public static Map<String, Object> argumentsAsMap(String arguments) {
 
@@ -61,5 +42,29 @@ public class AgentUtils {
         }
         Matcher matcher = TRAILING_COMMA_PATTERN.matcher(json);
         return matcher.replaceAll("$1");
+    }
+
+    public static void addSystemMessageIfMissing(List<ChatMessage> messages, AiServiceContext aiServiceContext,
+                                                 String memoryId, String defaultSystemPrompt) {
+
+        if (!(messages.get(0) instanceof SystemMessage)) {
+            Optional<String> systemPrompt = aiServiceContext.systemMessageProvider.apply(memoryId);
+            SystemMessage systemMessage =
+                    new SystemMessage(systemPrompt.orElse(defaultSystemPrompt));
+            messages.add(systemMessage);
+        }
+        Iterator<ChatMessage> iterator = messages.iterator();
+
+        // Skip the first message as it is a system message
+        if (iterator.hasNext()) {
+            iterator.next();
+        }
+
+        while (iterator.hasNext()) {
+            ChatMessage message = iterator.next();
+            if (message instanceof SystemMessage) {
+                iterator.remove();
+            }
+        }
     }
 }
