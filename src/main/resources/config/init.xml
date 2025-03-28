@@ -17,72 +17,79 @@
    under the License.
 -->
 <template name="init" onError="fault" xmlns="http://ws.apache.org/ns/synapse">
-	<parameter name="connectionType" description="LLM provider type"/>
-	<parameter name="name" description="Unique name the connection is identified by"/>
-	<parameter name="persistence" description="Persist to MI registry"/>
-	<parameter name="apiKey" description="API key"/>
+    <parameter name="connectionType" description="LLM provider type"/>
+    <parameter name="name" description="Unique name the connection is identified by"/>
+    <parameter name="persistence" description="Persist to MI registry"/>
+    <parameter name="apiKey" description="API key"/>
 
-	<parameter name="url" description="URL of the Vector Store"/>
-	<parameter name="collection" description="Collection name"/>
+    <parameter name="url" description="URL of the Vector Store"/>
+    <parameter name="collection" description="Collection name"/>
 
-	<parameter name="index" description="Index name"/>
-	<parameter name="namespace" description="Namespace of the Vector Store"/>
-	<parameter name="cloud" description="Cloud provider of the Vector Store"/>
-	<parameter name="region" description="Region of the Vector Store"/>
-	<parameter name="dimension" description="Dimension of the embeddings"/>
+    <parameter name="index" description="Index name"/>
+    <parameter name="namespace" description="Namespace of the Vector Store"/>
+    <parameter name="cloud" description="Cloud provider of the Vector Store"/>
+    <parameter name="region" description="Region of the Vector Store"/>
+    <parameter name="dimension" description="Dimension of the embeddings"/>
 
-	<parameter name="deploymentName" description="Deployment name of Azure Open AI"/>
-	<parameter name="endpoint" description="Endpoint of Azure Open AI"/>
-	<parameter name="baseUrl" description="Base URL of the AI service API"/>
+    <parameter name="deploymentName" description="Deployment name of Azure Open AI"/>
+    <parameter name="endpoint" description="Endpoint of Azure Open AI"/>
+    <parameter name="baseUrl" description="Base URL of the AI service API"/>
 
-	<parameter name="host" description="Host of the database"/>
-	<parameter name="port" description="Port of the database"/>
-	<parameter name="database" description="Database name"/>
-	<parameter name="user" description="Username of the database"/>
-	<parameter name="password" description="Password of the database"/>
-	<parameter name="table" description="Table name"/>
+    <parameter name="host" description="Host of the database"/>
+    <parameter name="port" description="Port of the database"/>
+    <parameter name="database" description="Database name"/>
+    <parameter name="user" description="Username of the database"/>
+    <parameter name="password" description="Password of the database"/>
+    <parameter name="table" description="Table name"/>
 
-	<sequence>
-		<property name="connectionType" expression="$func:connectionType"/>
-		<property name="connectionName" expression="$func:name"/>
-		<property name="persistence" expression="$func:persistence"/>
-		<property name="apiKey" expression="$func:apiKey"/>
+    <sequence>
+        <property name="connectionType" expression="$func:connectionType"/>
+        <property name="connectionName" expression="$func:name"/>
+        <property name="persistence" expression="$func:persistence"/>
+        <property name="apiKey" expression="$func:apiKey"/>
 
-		<property name="url" expression="$func:url"/>
-		<property name="collection" expression="$func:collection"/>
+        <property name="url" expression="$func:url"/>
+        <property name="collection" expression="$func:collection"/>
 
-		<property name="index" expression="$func:index"/>
-		<property name="namespace" expression="$func:namespace"/>
-		<property name="cloud" expression="$func:cloud"/>
-		<property name="region" expression="$func:region"/>
-		<property name="dimension" expression="$func:dimension"/>
+        <property name="index" expression="$func:index"/>
+        <property name="namespace" expression="$func:namespace"/>
+        <property name="cloud" expression="$func:cloud"/>
+        <property name="region" expression="$func:region"/>
+        <property name="dimension" expression="$func:dimension"/>
 
-		<property name="deploymentName" expression="$func:deploymentName"/>
-		<property name="endpoint" expression="$func:endpoint"/>
-		<property name="baseUrl" expression="$func:baseUrl"/>
+        <property name="deploymentName" expression="$func:deploymentName"/>
+        <property name="endpoint" expression="$func:endpoint"/>
+        <property name="baseUrl" expression="$func:baseUrl"/>
 
-		<property name="host" expression="$func:host"/>
-		<property name="port" expression="$func:port"/>
-		<property name="database" expression="$func:database"/>
-		<property name="user" expression="$func:user"/>
-		<property name="password" expression="$func:password"/>
-		<property name="table" expression="$func:table"/>
+        <property name="host" expression="$func:host"/>
+        <property name="port" expression="$func:port"/>
+        <property name="database" expression="$func:database"/>
+        <property name="user" expression="$func:user"/>
+        <property name="password" expression="$func:password"/>
+        <property name="table" expression="$func:table"/>
 
-		<switch source="get-property('connectionType')">
+        <switch source="get-property('connectionType')">
 
-			<case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
-				<class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection" />
-			</case>
+            <!-- LLM/Embedding Connection -->
+            <case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
+                <class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection"/>
+            </case>
 
-			<case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|POSTGRE_SQL">
-				<class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection" />
-			</case>
+            <!-- Vector Store Connection -->
+            <case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|POSTGRES_VECTOR">
+                <class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection"/>
+            </case>
 
-			<default>
-				<log level="full">
-					<property name="error" value="Unknown connection type"/>
-				</log>
-			</default>
-		</switch>
-	</sequence>
+            <!-- Memory Connection -->
+            <case regex="POSTGRES_MEMORY">
+                <class name="org.wso2.carbon.esb.module.ai.memory.MemoryConfig"/>
+            </case>
+
+            <default>
+                <log level="full">
+                    <property name="error" value="Unknown connection type"/>
+                </log>
+            </default>
+        </switch>
+    </sequence>
 </template>

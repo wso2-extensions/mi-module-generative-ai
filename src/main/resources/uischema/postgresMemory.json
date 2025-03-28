@@ -1,7 +1,7 @@
 {
   "connectorName": "ai",
-  "connectionName": "POSTGRE_SQL",
-  "title": "PGVector connection config",
+  "connectionName": "POSTGRES_MEMORY",
+  "title": "POSTGRES Memory connection config",
   "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
   "elements": [
     {
@@ -10,7 +10,7 @@
         "name": "connectionName",
         "displayName": "Connection Name",
         "inputType": "string",
-        "defaultValue": "POSTGRE_SQL",
+        "defaultValue": "POSTGRES_MEMORY",
         "required": "true",
         "helpTip": "A name for the vector store connection",
         "validation": "nameWithoutSpecialCharactors"
@@ -90,17 +90,6 @@
                     "defaultValue": "mi",
                     "required": "true",
                     "helpTip": "The table name"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "dimension",
-                    "displayName": "Dimension of embeddings",
-                    "inputType": "stringOrExpression",
-                    "defaultValue": "1536",
-                    "required": "true",
-                    "helpTip": "Give the dimension of the embeddings"
                   }
                 }
               ]
