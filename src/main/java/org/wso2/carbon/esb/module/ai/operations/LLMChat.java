@@ -26,12 +26,15 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.Result;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
@@ -128,15 +131,12 @@ public class LLMChat extends AbstractAIMediator {
             knowledgeRetriever = query -> knowledgeTexts;
         }
 
-        String memoryConfigKey = mc.getProperty("_MEMORY_CONFIG_KEY").toString();
-        ChatMemory chatMemory = null;
-        if (memoryConfigKey != null) {
-            int maxChatHistory = maxHistory != null ? maxHistory : 20;
-            DatabaseChatMemoryStore
-                    chatMemoryStore = MemoryStoreHandler.getDatabaseHandler().getMemoryStore(memoryConfigKey);
-            chatMemory = MessageWindowChatMemoryWithDatabase.builder().id(userID)
-                    .chatMemoryStore(chatMemoryStore).maxMessages(maxChatHistory).build();
+        String memoryConfigKey = mc.getProperty(Constants.MEMORY_CONFIG_KEY).toString();
+        if (StringUtils.isEmpty(memoryConfigKey)) {
+            handleConnectorException(Errors.MEMORY_CONFIG_KEY_NOT_FOUND, mc);
         }
+        int maxChatHistory = maxHistory != null ? maxHistory : 20;
+        ChatMemory chatMemory = Utils.getChatMemory(userID, memoryConfigKey, maxChatHistory);
 
         try {
             Object answer = getChatResponse(model, outputType, prompt, knowledgeRetriever, chatMemory, system);

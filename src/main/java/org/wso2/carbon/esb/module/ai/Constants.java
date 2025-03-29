@@ -138,4 +138,10 @@ public class Constants {
     public static final String ATTRIBUTES = "attributes";
     public static final String TOOL_EXECUTION_TIMEOUT = "toolExecutionTimeout";
     public static final String HALLUCINATED_TOOL_EXECUTION_REQUEST = "This is a hallucinated tool execution request";
+
+    // Config Key Names
+    public static final String MEMORY_CONFIG_KEY = "_MEMORY_CONFIG_KEY";
+    public static final String LLM_CONFIG_KEY = "_LLM_CONFIG_KEY";
+    public static final String VECTOR_STORE_CONFIG_KEY = "_VECTOR_STORE_CONFIG_KEY";
+    public static final String EMBEDDING_CONFIG_KEY = "_EMBEDDING_CONFIG_KEY";
 }

@@ -1,6 +1,6 @@
 {
   "connectorName": "ai",
-  "connectionName": "IN_MEMORY_STORE",
+  "connectionName": "IN_MEMORY",
   "title": "MI In-Memory Chat Store",
   "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
   "elements": [
@@ -10,7 +10,7 @@
         "name": "connectionName",
         "displayName": "Connection Name",
         "inputType": "string",
-        "defaultValue": "IN_MEMORY_STORE",
+        "defaultValue": "IN_MEMORY",
         "required": "true",
         "helpTip": "Connection name",
         "validation": "nameWithoutSpecialCharacters"

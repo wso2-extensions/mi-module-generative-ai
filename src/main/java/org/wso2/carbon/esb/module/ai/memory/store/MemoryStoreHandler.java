@@ -18,35 +18,41 @@
 
 package org.wso2.carbon.esb.module.ai.memory.store;
 
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryStoreHandler {
 
     private static final MemoryStoreHandler INSTANCE = new MemoryStoreHandler();
-    private static final Map<String, DatabaseChatMemoryStore> DATABASE_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, ChatMemoryStore> CHAT_MEMORY_STORE_MAP = new ConcurrentHashMap<>();
 
     private MemoryStoreHandler() {
 
     }
 
-    public static MemoryStoreHandler getDatabaseHandler() {
+    public static MemoryStoreHandler getMemoryStoreHandler() {
 
         return INSTANCE;
     }
 
-    public void addMemoryStore(String connectionName, DatabaseChatMemoryStore memoryStore) {
+    public void addMemoryStore(String connectionName, ChatMemoryStore memoryStore) {
 
-        DATABASE_MAP.computeIfAbsent(connectionName, k -> memoryStore);
+        CHAT_MEMORY_STORE_MAP.computeIfAbsent(connectionName, k -> memoryStore);
     }
 
-    public DatabaseChatMemoryStore getMemoryStore(String connectionName) {
+    public ChatMemoryStore getMemoryStore(String connectionName) {
 
-        return DATABASE_MAP.get(connectionName);
+        return CHAT_MEMORY_STORE_MAP.get(connectionName);
     }
 
     public void shutdownConnections() {
 
-        DATABASE_MAP.values().forEach(DatabaseChatMemoryStore::shutdown);
+        CHAT_MEMORY_STORE_MAP.values().forEach((memoryStore) -> {
+            if (memoryStore instanceof DatabaseChatMemoryStore) {
+                ((DatabaseChatMemoryStore) memoryStore).shutdown();
+            }
+        });
     }
 }

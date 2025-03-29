@@ -46,16 +46,16 @@ public class Configure extends AbstractConnector {
                     String propertyName;
                     switch (connectionTag) {
                         case "llmConfigKey":
-                            propertyName = "_LLM_CONFIG_KEY";
+                            propertyName = Constants.LLM_CONFIG_KEY;
                             break;
                         case "memoryConfigKey":
-                            propertyName = "_MEMORY_CONFIG_KEY";
+                            propertyName = Constants.MEMORY_CONFIG_KEY;
                             break;
                         case "vectorStoreConfigKey":
-                            propertyName = "_VECTOR_STORE_CONFIG_KEY";
+                            propertyName = Constants.VECTOR_STORE_CONFIG_KEY;
                             break;
                         case "embeddingConfigKey":
-                            propertyName = "_EMBEDDING_CONFIG_KEY";
+                            propertyName = Constants.EMBEDDING_CONFIG_KEY;
                             break;
                         default:
                             propertyName = null;

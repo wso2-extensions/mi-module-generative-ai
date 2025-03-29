@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.esb.module.ai.memory;
 
+import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
@@ -57,12 +58,14 @@ public class MemoryConfig extends AbstractConnector implements ManagedLifecycle 
         String password = (String) getParameter(messageContext, Constants.PASSWORD);
         String table = (String) getParameter(messageContext, Constants.TABLE);
 
-        MemoryStoreHandler databaseHandler = MemoryStoreHandler.getDatabaseHandler();
+        MemoryStoreHandler memoryStoreHandler = MemoryStoreHandler.getMemoryStoreHandler();
 
         if (MemoryType.POSTGRES_MEMORY.name().equals(connectionType)) {
             RDBMSDatabase.Builder builder = new PostgresDatabase.Builder();
             builder.host(host).port(port).database(database).user(user).password(password).table(table);
-            databaseHandler.addMemoryStore(connectionName, new RDBMSChatMemoryStore(builder.build()));
+            memoryStoreHandler.addMemoryStore(connectionName, new RDBMSChatMemoryStore(builder.build()));
+        } else if (MemoryType.IN_MEMORY.name().equals(connectionType)) {
+            memoryStoreHandler.addMemoryStore(connectionName, new InMemoryChatMemoryStore());
         } else {
             handleException("Unsupported memory type: " + connectionType, messageContext);
         }

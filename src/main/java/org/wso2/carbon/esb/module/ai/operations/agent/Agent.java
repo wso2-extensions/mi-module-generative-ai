@@ -66,11 +66,11 @@ import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
 import org.wso2.carbon.esb.module.ai.operations.agent.context.SharedAgentDataHolder;
 import org.wso2.carbon.esb.module.ai.operations.agent.context.ToolExecutionDataHolder;
 import org.wso2.carbon.esb.module.ai.utils.AgentUtils;
+import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -158,7 +158,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
 
         Long toolExecutionTimeout = getMediatorParameter(mc, Constants.TOOL_EXECUTION_TIMEOUT, Long.class, true);
         if (toolExecutionTimeout != null) {
-            toolDefinitionsMap.get(agentID).setToolExecutionTimeout(toolExecutionTimeout);
+            toolDefinitionsMap.get(agentID).setToolExecutionTimeout(toolExecutionTimeout * 1000);
         }
 
         String memoryId = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
@@ -188,11 +188,11 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
 
             // Build the AI service context
             AiServiceContext aiServiceContext = new AiServiceContext(null);
-            String databaseConnectionName = mc.getProperty("_MEMORY_CONFIG_KEY").toString();
-            DatabaseChatMemoryStore
-                    chatMemoryStore = MemoryStoreHandler.getDatabaseHandler().getMemoryStore(databaseConnectionName);
-            ChatMemory chatMemory = MessageWindowChatMemoryWithDatabase.builder().id(memoryId)
-                    .chatMemoryStore(chatMemoryStore).maxMessages(maxChatHistory).build();
+            String memoryConfigKey = mc.getProperty(Constants.MEMORY_CONFIG_KEY).toString();
+            if (StringUtils.isEmpty(memoryConfigKey)) {
+                handleConnectorException(Errors.MEMORY_CONFIG_KEY_NOT_FOUND, mc);
+            }
+            ChatMemory chatMemory = Utils.getChatMemory(memoryId, memoryConfigKey, maxChatHistory);
             aiServiceContext.chatMemories = new ConcurrentHashMap<>();
             aiServiceContext.chatMemories.put(memoryId, chatMemory);
             aiServiceContext.toolSpecifications = toolDefinitionsMap.get(agentID).getToolSpecifications();

@@ -105,6 +105,8 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             return (T) Boolean.valueOf(value);
         } else if (type == String.class) {
             return (T) value;
+        } else if (type == Long.class) {
+            return (T) Long.valueOf(value);
         } else {
             throw new IllegalArgumentException("Unsupported type: " + type);
         }

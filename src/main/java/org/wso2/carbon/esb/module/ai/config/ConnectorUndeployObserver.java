@@ -49,7 +49,7 @@ public class ConnectorUndeployObserver extends AbstractSynapseObserver {
             if (log.isDebugEnabled()) {
                 log.debug("File Connector is being un deployed. Closing all file connections created.");
             }
-            MemoryStoreHandler.getDatabaseHandler().shutdownConnections();
+            MemoryStoreHandler.getMemoryStoreHandler().shutdownConnections();
             synapseConfiguration.unregisterObserver(this);
         }
     }
