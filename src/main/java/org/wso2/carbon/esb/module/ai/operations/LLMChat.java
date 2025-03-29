@@ -37,6 +37,9 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
+import org.wso2.carbon.esb.module.ai.memory.MessageWindowChatMemoryWithDatabase;
+import org.wso2.carbon.esb.module.ai.memory.store.DatabaseChatMemoryStore;
+import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.lang.reflect.Type;
@@ -79,6 +82,7 @@ public class LLMChat extends AbstractAIMediator {
 
         String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
+        String userID = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
         String prompt = parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
 
         String modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
@@ -124,21 +128,14 @@ public class LLMChat extends AbstractAIMediator {
             knowledgeRetriever = query -> knowledgeTexts;
         }
 
-        // TODO: add memory support
+        String memoryConfigKey = mc.getProperty("_MEMORY_CONFIG_KEY").toString();
         ChatMemory chatMemory = null;
-        if (chatHistory != null) {
-            List<ChatMessage> chatMessages = parseAndValidateChatHistory(chatHistory);
-            if (chatMessages == null) {
-                handleConnectorException(Errors.INVALID_INPUT_FOR_CHAT_MEMORY, mc);
-                return;
-            }
-            if (maxHistory == null) {
-                maxHistory = chatMessages.size();
-            }
-            chatMemory = TemporaryChatMemory.builder()
-                    .from(chatMessages)
-                    .maxMessages(maxHistory)
-                    .build();
+        if (memoryConfigKey != null) {
+            int maxChatHistory = maxHistory != null ? maxHistory : 20;
+            DatabaseChatMemoryStore
+                    chatMemoryStore = MemoryStoreHandler.getDatabaseHandler().getMemoryStore(memoryConfigKey);
+            chatMemory = MessageWindowChatMemoryWithDatabase.builder().id(userID)
+                    .chatMemoryStore(chatMemoryStore).maxMessages(maxChatHistory).build();
         }
 
         try {

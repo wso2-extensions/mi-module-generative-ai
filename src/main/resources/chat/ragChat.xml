@@ -17,7 +17,7 @@
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="ragChat">
     <parameter name="connections" description="Connections"/>
-<!--    <parameter name="userID" description="User ID"/>-->
+    <parameter name="userID" description="User ID"/>
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="outputType" description="Response type"/>
     <parameter name="responseVariable" description="Response variable name"/>
@@ -77,17 +77,18 @@
                 <!--Chat with the system using the prompt and knowledge-->
                 <variable name="SKIP_CONFIG_PROCESSING" type="BOOLEAN" value="true"/>
                 <ai.chat>
-                    <system>{${params.functionParams.system}}</system>
+                    <system>{${exists(params.functionParams.system) ? params.functionParams.system : ""}}</system>
+                    <userID>{${params.functionParams.userID}}</userID>
                     <prompt>{${vars.RAG_CHAT_PARSED_PROMPT}}</prompt>
                     <outputType>{${params.functionParams.outputType}}</outputType>
                     <responseVariable>{${params.functionParams.responseVariable}}</responseVariable>
                     <overwriteBody>false</overwriteBody>
                     <modelName>{${params.functionParams.modelName}}</modelName>
-                    <temperature>{${params.functionParams.temperature}}</temperature>
+                    <temperature>{${exists(params.functionParams.temperature) ? params.functionParams.temperature : ""}}</temperature>
                     <maxTokens>{${params.functionParams.maxTokens}}</maxTokens>
-                    <topP>{${params.functionParams.topP}}</topP>
-                    <frequencyPenalty>{${params.functionParams.frequencyPenalty}}</frequencyPenalty>
-                    <seed>{${params.functionParams.seed}}</seed>
+                    <topP>{${exists(params.functionParams.topP) ? params.functionParams.topP : ""}}</topP>
+                    <frequencyPenalty>{${exists(params.functionParams.frequencyPenalty) ? params.functionParams.frequencyPenalty : ""}}</frequencyPenalty>
+                    <seed>{${exists(params.functionParams.seed) ? params.functionParams.seed : ""}}</seed>
                     <knowledge>{${vars.RAG_CHAT_TEMP_VAR.payload}}</knowledge>
                     <maxHistory>{${params.functionParams.maxHistory}}</maxHistory>
                 </ai.chat>

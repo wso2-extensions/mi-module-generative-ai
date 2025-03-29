@@ -29,6 +29,22 @@
             }
           },
           {
+            "type": "attribute",
+            "value": {
+              "name": "memoryConfigKey",
+              "displayName": "Memory Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "IN_MEMORY_STORE",
+                "POSTGRES_MEMORY"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "Memory connection to be used"
+            }
+          },
+          {
             "type": "attributeGroup",
             "value": {
               "groupName": "Basic",
@@ -42,6 +58,16 @@
                     "defaultValue": "gpt-4o",
                     "required": "true",
                     "helpTip": "Name of the model to use"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "userID",
+                    "displayName": "User ID",
+                    "inputType": "stringOrExpression",
+                    "required": "true",
+                    "helpTip": "Unique user identifier"
                   }
                 },
                 {
@@ -113,10 +139,20 @@
                 {
                   "type": "attribute",
                   "value": {
+                    "name": "maxHistory",
+                    "displayName": "Max chat history",
+                    "inputType": "string",
+                    "defaultValue": "10",
+                    "required": "false",
+                    "helpTip": "Maximum chat history to use"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
                     "name": "system",
                     "displayName": "System prompt",
                     "inputType": "textAreaOrExpression",
-                    "defaultValue": "You are a helpful AI agent",
                     "required": "false",
                     "helpTip": "Give instructions to LLM"
                   }

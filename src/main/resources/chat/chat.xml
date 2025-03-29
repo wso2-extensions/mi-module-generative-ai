@@ -17,6 +17,7 @@
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="chat">
     <parameter name="connections" description="Connections"/>
+    <parameter name="userID" description="User ID"/>
     <parameter name="system" description="System prompt"/>
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="outputType" description="Response type"/>
@@ -37,13 +38,18 @@
 
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.config.Configure"/>
+        <filter xpath="${exists(props.synapse._MEMORY_CONFIG_KEY)}">
+            <ai.invokeConnection configKey="{${props.synapse._MEMORY_CONFIG_KEY}}"/>
+        </filter>
         <filter xpath="${exists(props.synapse._LLM_CONFIG_KEY)}">
             <then>
                 <ai.invokeConnection configKey="{${props.synapse._LLM_CONFIG_KEY}}"/>
                 <class name="org.wso2.carbon.esb.module.ai.operations.LLMChat"/>
                 <property name="_LLM_CONFIG_KEY" scope="default" action="remove"/>
+                <property name="_MEMORY_CONFIG_KEY" scope="default" action="remove"/>
             </then>
             <else>
+                <property name="_MEMORY_CONFIG_KEY" scope="default" action="remove"/>
                 <payloadFactory media-type="json" template-type="default">
                     <format>{"error":"LLM connection is not provided"}</format>
                 </payloadFactory>
