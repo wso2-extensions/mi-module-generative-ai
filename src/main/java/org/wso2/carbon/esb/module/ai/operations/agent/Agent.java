@@ -60,9 +60,6 @@ import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
-import org.wso2.carbon.esb.module.ai.memory.MessageWindowChatMemoryWithDatabase;
-import org.wso2.carbon.esb.module.ai.memory.store.DatabaseChatMemoryStore;
-import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
 import org.wso2.carbon.esb.module.ai.operations.agent.context.SharedAgentDataHolder;
 import org.wso2.carbon.esb.module.ai.operations.agent.context.ToolExecutionDataHolder;
 import org.wso2.carbon.esb.module.ai.utils.AgentUtils;
@@ -311,8 +308,6 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                 clonedMessageContext.setProperty(Constants.TOOL_EXECUTION_DATA_HOLDER + "." + agentID,
                         toolExecutionDataHolder);
 
-                ContinuationStackManager.addReliantContinuationState(clonedMessageContext, 0,
-                        getMediatorPosition());
                 executeTool(agentID, toolExecutionRequest, clonedMessageContext, toolExecutionsSize);
             }
         }
@@ -379,7 +374,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         synLog.traceOrDebug("Aggregating agent tool execution messages started for correlation : " + correlation);
 
         Long toolExecutionTimeout = toolDefinitionsMap.get(agentID).getToolExecutionTimeout();
-        //No need to build the message as we are going to aggregate the variables
+
         while (aggregate == null) {
             synchronized (getLock(agentID)) {
                 if (activeAggregates.containsKey(agentID) && activeAggregates.get(agentID).containsKey(correlation)) {
@@ -493,8 +488,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                 activeAggregates.get(aggregate.getAgentID()).remove(aggregate.getCorrelation());
                 return continueAgentInference(aggregate.getAgentID(), clonedMessageContext);
             } else {
-                handleException(aggregate, "Error cloning the original message context", null,
-                        originalMessageContext);
+                handleException(aggregate, "Error cloning the original message context", null, originalMessageContext);
                 return false;
             }
         } else {
@@ -684,9 +678,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         return newCtx;
     }
 
-    private boolean executeTool(String agentID, ToolExecutionRequest toolExecutionRequest, MessageContext mc,
-                                int toolCount) {
+    private void executeTool(String agentID, ToolExecutionRequest toolExecutionRequest, MessageContext mc,
+                             int toolCount) {
 
+        ContinuationStackManager.addReliantContinuationState(mc, 0, getMediatorPosition());
         SequenceMediator invoker =
                 toolDefinitionsMap.get(agentID).getToolInvoker(toolExecutionRequest.name());
         Map<String, Object> arguments = AgentUtils.argumentsAsMap(toolExecutionRequest.arguments());
@@ -707,7 +702,6 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             startToolExecutionTimeout(agentID, mc, correlation, toolCount);
         }
         mc.getEnvironment().injectAsync(mc, invoker);
-        return false; //Async invocation
     }
 
     private void startToolExecutionTimeout(String agentID, MessageContext mc, String correlation, int toolCount) {
