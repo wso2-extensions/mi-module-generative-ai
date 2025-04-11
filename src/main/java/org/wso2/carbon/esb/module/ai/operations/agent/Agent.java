@@ -101,18 +101,18 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
     private final ServiceOutputParser serviceOutputParser = new ServiceOutputParser();
 
     /**
-     * instanceID -> [correlationId -> ToolExecutionAggregate]
+     * invokeMediatorID -> [correlationId -> ToolExecutionAggregate]
      */
     private final Map<String, Map<String, ToolExecutionAggregate>> activeAggregates =
             Collections.synchronizedMap(new HashMap<>());
 
     /**
-     * instanceID -> lock (lock per agent instance)
+     * invokeMediatorID -> lock (lock per agent instance)
      */
     private final Map<String, Object> lockMap = Collections.synchronizedMap(new HashMap<>());
 
     /**
-     * instanceID -> ToolDefinitions
+     * invokeMediatorID -> ToolDefinitions
      */
     private final Map<String, ToolDefinitions> toolDefinitionsMap = new HashMap<>();
 
@@ -254,7 +254,6 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         }
 
         ChatResponse chatResponse = aiServiceContext.chatModel.chat(chatRequest);
-        sharedAgentDataHolder.getLock();
         sharedAgentDataHolder.setTokenUsageAccumulator(
                 TokenUsage.sum(sharedAgentDataHolder.getTokenUsageAccumulator(), chatResponse.metadata().tokenUsage()));
 
@@ -264,10 +263,8 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         if (!aiMessage.hasToolExecutionRequests()) {
             agentInferenceFinished = true;
             sharedAgentDataHolder.setFinishChatResponse(chatResponse);
-            sharedAgentDataHolder.releaseLock();
         } else {
             sharedAgentDataHolder.setCurrentToolExecutionRequests(aiMessage.toolExecutionRequests());
-            sharedAgentDataHolder.releaseLock();
 
             int i = 0;
             int toolExecutionsSize = aiMessage.toolExecutionRequests().size();
