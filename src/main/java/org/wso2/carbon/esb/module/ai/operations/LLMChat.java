@@ -36,7 +36,7 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
-import org.wso2.carbon.esb.module.ai.connections.LLMConnectionHandler;
+import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.lang.reflect.Type;
@@ -82,10 +82,12 @@ public class LLMChat extends AbstractAIMediator {
     private Double frequencyPenalty;
     private Integer seed;
     private String system;
+    private String connectionName;
     private ChatLanguageModel model;
 
     @Override
     public void execute(MessageContext mc, String responseVariable, Boolean overwriteBody) {
+        connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
         String prompt = getMediatorParameter(mc, Constants.PROMPT, String.class, false);
         modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
@@ -100,7 +102,7 @@ public class LLMChat extends AbstractAIMediator {
         seed = getMediatorParameter(mc, Constants.SEED, Integer.class, true);
 
         try {
-            model = LLMConnectionHandler.getChatModel(mc, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
+            model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
             if (model == null) {
                 handleConnectorException(Errors.LLM_CONNECTION_ERROR, mc);
                 return;
