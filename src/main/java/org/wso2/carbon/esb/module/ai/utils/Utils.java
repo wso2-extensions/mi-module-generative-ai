@@ -22,6 +22,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import org.wso2.carbon.esb.module.ai.memory.MessageWindowChatMemoryWithDatabase;
+import org.wso2.carbon.esb.module.ai.memory.store.DatabaseChatMemoryStore;
+import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
+
 import java.lang.reflect.Type;
 
 public class Utils {
@@ -39,5 +46,27 @@ public class Utils {
 
     public static String toJson(Object object) {
         return gson.toJson(object);
+    }
+
+    /**
+     * Returns the chat memory for the given user ID
+     *
+     * @param userID          User ID
+     * @param memoryConfigKey Memory configuration key
+     * @param maxChatHistory  Maximum chat history
+     * @return Chat memory
+     */
+    public static ChatMemory getChatMemory(String userID, String memoryConfigKey, int maxChatHistory) {
+
+        ChatMemory chatMemory;
+        ChatMemoryStore chatMemoryStore = MemoryStoreHandler.getMemoryStoreHandler().getMemoryStore(memoryConfigKey);
+        if (chatMemoryStore instanceof DatabaseChatMemoryStore) {
+            chatMemory = MessageWindowChatMemoryWithDatabase.builder().id(userID)
+                    .chatMemoryStore((DatabaseChatMemoryStore) chatMemoryStore).maxMessages(maxChatHistory).build();
+        } else {
+            chatMemory = MessageWindowChatMemory.builder().id(userID).chatMemoryStore(chatMemoryStore)
+                    .maxMessages(maxChatHistory).build();
+        }
+        return chatMemory;
     }
 }

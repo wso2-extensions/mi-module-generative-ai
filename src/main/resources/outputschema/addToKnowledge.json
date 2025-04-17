@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Output Schema addToKnowledge operation",
+  "description": "Output schema for the addToKnowledge operation in the connector.",
+  "properties": {
+    "payload": {
+      "type": "object",
+      "description": "Payload containing result",
+      "properties": {
+        "result": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "result"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Attributes",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  },
+  "required": [
+    "attributes",
+    "payload"
+  ],
+  "additionalProperties": false
+}

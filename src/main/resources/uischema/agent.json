@@ -1,7 +1,7 @@
 {
   "connectorName": "ai",
-  "operationName": "chat",
-  "title": "Chat completion",
+  "operationName": "agent",
+  "title": "AI Agent",
   "help": "",
   "elements": [
     {
@@ -13,7 +13,7 @@
             "type": "attribute",
             "value": {
               "name": "llmConfigKey",
-              "displayName": "LLM Connection",
+              "displayName": "OpenAI Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
                 "OPEN_AI",
@@ -52,6 +52,16 @@
                 {
                   "type": "attribute",
                   "value": {
+                    "name": "userID",
+                    "displayName": "User ID",
+                    "inputType": "stringOrExpression",
+                    "required": "true",
+                    "helpTip": "Unique user identifier"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
                     "name": "modelName",
                     "displayName": "Model name",
                     "inputType": "stringOrExpression",
@@ -63,11 +73,12 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "userID",
-                    "displayName": "User ID",
-                    "inputType": "stringOrExpression",
-                    "required": "true",
-                    "helpTip": "Unique user identifier"
+                    "name": "system",
+                    "displayName": "System prompt",
+                    "inputType": "textAreaOrExpression",
+                    "defaultValue": "You are a helpful AI agent",
+                    "required": "false",
+                    "helpTip": "Give instructions to LLM"
                   }
                 },
                 {
@@ -79,23 +90,6 @@
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Query the LLM"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "outputType",
-                    "displayName": "Output type",
-                    "inputType": "combo",
-                    "comboValues": [
-                      "string",
-                      "integer",
-                      "float",
-                      "boolean"
-                    ],
-                    "defaultValue": "string",
-                    "required": "true",
-                    "helpTip": "Define type of the output"
                   }
                 }
               ]
@@ -115,16 +109,6 @@
                     "defaultValue": "10",
                     "required": "false",
                     "helpTip": "Maximum chat history to use"
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "system",
-                    "displayName": "System prompt",
-                    "inputType": "textAreaOrExpression",
-                    "required": "false",
-                    "helpTip": "Give instructions to LLM"
                   }
                 },
                 {
@@ -180,6 +164,17 @@
                     "defaultValue": "",
                     "required": "false",
                     "helpTip": "Seed"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "toolExecutionTimeout",
+                    "displayName": "Tool Execution Timeout",
+                    "inputType": "string",
+                    "defaultValue": "10",
+                    "required": "false",
+                    "helpTip": "Tool Execution Timeout in seconds"
                   }
                 }
               ]

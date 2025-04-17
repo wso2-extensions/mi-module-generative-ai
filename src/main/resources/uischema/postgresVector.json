@@ -1,0 +1,113 @@
+{
+  "connectorName": "ai",
+  "connectionName": "POSTGRES_VECTOR",
+  "title": "PGVector connection config",
+  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "POSTGRES_VECTOR",
+        "required": "true",
+        "helpTip": "A name for the vector store connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "host",
+                    "displayName": "Host",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "localhost",
+                    "required": "true",
+                    "helpTip": "The host name of the database server"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "port",
+                    "displayName": "Port",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "5432",
+                    "required": "true",
+                    "helpTip": "The port number of the database server"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "database",
+                    "displayName": "Database",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "postgres",
+                    "required": "true",
+                    "helpTip": "The name of the database"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "user",
+                    "displayName": "User",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "The user name to connect to the database"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "password",
+                    "displayName": "Password",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "The password to connect to the database"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "table",
+                    "displayName": "Table",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "mi",
+                    "required": "true",
+                    "helpTip": "The table name"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "dimension",
+                    "displayName": "Dimension of embeddings",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "1536",
+                    "required": "true",
+                    "helpTip": "Give the dimension of the embeddings"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

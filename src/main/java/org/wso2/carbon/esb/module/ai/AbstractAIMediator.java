@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.esb.module.ai;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.axis2.AxisFault;
 import org.apache.synapse.MessageContext;
@@ -26,6 +27,8 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.data.connector.ConnectorResponse;
 import org.apache.synapse.data.connector.DefaultConnectorResponse;
+import org.apache.synapse.util.InlineExpressionUtil;
+import org.jaxen.JaxenException;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
 
@@ -102,6 +105,8 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             return (T) Boolean.valueOf(value);
         } else if (type == String.class) {
             return (T) value;
+        } else if (type == Long.class) {
+            return (T) Long.valueOf(value);
         } else {
             throw new IllegalArgumentException("Unsupported type: " + type);
         }
@@ -127,16 +132,17 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         String jsonString = Utils.toJson(payload);
         if (payload instanceof List) {
             output = JsonParser.parseString(jsonString).getAsJsonArray();
-        } else if (payload instanceof String || payload instanceof Boolean ||
-                        payload instanceof Long || payload instanceof Double) {
+        } else if (payload instanceof String || payload instanceof Boolean || payload instanceof Long ||
+                payload instanceof Double || payload instanceof JsonElement) {
             output = payload;
         } else {
             // Convert Java object to JSON string
             output = JsonParser.parseString(jsonString).getAsJsonObject();
         }
 
-        if (overwriteBody != null && overwriteBody) {
-            org.apache.axis2.context.MessageContext axisMsgCtx = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        if (overwriteBody) {
+            org.apache.axis2.context.MessageContext axisMsgCtx =
+                    ((Axis2MessageContext) messageContext).getAxis2MessageContext();
             try {
                 JsonUtil.getNewJsonPayload(axisMsgCtx, jsonString, true, true);
             } catch (AxisFault e) {
@@ -144,7 +150,7 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             }
             axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.MESSAGE_TYPE, Constants.JSON_CONTENT_TYPE);
             axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.CONTENT_TYPE, Constants.JSON_CONTENT_TYPE);
-        }else {
+        } else {
             response.setPayload(output);
         }
         response.setHeaders(headers);
@@ -166,5 +172,15 @@ public abstract class AbstractAIMediator extends AbstractConnector {
         mc.setProperty("ERROR_CODE", code.getCode());
         mc.setProperty("ERROR_MESSAGE", code.getMessage());
         throw new SynapseException(code.getMessage());
+    }
+
+    protected String parseInlineExpression(MessageContext mc, String inlineExpression) {
+
+        try {
+            return InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, inlineExpression);
+        } catch (JaxenException e) {
+            handleConnectorException(Errors.ERROR_PARSE_PROMPT, mc, e);
+        }
+        return inlineExpression;
     }
 }
