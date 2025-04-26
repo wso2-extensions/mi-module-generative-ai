@@ -55,6 +55,7 @@ import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.mediators.eip.EIPConstants;
 import org.apache.synapse.mediators.eip.EIPUtils;
 import org.apache.synapse.mediators.eip.SharedDataHolder;
+import org.apache.synapse.mediators.template.TemplateContext;
 import org.apache.synapse.util.MessageHelper;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
@@ -71,6 +72,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -330,8 +332,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         boolean result = false;
         boolean readyToAggregate = false;
 
-        String agentID = getMediatorParameter(messageContext, SynapseConstants.INVOKE_MEDIATOR_ID,
-                String.class, false);
+        String agentID = getAgentIDFromCallback(messageContext);
+        if (agentID == null) {
+            handleException("Agent ID not found in the callback", messageContext);
+        }
         ToolExecutionDataHolder toolExecutionDataHolder = (ToolExecutionDataHolder) messageContext.getProperty(
                 Constants.TOOL_EXECUTION_DATA_HOLDER + "." + agentID);
         if (!continuationState.hasChild()) {
@@ -355,6 +359,22 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                     toolExecutionDataHolder.getTotalToolExecutionCount(), synLog);
         }
         return result;
+    }
+
+    private String getAgentIDFromCallback(MessageContext messageContext) {
+
+        Stack<TemplateContext> funcStack = (Stack) messageContext.getProperty("_SYNAPSE_FUNCTION_STACK");
+        String agentId = null;
+        if (funcStack != null && !funcStack.isEmpty()) {
+            for (int i = funcStack.size() - 1; i >= 0; i--) {
+                TemplateContext templateContext = funcStack.get(i);
+                if (Constants.AGENT.equals(templateContext.getName())) {
+                    agentId = templateContext.getParameterValue(SynapseConstants.INVOKE_MEDIATOR_ID).toString();
+                    break;
+                }
+            }
+        }
+        return agentId;
     }
 
     private boolean aggregateToolExecutionResult(String agentID, MessageContext synCtx, int toolCount,

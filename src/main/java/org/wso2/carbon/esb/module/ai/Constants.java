@@ -144,4 +144,5 @@ public class Constants {
     public static final String LLM_CONFIG_KEY = "_LLM_CONFIG_KEY";
     public static final String VECTOR_STORE_CONFIG_KEY = "_VECTOR_STORE_CONFIG_KEY";
     public static final String EMBEDDING_CONFIG_KEY = "_EMBEDDING_CONFIG_KEY";
+    public static final String AGENT = "agent";
 }
