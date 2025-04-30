@@ -12,40 +12,35 @@
   "type": "Connector",
   "releases": [
     {
-      "tagName": "v0.1.0",
+      "tagName": "v0.1.2",
       "products": [
         "MI 4.4.0"
       ],
       "operations": [
         {
-          "name":"init",
-          "description":"Config operation",
-          "isHidden":true
+          "name": "chat",
+          "description": "Invoke a LLM service.",
+          "isHidden": false
         },
         {
-          "name":"chat",
-          "description":"Invoke a LLM service.",
-          "isHidden":false
+          "name": "ragChat",
+          "description": "Invoke RAG.",
+          "isHidden": false
         },
         {
-          "name":"ragChat",
-          "description":"Invoke RAG.",
-          "isHidden":false
+          "name": "agent",
+          "description": "Create an AI agent.",
+          "isHidden": false
         },
         {
-          "name":"agent",
-          "description":"Create an AI agent.",
-          "isHidden":false
+          "name": "addToKnowledge",
+          "description": "Add text and its embeddings to a selected vector store.",
+          "isHidden": false
         },
         {
-          "name":"addToKnowledge",
-          "description":"Add text and its embeddings to a selected vector store.",
-          "isHidden":false
-        },
-        {
-          "name":"getFromKnowledge",
-          "description":"Search for similar texts in a selected vector store.",
-          "isHidden":false
+          "name": "getFromKnowledge",
+          "description": "Search for similar texts in a selected vector store.",
+          "isHidden": false
         }
       ],
       "connections": [
@@ -91,6 +86,168 @@
         }
       ],
       "isHidden": false
+    },
+    {
+      "tagName": "v0.1.1",
+      "products": [
+        "MI 4.4.0"
+      ],
+      "operations": [
+        {
+          "name": "init",
+          "description": "Config operation",
+          "isHidden": true
+        },
+        {
+          "name": "chat",
+          "description": "Invoke a LLM service.",
+          "isHidden": false
+        },
+        {
+          "name": "ragChat",
+          "description": "Invoke RAG.",
+          "isHidden": false
+        },
+        {
+          "name": "agent",
+          "description": "Create an AI agent.",
+          "isHidden": false
+        },
+        {
+          "name": "addToKnowledge",
+          "description": "Add text and its embeddings to a selected vector store.",
+          "isHidden": false
+        },
+        {
+          "name": "getFromKnowledge",
+          "description": "Search for similar texts in a selected vector store.",
+          "isHidden": false
+        }
+      ],
+      "connections": [
+        {
+          "name": "ANTHROPIC",
+          "description": "Connection for interacting with the Anthropic AI service."
+        },
+        {
+          "name": "AZURE_OPEN_AI",
+          "description": "Connection for interacting with the Azure OpenAI service."
+        },
+        {
+          "name": "MISTRAL_AI",
+          "description": "Connection for interacting with the MistralAI service."
+        },
+        {
+          "name": "DEEPSEEK",
+          "description": "Connection for interacting with the DeepSeek service."
+        },
+        {
+          "name": "OPEN_AI",
+          "description": "Connection for interacting with the OpenAI service."
+        },
+        {
+          "name": "MI_VECTOR_STORE",
+          "description": "Connection for interacting with the MI In-Registry vector store."
+        },
+        {
+          "name": "PINECONE",
+          "description": "Connection for interacting with the Pinecone vector store."
+        },
+        {
+          "name": "POSTGRES_VECTOR",
+          "description": "Connection for interacting with the PostgreSQL vector database."
+        },
+        {
+          "name": "CHROMA_DB",
+          "description": "Connection for interacting with the ChromaDB vector database."
+        },
+        {
+          "name": "POSTGRES_MEMORY",
+          "description": "Connection for interacting with the PostgreSQL memory database."
+        }
+      ],
+      "isHidden": true
+    },
+    {
+      "tagName": "v0.1.0",
+      "products": [
+        "MI 4.4.0"
+      ],
+      "operations": [
+        {
+          "name": "init",
+          "description": "Config operation",
+          "isHidden": true
+        },
+        {
+          "name": "chat",
+          "description": "Invoke a LLM service.",
+          "isHidden": false
+        },
+        {
+          "name": "ragChat",
+          "description": "Invoke RAG.",
+          "isHidden": false
+        },
+        {
+          "name": "agent",
+          "description": "Create an AI agent.",
+          "isHidden": false
+        },
+        {
+          "name": "addToKnowledge",
+          "description": "Add text and its embeddings to a selected vector store.",
+          "isHidden": false
+        },
+        {
+          "name": "getFromKnowledge",
+          "description": "Search for similar texts in a selected vector store.",
+          "isHidden": false
+        }
+      ],
+      "connections": [
+        {
+          "name": "ANTHROPIC",
+          "description": "Connection for interacting with the Anthropic AI service."
+        },
+        {
+          "name": "AZURE_OPEN_AI",
+          "description": "Connection for interacting with the Azure OpenAI service."
+        },
+        {
+          "name": "MISTRAL_AI",
+          "description": "Connection for interacting with the MistralAI service."
+        },
+        {
+          "name": "DEEPSEEK",
+          "description": "Connection for interacting with the DeepSeek service."
+        },
+        {
+          "name": "OPEN_AI",
+          "description": "Connection for interacting with the OpenAI service."
+        },
+        {
+          "name": "MI_VECTOR_STORE",
+          "description": "Connection for interacting with the MI In-Registry vector store."
+        },
+        {
+          "name": "PINECONE",
+          "description": "Connection for interacting with the Pinecone vector store."
+        },
+        {
+          "name": "POSTGRES_VECTOR",
+          "description": "Connection for interacting with the PostgreSQL vector database."
+        },
+        {
+          "name": "CHROMA_DB",
+          "description": "Connection for interacting with the ChromaDB vector database."
+        },
+        {
+          "name": "POSTGRES_MEMORY",
+          "description": "Connection for interacting with the PostgreSQL memory database."
+        }
+      ],
+      "isHidden": true
     }
   ],
   "labels": [
