@@ -167,7 +167,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         String parsedPrompt =
                 parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
         String attachments = parseInlineExpression(mc,
-                getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, false));
+                getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, true));
 
         ChatLanguageModel model = null;
         try {

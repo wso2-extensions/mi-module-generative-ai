@@ -88,7 +88,7 @@ public class LLMChat extends AbstractAIMediator {
         String userID = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
         String prompt = parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
         String attachments = parseInlineExpression(mc,
-                getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, false));
+                getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, true));
         UserMessage userMessage = Utils.buildUserMessage(prompt, attachments);
 
         String modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);

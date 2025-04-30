@@ -21,6 +21,7 @@ package org.wso2.carbon.esb.module.ai;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.axis2.AxisFault;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.commons.json.JsonUtil;
@@ -176,6 +177,9 @@ public abstract class AbstractAIMediator extends AbstractConnector {
 
     protected String parseInlineExpression(MessageContext mc, String inlineExpression) {
 
+        if (StringUtils.isEmpty(inlineExpression)) {
+            return inlineExpression;
+        }
         try {
             return InlineExpressionUtil.processInLineSynapseExpressionTemplate(mc, inlineExpression);
         } catch (JaxenException e) {
