@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "connectionName": "IN_MEMORY",
   "title": "MI In-Memory Chat Store",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "help": "Configuration for connecting to an in-memory chat store",
   "elements": [
     {
       "type": "attribute",

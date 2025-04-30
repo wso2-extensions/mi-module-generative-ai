@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "operationName": "getFromKnowledge",
   "title": "Search the vector store",
-  "help": "",
+  "help": "This operation allows you to search a vector store using an input query. You can configure the vector store connection, embedding model, and other parameters to customize the search process.",
   "elements": [
     {
       "type": "attributeGroup",
@@ -24,7 +24,7 @@
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "Vector store connection to be used"
+              "helpTip": "Select the vector store connection to retrieve data from."
             }
           },
           {
@@ -39,7 +39,7 @@
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "AI service connection to be used"
+              "helpTip": "Choose the AI service connection for embedding generation."
             }
           },
           {
@@ -55,7 +55,7 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "An array of JSON objects in the format of {\"text\":\"test\",\"embedding\":\"[array of numbers]\"}"
+                    "helpTip": "Provide the input text or query to search in the vector store."
                   }
                 },
                 {
@@ -66,7 +66,7 @@
                     "inputType": "checkbox",
                     "defaultValue": true,
                     "required": "true",
-                    "helpTip": "Need to embed the input?"
+                    "helpTip": "Check this box if the input needs to be embedded."
                   }
                 },
                 {
@@ -82,7 +82,7 @@
                     ],
                     "defaultValue": "text-embedding-3-small",
                     "required": "true",
-                    "helpTip": "Select the splitting strategy",
+                    "helpTip": "Select the embedding model to use for processing the input.",
                     "enableCondition": [
                       {
                         "needEmbedding": true
@@ -98,7 +98,7 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "5",
                     "required": "false",
-                    "helpTip": "Maximum number of results to be returned"
+                    "helpTip": "Specify the maximum number of results to return."
                   }
                 },
                 {
@@ -109,7 +109,7 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "0.75",
                     "required": "false",
-                    "helpTip": "Minimum score to be considered as a valid result"
+                    "helpTip": "Set the minimum score threshold for valid results."
                   }
                 }
               ]
@@ -118,13 +118,13 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "Response",
+              "groupName": "Output",
               "elements": [
                 {
                   "type": "attribute",
                   "value": {
                     "name": "responseVariable",
-                    "displayName": "Response Variable Name",
+                    "displayName": "Output Variable Name",
                     "inputType": "string",
                     "deriveResponseVariable": true,
                     "required": "true",

@@ -19,8 +19,10 @@
     <parameter name="agentID" description="Agent ID"/>
     <parameter name="connections" description="Connections"/>
     <parameter name="userID" description="User ID"/>
-    <parameter name="system" description="System prompt"/>
+    <parameter name="role" description="Role of the agent"/>
+    <parameter name="instructions" description="Instructions for the agent"/>
     <parameter name="prompt" description="Prompt name"/>
+    <parameter name="attachments" description="File attachments"/>
     <!--    <parameter name="outputType" description="Response type"/>-->
     <parameter name="responseVariable" description="Response variable name"/>
     <parameter name="overwriteBody"

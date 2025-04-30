@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "connectionName": "DEEPSEEK",
   "title": "DEEPSEEK Connection Config",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "help": "Configuration for connecting to the DEEPSEEK API",
   "elements": [
     {
       "type": "attribute",

@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "operationName": "agent",
   "title": "AI Agent",
-  "help": "",
+  "help": "Create an AI agent with tools and capabilities.",
   "elements": [
     {
       "type": "attributeGroup",
@@ -13,7 +13,7 @@
             "type": "attribute",
             "value": {
               "name": "llmConfigKey",
-              "displayName": "OpenAI Connection",
+              "displayName": "LLM Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
                 "OPEN_AI",
@@ -25,7 +25,7 @@
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "LLM service connection to be used"
+              "helpTip": "Select the LLM service connection to be used for processing queries."
             }
           },
           {
@@ -41,7 +41,7 @@
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "Memory connection to be used"
+              "helpTip": "Choose the memory connection to store and retrieve chat history or context."
             }
           },
           {
@@ -55,8 +55,9 @@
                     "name": "userID",
                     "displayName": "User ID",
                     "inputType": "stringOrExpression",
+                    "placeholder": "payload.userID",
                     "required": "true",
-                    "helpTip": "Unique user identifier"
+                    "helpTip": "Provide a unique identifier for the user interacting with the agent."
                   }
                 },
                 {
@@ -67,18 +68,29 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "gpt-4o",
                     "required": "true",
-                    "helpTip": "Name of the model to use"
+                    "helpTip": "Specify the name of the LLM model to be used for generating responses."
                   }
                 },
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "system",
-                    "displayName": "System prompt",
-                    "inputType": "textAreaOrExpression",
-                    "defaultValue": "You are a helpful AI agent",
+                    "name": "role",
+                    "displayName": "Role",
+                    "inputType": "string",
+                    "placeholder": "AI Assistant",
                     "required": "false",
-                    "helpTip": "Give instructions to LLM"
+                    "helpTip": "Define the role or persona of the agent (e.g., AI Assistant)."
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "instructions",
+                    "displayName": "Instructions",
+                    "inputType": "expressionTextArea",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "Provide specific instructions or guidelines for the LLM to follow."
                   }
                 },
                 {
@@ -89,7 +101,18 @@
                     "inputType": "expressionTextArea",
                     "defaultValue": "",
                     "required": "true",
-                    "helpTip": "Query the LLM"
+                    "helpTip": "Enter the query or prompt to be processed by the LLM."
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "attachments",
+                    "displayName": "Attachments",
+                    "inputType": "expressionTextArea",
+                    "placeholder": "[{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]",
+                    "required": "false",
+                    "helpTip": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}] or {\"type\":\"application/pdf\", \"content\":\"base64 content\"}. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
                   }
                 }
               ]
@@ -108,7 +131,7 @@
                     "inputType": "string",
                     "defaultValue": "10",
                     "required": "false",
-                    "helpTip": "Maximum chat history to use"
+                    "helpTip": "Set the maximum number of previous messages to include in the context."
                   }
                 },
                 {
@@ -119,7 +142,7 @@
                     "inputType": "string",
                     "defaultValue": "4069",
                     "required": "false",
-                    "helpTip": "Maximum number of tokens to generate"
+                    "helpTip": "Specify the maximum number of tokens to generate in the response."
                   }
                 },
                 {
@@ -130,7 +153,7 @@
                     "inputType": "string",
                     "defaultValue": "0.7",
                     "required": "false",
-                    "helpTip": "Controls randomness: lower temperature results in less randomness"
+                    "helpTip": "Adjust the randomness of the response: lower values produce more deterministic outputs."
                   }
                 },
                 {
@@ -141,7 +164,7 @@
                     "inputType": "string",
                     "defaultValue": "1",
                     "required": "false",
-                    "helpTip": "Controls diversity: lower value results in more diversity"
+                    "helpTip": "Control response diversity: lower values result in more focused outputs."
                   }
                 },
                 {
@@ -152,7 +175,7 @@
                     "inputType": "string",
                     "defaultValue": "0",
                     "required": "false",
-                    "helpTip": "Controls repetition: lower value results in less repetition"
+                    "helpTip": "Reduce repetition in responses: higher values discourage repeated phrases."
                   }
                 },
                 {
@@ -163,7 +186,7 @@
                     "inputType": "string",
                     "defaultValue": "",
                     "required": "false",
-                    "helpTip": "Seed"
+                    "helpTip": "Set a seed value for deterministic outputs (useful for debugging)."
                   }
                 },
                 {
@@ -174,7 +197,7 @@
                     "inputType": "string",
                     "defaultValue": "10",
                     "required": "false",
-                    "helpTip": "Tool Execution Timeout in seconds"
+                    "helpTip": "Specify the maximum time (in seconds) allowed for tool execution."
                   }
                 }
               ]
@@ -183,17 +206,17 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "Response",
+              "groupName": "Output",
               "elements": [
                 {
                   "type": "attribute",
                   "value": {
                     "name": "responseVariable",
-                    "displayName": "Response Variable Name",
+                    "displayName": "Output Variable Name",
                     "inputType": "string",
                     "deriveResponseVariable": true,
                     "required": "true",
-                    "helpTip": "Name of the variable to which the output of the operation should be assigned"
+                    "helpTip": "Provide the name of the variable to store the operation's output."
                   }
                 },
                 {
@@ -203,7 +226,7 @@
                     "displayName": "Overwrite Message Body",
                     "inputType": "checkbox",
                     "defaultValue": "false",
-                    "helpTip": "Replace the Message Body in Message Context with the response of the operation (This will remove the payload from the above variable).",
+                    "helpTip": "Enable this to replace the message body with the operation's response (removes payload from the variable).",
                     "required": "false"
                   }
                 }

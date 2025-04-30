@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "operationName": "addToKnowledge",
   "title": "Ingest documents to the vector store",
-  "help": "",
+  "help": "This operation allows you to ingest documents into a vector store by parsing, splitting, and generating embeddings for the input data.",
   "elements": [
     {
       "type": "attributeGroup",
@@ -24,7 +24,7 @@
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "Vector store connection to be used"
+              "helpTip": "Select the vector store connection to store and retrieve embeddings."
             }
           },
           {
@@ -39,7 +39,7 @@
               "defaultType": "connection.local",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "AI service connection to be used"
+              "helpTip": "Choose the AI service connection for generating embeddings."
             }
           }
         ]
@@ -58,7 +58,7 @@
               "inputType": "stringOrExpression",
               "defaultValue": "",
               "required": "true",
-              "helpTip": "An array of JSON objects in the format of {\"text\":\"test\",\"embedding\":\"[array of numbers]\"}"
+              "helpTip": "Provide the input data to be processed."
             }
           }
         ]
@@ -77,7 +77,7 @@
               "inputType": "checkbox",
               "defaultValue": true,
               "required": "true",
-              "helpTip": "Need to parse the input?"
+              "helpTip": "Enable this option if the input needs to be parsed into text."
             }
           },
           {
@@ -99,7 +99,7 @@
               ],
               "defaultValue": "pdf-to-text",
               "required": "true",
-              "helpTip": "Select the content type of the input",
+              "helpTip": "Select the format of the input content to parse it correctly.",
               "enableCondition": [
                 {
                   "needParse": true
@@ -123,7 +123,7 @@
               "inputType": "checkbox",
               "defaultValue": true,
               "required": "true",
-              "helpTip": "Need to split the input?"
+              "helpTip": "Enable this option if the input needs to be split into smaller segments."
             }
           },
           {
@@ -139,7 +139,7 @@
               ],
               "defaultValue": "Recursive",
               "required": "true",
-              "helpTip": "Select the splitting strategy",
+              "helpTip": "Choose the strategy for splitting the input into segments.",
               "enableCondition": [
                 {
                   "needSplit": true
@@ -155,7 +155,7 @@
               "inputType": "stringOrExpression",
               "defaultValue": "1000",
               "required": "false",
-              "helpTip": "Max segment size in tokens",
+              "helpTip": "Specify the maximum size (in tokens) for each segment.",
               "enableCondition": [
                 {
                   "needSplit": true
@@ -171,7 +171,7 @@
               "inputType": "stringOrExpression",
               "defaultValue": "200",
               "required": "false",
-              "helpTip": "Max overlap size in tokens",
+              "helpTip": "Specify the maximum overlap size (in tokens) between segments.",
               "enableCondition": [
                 {
                   "needSplit": true
@@ -195,7 +195,7 @@
               "inputType": "checkbox",
               "defaultValue": true,
               "required": "true",
-              "helpTip": "Need to generate embedding?"
+              "helpTip": "Enable this option to generate embeddings for the input."
             }
           },
           {
@@ -211,7 +211,7 @@
               ],
               "defaultValue": "text-embedding-3-small",
               "required": "true",
-              "helpTip": "Select the splitting strategy",
+              "helpTip": "Select the embedding model to generate vector representations.",
               "enableCondition": [
                 {
                   "needEmbedding": true
@@ -225,18 +225,18 @@
     {
       "type": "attributeGroup",
       "value": {
-        "groupName": "Response",
+        "groupName": "Output",
         "elements": [
           {
             "type": "attribute",
             "value": {
               "name": "responseVariable",
-              "displayName": "Response Variable Name",
+              "displayName": "Output Variable Name",
               "inputType": "stringOrExpression",
               "defaultValue": "",
               "required": "true",
               "deriveResponseVariable": true,
-              "helpTip": "Define the response variable"
+              "helpTip": "Specify the name of the variable to store the operation's response."
             }
           },
           {

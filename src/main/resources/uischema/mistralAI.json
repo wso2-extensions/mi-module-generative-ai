@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "connectionName": "MISTRAL_AI",
   "title": "MistralAI Connection Config",
-  "help": "<h1>AI Connector</h1> <b>The MistralAI connector supports OpenAI connection</b>",
+  "help": "Configuration for connecting to the MistralAI API",
   "elements": [
     {
       "type": "attribute",

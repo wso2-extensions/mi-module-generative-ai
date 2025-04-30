@@ -144,7 +144,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         Boolean overWriteBody = getMediatorParameter(mc, Constants.OVERWRITE_BODY, Boolean.class, false);
 
         // Advanced configurations
-        String system = getMediatorParameter(mc, Constants.SYSTEM, String.class, false);
+        String role = getMediatorParameter(mc, Constants.ROLE, String.class, true);
+        String instructions = getMediatorParameter(mc, Constants.INSTRUCTIONS, String.class, true);
+        String system = buildSystemPrompt(role, instructions, mc);
+
         Double temperature = getMediatorParameter(mc, Constants.TEMPERATURE, Double.class, true);
         Integer maxTokens = getMediatorParameter(mc, Constants.MAX_TOKENS, Integer.class, true);
         Double topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
@@ -163,6 +166,8 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         String memoryId = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
         String parsedPrompt =
                 parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
+        String attachments = parseInlineExpression(mc,
+                getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, false));
 
         ChatLanguageModel model = null;
         try {
@@ -195,12 +200,11 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             aiServiceContext.chatMemories = new ConcurrentHashMap<>();
             aiServiceContext.chatMemories.put(memoryId, chatMemory);
             aiServiceContext.toolSpecifications = toolDefinitionsMap.get(agentID).getToolSpecifications();
-            aiServiceContext.systemMessageProvider =
-                    chatMemoryId -> system != null ? Optional.of(system) : Optional.of(DEFAULT_SYSTEM_PROMPT);
+            aiServiceContext.systemMessageProvider = chatMemoryId -> Optional.of(system);
             aiServiceContext.chatModel = model;
 
             SystemMessage systemMessage = new SystemMessage(system);
-            UserMessage userMessage = new UserMessage(parsedPrompt);
+            UserMessage userMessage = Utils.buildUserMessage(parsedPrompt, attachments);
 
             aiServiceContext.chatMemory(memoryId).add(systemMessage);
             aiServiceContext.chatMemory(memoryId).add(userMessage);
@@ -231,6 +235,23 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             handleConnectorException(Errors.CHAT_COMPLETION_ERROR, mc, e);
         }
         return true;
+    }
+
+    private String buildSystemPrompt(String role, String instructions, MessageContext mc) {
+
+        StringBuilder prompt = new StringBuilder();
+        if (StringUtils.isNotEmpty(role)) {
+            prompt.append("# Role").append(System.lineSeparator())
+                    .append(role).append(System.lineSeparator()).append(System.lineSeparator());
+        }
+        if (StringUtils.isNotEmpty(instructions)) {
+            prompt.append("## Instructions").append(System.lineSeparator())
+                    .append(parseInlineExpression(mc, instructions));
+        }
+        if (prompt.length() == 0) {
+            return DEFAULT_SYSTEM_PROMPT;
+        }
+        return prompt.toString();
     }
 
     private boolean inferenceAgentAndExecuteTools(MessageContext mc, SynapseLog synLog, String agentID) {

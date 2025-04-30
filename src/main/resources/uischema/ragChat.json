@@ -1,8 +1,8 @@
 {
   "connectorName": "ai",
   "operationName": "ragChat",
-  "title": "RAG Chat completion",
-  "help": "",
+  "title": "RAG Chat Completion",
+  "help": "Generate a chat completion using a large language model (LLM) with RAG (Retrieval-Augmented Generation) capabilities.",
   "elements": [
     {
       "type": "attribute",
@@ -83,6 +83,7 @@
               "name": "userID",
               "displayName": "User ID",
               "inputType": "stringOrExpression",
+              "placeholder": "payload.userID",
               "required": "true",
               "helpTip": "Unique user identifier"
             }
@@ -114,6 +115,7 @@
               "inputType": "combo",
               "comboValues": [
                 "text-embedding-3-small",
+                "text-embedding-3-large",
                 "text-embedding-ada-002"
               ],
               "defaultValue": "text-embedding-3-small",
@@ -277,13 +279,13 @@
     {
       "type": "attributeGroup",
       "value": {
-        "groupName": "Response",
+        "groupName": "Output",
         "elements": [
           {
             "type": "attribute",
             "value": {
               "name": "responseVariable",
-              "displayName": "Response Variable Name",
+              "displayName": "Output Variable Name",
               "inputType": "string",
               "deriveResponseVariable": true,
               "required": "true",
