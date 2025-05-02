@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "connectionName": "PINECONE",
   "title": "Pinecone connection config",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "help": "Configuration for connecting to the Pinecone API",
   "elements": [
     {
       "type": "attribute",

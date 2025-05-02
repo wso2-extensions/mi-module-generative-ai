@@ -12,40 +12,35 @@
   "type": "Connector",
   "releases": [
     {
-      "tagName": "v0.1.0",
+      "tagName": "v0.1.2",
       "products": [
         "MI 4.4.0"
       ],
       "operations": [
         {
-          "name":"init",
-          "description":"Config operation",
-          "isHidden":true
+          "name": "chat",
+          "description": "Invoke a LLM service.",
+          "isHidden": false
         },
         {
-          "name":"chat",
-          "description":"Invoke a LLM service.",
-          "isHidden":false
+          "name": "ragChat",
+          "description": "Invoke RAG.",
+          "isHidden": false
         },
         {
-          "name":"ragChat",
-          "description":"Invoke RAG.",
-          "isHidden":false
+          "name": "agent",
+          "description": "Create an AI agent.",
+          "isHidden": false
         },
         {
-          "name":"agent",
-          "description":"Create an AI agent.",
-          "isHidden":false
+          "name": "addToKnowledge",
+          "description": "Add text and its embeddings to a selected vector store.",
+          "isHidden": false
         },
         {
-          "name":"addToKnowledge",
-          "description":"Add text and its embeddings to a selected vector store.",
-          "isHidden":false
-        },
-        {
-          "name":"getFromKnowledge",
-          "description":"Search for similar texts in a selected vector store.",
-          "isHidden":false
+          "name": "getFromKnowledge",
+          "description": "Search for similar texts in a selected vector store.",
+          "isHidden": false
         }
       ],
       "connections": [

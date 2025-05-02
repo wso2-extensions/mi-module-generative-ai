@@ -1,8 +1,8 @@
 {
   "connectorName": "ai",
   "connectionName": "POSTGRES_MEMORY",
-  "title": "POSTGRES Memory connection config",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "title": "POSTGRES Memory Connection Config",
+  "help": "Configuration for connecting to a PostgreSQL memory database",
   "elements": [
     {
       "type": "attribute",

@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "connectionName": "AZURE_OPEN_AI",
   "title": "Azure OpenAI Connection Config",
-  "help": "<h1>AI Connector</h1> <b>The Azure OpenAI connector supports OpenAI connection</b>",
+  "help": "Configuration for connecting to the Azure OpenAI API",
   "elements": [
     {
       "type": "attribute",

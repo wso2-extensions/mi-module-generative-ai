@@ -2,7 +2,7 @@
   "connectorName": "ai",
   "connectionName": "MI_VECTOR_STORE",
   "title": "MI In-Memory Vector Store",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "help": "Configuration for connecting to an in-memory vector store",
   "elements": [
     {
       "type": "attribute",

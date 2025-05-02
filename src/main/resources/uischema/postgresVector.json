@@ -1,8 +1,8 @@
 {
   "connectorName": "ai",
   "connectionName": "POSTGRES_VECTOR",
-  "title": "PGVector connection config",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "title": "PGVector Connection Config",
+  "help": "Configuration for connecting to the PGVector API",
   "elements": [
     {
       "type": "attribute",

@@ -73,10 +73,10 @@ public class LLMChat extends AbstractAIMediator {
     private static final Gson gson = new Gson();
 
     // Define the agent interfaces for different output types for the LangChain4j service
-    interface StringAgent { Result<String> chat(String userMessage); }
-    interface IntegerAgent { Result<Integer> chat(String userMessage); }
-    interface FloatAgent { Result<Float> chat(String userMessage); }
-    interface BooleanAgent { Result<Boolean> chat(String userMessage); }
+    interface StringAgent { Result<String> chat(UserMessage userMessage); }
+    interface IntegerAgent { Result<Integer> chat(UserMessage userMessage); }
+    interface FloatAgent { Result<Float> chat(UserMessage userMessage); }
+    interface BooleanAgent { Result<Boolean> chat(UserMessage userMessage); }
 
     private static final String DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant.";
 
@@ -87,12 +87,15 @@ public class LLMChat extends AbstractAIMediator {
 
         String userID = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
         String prompt = parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
+        String attachments = parseInlineExpression(mc,
+                getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, true));
+        UserMessage userMessage = Utils.buildUserMessage(prompt, attachments);
 
         String modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
         String outputType = getMediatorParameter(mc, Constants.OUTPUT_TYPE, String.class, false);
 
         // Advanced configurations
-        String system = getMediatorParameter(mc, Constants.SYSTEM, String.class, false);
+        String system = getMediatorParameter(mc, Constants.SYSTEM, String.class, true);
         Double temperature = getMediatorParameter(mc, Constants.TEMPERATURE, Double.class, true);
         Integer maxTokens = getMediatorParameter(mc, Constants.MAX_TOKENS, Integer.class, true);
         Double topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
@@ -113,7 +116,6 @@ public class LLMChat extends AbstractAIMediator {
 
         // Additional configurations
         String knowledge = getMediatorParameter(mc, Constants.KNOWLEDGE, String.class, true);
-        String chatHistory = getMediatorParameter(mc, Constants.HISTORY, String.class, true);
         Integer maxHistory = getMediatorParameter(mc, Constants.MAX_HISTORY, Integer.class, true);
 
         ContentRetriever knowledgeRetriever = null;
@@ -139,7 +141,7 @@ public class LLMChat extends AbstractAIMediator {
         ChatMemory chatMemory = Utils.getChatMemory(userID, memoryConfigKey, maxChatHistory);
 
         try {
-            Object answer = getChatResponse(model, outputType, prompt, knowledgeRetriever, chatMemory, system);
+            Object answer = getChatResponse(model, outputType, userMessage, knowledgeRetriever, chatMemory, system);
             if (answer != null) {
                 handleConnectorResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {
@@ -202,18 +204,18 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(ChatLanguageModel model, String outputType, String prompt,
+    private Object getChatResponse(ChatLanguageModel model, String outputType, UserMessage userMessage,
                                    ContentRetriever knowledgeRetriever, ChatMemory chatMemory, String systemMessage) {
 
         return switch (outputType.toLowerCase()) {
             case "string" ->
-                    getAgent(model, StringAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
-            case "integer" ->
-                    getAgent(model, IntegerAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
+                    getAgent(model, StringAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(userMessage);
+            case "integer" -> getAgent(model, IntegerAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(
+                    userMessage);
             case "float" ->
-                    getAgent(model, FloatAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
-            case "boolean" ->
-                    getAgent(model, BooleanAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(prompt);
+                    getAgent(model, FloatAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(userMessage);
+            case "boolean" -> getAgent(model, BooleanAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(
+                    userMessage);
             default -> null;
         };
     }
@@ -223,8 +225,10 @@ public class LLMChat extends AbstractAIMediator {
 
         AiServices<T> service = AiServices
                 .builder(agentType)
-                .chatLanguageModel(model)
-                .systemMessageProvider(chatMemoryId -> system != null ? system : DEFAULT_SYSTEM_PROMPT);
+                .chatLanguageModel(model);
+        if (system != null) {
+            service = service.systemMessageProvider(chatMemoryId -> system);
+        }
         if (knowledgeRetriever != null) {
             service = service.contentRetriever(knowledgeRetriever);
         }

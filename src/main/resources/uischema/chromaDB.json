@@ -1,8 +1,8 @@
 {
   "connectorName": "ai",
   "connectionName": "CHROMA_DB",
-  "title": "ChromaDB",
-  "help": "<h1>AI Connector</h1> <b>The OpenAI connector supports OpenAI connection</b>",
+  "title": "ChromaDB Connection Config",
+  "help": "Configuration for connecting to the ChromaDB API",
   "elements": [
     {
       "type": "attribute",
