@@ -19,7 +19,7 @@
                 "MI_VECTOR_STORE",
                 "CHROMA_DB",
                 "PINECONE",
-                "POSTGRE_SQL"
+                "POSTGRES_VECTOR"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",

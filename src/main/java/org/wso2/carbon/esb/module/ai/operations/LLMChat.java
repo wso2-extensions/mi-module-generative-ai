@@ -133,10 +133,8 @@ public class LLMChat extends AbstractAIMediator {
             knowledgeRetriever = query -> knowledgeTexts;
         }
 
-        String memoryConfigKey = mc.getProperty(Constants.MEMORY_CONFIG_KEY).toString();
-        if (StringUtils.isEmpty(memoryConfigKey)) {
-            handleConnectorException(Errors.MEMORY_CONFIG_KEY_NOT_FOUND, mc);
-        }
+        Object memoryConfigKeyObj = mc.getProperty(Constants.MEMORY_CONFIG_KEY);
+        String memoryConfigKey = memoryConfigKeyObj != null ? memoryConfigKeyObj.toString() : null;
         int maxChatHistory = maxHistory != null ? maxHistory : 20;
         ChatMemory chatMemory = Utils.getChatMemory(userID, memoryConfigKey, maxChatHistory);
 

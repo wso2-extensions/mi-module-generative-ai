@@ -64,8 +64,6 @@ public class MemoryConfig extends AbstractConnector implements ManagedLifecycle 
             RDBMSDatabase.Builder builder = new PostgresDatabase.Builder();
             builder.host(host).port(port).database(database).user(user).password(password).table(table);
             memoryStoreHandler.addMemoryStore(connectionName, new RDBMSChatMemoryStore(builder.build()));
-        } else if (MemoryType.IN_MEMORY.name().equals(connectionType)) {
-            memoryStoreHandler.addMemoryStore(connectionName, new InMemoryChatMemoryStore());
         } else {
             handleException("Unsupported memory type: " + connectionType, messageContext);
         }
