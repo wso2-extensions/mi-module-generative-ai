@@ -63,12 +63,11 @@
         "displayName": "Memory Connection",
         "inputType": "connection",
         "allowedConnectionTypes": [
-          "IN_MEMORY",
           "POSTGRES_MEMORY"
         ],
         "defaultType": "connection.local",
         "defaultValue": "",
-        "required": "true",
+        "required": "false",
         "helpTip": "Memory connection to be used"
       }
     },

@@ -1,8 +1,8 @@
 {
   "connectorName": "ai",
   "connectionName": "MI_VECTOR_STORE",
-  "title": "MI In-Memory Vector Store",
-  "help": "Configuration for connecting to an in-memory vector store",
+  "title": "MI Registry Vector Store",
+  "help": "Configuration for connecting to an file based vector store",
   "elements": [
     {
       "type": "attribute",
@@ -14,34 +14,6 @@
         "required": "true",
         "helpTip": "A name for the vector store connection",
         "validation": "nameWithoutSpecialCharactors"
-      }
-    },
-    {
-      "type": "attributeGroup",
-      "value": {
-        "groupName": "General",
-        "elements": [
-          {
-            "type": "attributeGroup",
-            "value": {
-              "groupName": "Basic",
-              "elements": [
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "persistence",
-                    "displayName": "Persist to MI registry",
-                    "inputType": "combo",
-                    "comboValues": ["Enable", "Disable"],
-                    "defaultValue": "Enable",
-                    "required": "true",
-                    "helpTip": "Persist the vector store to the MI registry"
-                  }
-                }
-              ]
-            }
-          }
-        ]
       }
     }
   ]

@@ -35,12 +35,11 @@
               "displayName": "Memory Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "IN_MEMORY",
                 "POSTGRES_MEMORY"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
-              "required": "true",
+              "required": "false",
               "helpTip": "Choose the memory connection to store and retrieve chat history or context."
             }
           },

@@ -190,13 +190,12 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                 }
             }
 
+            Object memoryConfigKeyObj = mc.getProperty(Constants.MEMORY_CONFIG_KEY);
+            String memoryConfigKey = memoryConfigKeyObj != null ? memoryConfigKeyObj.toString() : null;
+            ChatMemory chatMemory = Utils.getChatMemory(memoryId, memoryConfigKey, maxChatHistory);
+
             // Build the AI service context
             AiServiceContext aiServiceContext = new AiServiceContext(null);
-            String memoryConfigKey = mc.getProperty(Constants.MEMORY_CONFIG_KEY).toString();
-            if (StringUtils.isEmpty(memoryConfigKey)) {
-                handleConnectorException(Errors.MEMORY_CONFIG_KEY_NOT_FOUND, mc);
-            }
-            ChatMemory chatMemory = Utils.getChatMemory(memoryId, memoryConfigKey, maxChatHistory);
             aiServiceContext.chatMemories = new ConcurrentHashMap<>();
             aiServiceContext.chatMemories.put(memoryId, chatMemory);
             aiServiceContext.toolSpecifications = toolDefinitionsMap.get(agentID).getToolSpecifications();

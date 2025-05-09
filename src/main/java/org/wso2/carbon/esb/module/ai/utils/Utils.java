@@ -32,6 +32,7 @@ import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -86,6 +87,10 @@ public class Utils {
      */
     public static ChatMemory getChatMemory(String userID, String memoryConfigKey, int maxChatHistory) {
 
+        if (StringUtils.isEmpty(memoryConfigKey)) {
+            return MessageWindowChatMemory.builder().id(userID).chatMemoryStore(new InMemoryChatMemoryStore())
+                    .maxMessages(maxChatHistory).build();
+        }
         ChatMemory chatMemory;
         ChatMemoryStore chatMemoryStore = MemoryStoreHandler.getMemoryStoreHandler().getMemoryStore(memoryConfigKey);
         if (chatMemoryStore instanceof DatabaseChatMemoryStore) {

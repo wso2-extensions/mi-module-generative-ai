@@ -44,9 +44,8 @@ public class VectorStoreConnectionHandler {
 
         switch (connectionParams.getConnectionType()) {
             case Constants.MI_VECTOR_STORE:
-                Boolean persistence = connectionParams.getConnectionProperty(Constants.PERSISTENCE).equals(Constants.ENABLE);
                 MicroIntegratorRegistry microIntegratorRegistry = (MicroIntegratorRegistry) mc.getConfiguration().getRegistry();
-                vectorStore = new MIVectorStore(connectionName, persistence, microIntegratorRegistry);
+                vectorStore = new MIVectorStore(connectionName, microIntegratorRegistry);
                 break;
 
             case Constants.CHROMA_DB:
