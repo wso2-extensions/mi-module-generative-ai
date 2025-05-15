@@ -141,7 +141,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         String modelName = getMediatorParameter(mc, Constants.MODEL_NAME, String.class, false);
         String responseVariable = getMediatorParameter(
                 mc, Constants.RESPONSE_VARIABLE, String.class, false);
-        Boolean overWriteBody = getMediatorParameter(mc, Constants.OVERWRITE_BODY, Boolean.class, false);
+        Boolean overWriteBody = getMediatorParameter(mc, Constants.OVERWRITE_BODY, Boolean.class, true);
 
         // Advanced configurations
         String role = getMediatorParameter(mc, Constants.ROLE, String.class, true);
