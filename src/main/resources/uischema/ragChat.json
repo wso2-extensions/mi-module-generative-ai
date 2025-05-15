@@ -84,7 +84,13 @@
               "inputType": "stringOrExpression",
               "placeholder": "payload.userID",
               "required": "true",
-              "helpTip": "Unique user identifier"
+              "helpTip": "Unique user identifier",
+              "enableCondition": [
+                "NOT",
+                {
+                  "memoryConfigKey": ""
+                }
+              ]
             }
           },
           {

@@ -76,7 +76,7 @@
               "displayName": "Parse",
               "inputType": "checkbox",
               "defaultValue": true,
-              "required": "true",
+              "required": "false",
               "helpTip": "Enable this option if the input needs to be parsed into text."
             }
           },
@@ -122,7 +122,7 @@
               "displayName": "Split",
               "inputType": "checkbox",
               "defaultValue": true,
-              "required": "true",
+              "required": "false",
               "helpTip": "Enable this option if the input needs to be split into smaller segments."
             }
           },
@@ -194,7 +194,7 @@
               "displayName": "Generate Embedding",
               "inputType": "checkbox",
               "defaultValue": true,
-              "required": "true",
+              "required": "false",
               "helpTip": "Enable this option to generate embeddings for the input."
             }
           },
@@ -232,7 +232,7 @@
             "value": {
               "name": "responseVariable",
               "displayName": "Output Variable Name",
-              "inputType": "stringOrExpression",
+              "inputType": "string",
               "defaultValue": "",
               "required": "true",
               "deriveResponseVariable": true,

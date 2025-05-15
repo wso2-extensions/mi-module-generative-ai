@@ -44,7 +44,7 @@ public class Constants {
     public static final String MI_VECTOR_STORE = "MI_VECTOR_STORE";
     public static final String CHROMA_DB = "CHROMA_DB";
     public static final String PINECONE = "PINECONE";
-    public static final String POSTGRE_SQL = "POSTGRE_SQL";
+    public static final String POSTGRES_VECTOR = "POSTGRES_VECTOR";
 
     // LLM connection properties
     public static final String DEPLOYMENT_NAME = "deploymentName";

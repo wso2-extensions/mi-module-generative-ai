@@ -50,7 +50,7 @@ public abstract class AbstractAIMediator extends AbstractConnector {
                 messageContext, Constants.RESPONSE_VARIABLE, String.class, false
         );
         Boolean overwriteBody = getMediatorParameter(
-                messageContext, Constants.OVERWRITE_BODY, Boolean.class, false);
+                messageContext, Constants.OVERWRITE_BODY, Boolean.class, true);
         execute(messageContext, responseVariable, overwriteBody);
     }
 

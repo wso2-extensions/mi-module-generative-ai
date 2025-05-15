@@ -65,7 +65,7 @@
                     "displayName": "Embed Input",
                     "inputType": "checkbox",
                     "defaultValue": true,
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Check this box if the input needs to be embedded."
                   }
                 },

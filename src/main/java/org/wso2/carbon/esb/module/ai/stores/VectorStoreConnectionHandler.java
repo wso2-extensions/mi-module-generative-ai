@@ -69,7 +69,7 @@ public class VectorStoreConnectionHandler {
                 }
                 break;
 
-            case Constants.POSTGRE_SQL:
+            case Constants.POSTGRES_VECTOR:
                 try {
                     boolean status = PGVector.testConnection(
                             connectionParams.getConnectionProperty(Constants.HOST),

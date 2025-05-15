@@ -67,7 +67,13 @@
                     "inputType": "stringOrExpression",
                     "placeholder": "payload.userID",
                     "required": "true",
-                    "helpTip": "Provide a unique identifier for the user initiating the request."
+                    "helpTip": "Provide a unique identifier for the user initiating the request.",
+                    "enableCondition": [
+                      "NOT",
+                      {
+                        "memoryConfigKey": ""
+                      }
+                    ]
                   }
                 },
                 {
@@ -89,7 +95,7 @@
                     "inputType": "expressionTextArea",
                     "placeholder": "[{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]",
                     "required": "false",
-                    "helpTip": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}] or {\"type\":\"application/pdf\", \"content\":\"base64 content\"}. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
+                    "helpTip": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
                   }
                 },
                 {
