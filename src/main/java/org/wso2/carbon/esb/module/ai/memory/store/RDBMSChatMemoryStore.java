@@ -48,7 +48,7 @@ public class RDBMSChatMemoryStore implements DatabaseChatMemoryStore {
             String createTable =
                     "CREATE TABLE IF NOT EXISTS " + database.getTable() + " (" +
                             "id SERIAL PRIMARY KEY, " +
-                            "userID TEXT NOT NULL, " +
+                            "sessionId TEXT NOT NULL, " +
                             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                             "message TEXT NOT NULL" +
                             ")";
@@ -67,10 +67,10 @@ public class RDBMSChatMemoryStore implements DatabaseChatMemoryStore {
         if (o == null) {
             return null;
         }
-        String userID = String.valueOf(o);
-        String selectQuery = "SELECT * FROM " + database.getTable() + " WHERE userID = ? ORDER BY timestamp DESC";
+        String sessionId = String.valueOf(o);
+        String selectQuery = "SELECT * FROM " + database.getTable() + " WHERE sessionId = ? ORDER BY timestamp DESC";
         Statement selectStatement = new Statement(selectQuery);
-        selectStatement.addParameter(userID, null, "VARCHAR");
+        selectStatement.addParameter(sessionId, null, "VARCHAR");
         try {
             List<Map<String, Object>> resultSet = database.executeSelectQuery(selectStatement);
             if (resultSet != null) {
@@ -88,11 +88,11 @@ public class RDBMSChatMemoryStore implements DatabaseChatMemoryStore {
         if (o == null) {
             return null;
         }
-        String userID = String.valueOf(o);
+        String sessionId = String.valueOf(o);
         String selectQuery =
-                "SELECT * FROM " + database.getTable() + " WHERE userID = ? ORDER BY timestamp DESC LIMIT ?";
+                "SELECT * FROM " + database.getTable() + " WHERE sessionId = ? ORDER BY timestamp DESC LIMIT ?";
         Statement selectStatement = new Statement(selectQuery);
-        selectStatement.addParameter(userID, null, "VARCHAR");
+        selectStatement.addParameter(sessionId, null, "VARCHAR");
         selectStatement.addParameter(String.valueOf(limit), null, "INTEGER");
         try {
             List<Map<String, Object>> resultSet = database.executeSelectQuery(selectStatement);
@@ -126,7 +126,7 @@ public class RDBMSChatMemoryStore implements DatabaseChatMemoryStore {
     /**
      * Update messages in the database
      *
-     * @param o       userID
+     * @param o       sessionId
      * @param message message to be updated
      */
     @Override
@@ -136,13 +136,13 @@ public class RDBMSChatMemoryStore implements DatabaseChatMemoryStore {
             return -1;
         }
 
-        String userID = String.valueOf(o);
+        String sessionId = String.valueOf(o);
         String messageContent = ChatMessageSerializer.messageToJson(message);
 
         String insertQuery = "INSERT INTO " + database.getTable() +
-                " (userID, timestamp, message) VALUES (?, NOW(), ?)";
+                " (sessionId, timestamp, message) VALUES (?, NOW(), ?)";
         Statement insertStatement = new Statement(insertQuery);
-        insertStatement.addParameter(userID, null, "VARCHAR");
+        insertStatement.addParameter(sessionId, null, "VARCHAR");
         insertStatement.addParameter(messageContent, null, "LONGVARCHAR");
         try {
             return database.executeUpdate(insertStatement);

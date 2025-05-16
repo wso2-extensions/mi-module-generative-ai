@@ -163,7 +163,6 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             toolDefinitionsMap.get(agentID).setToolExecutionTimeout(toolExecutionTimeout * 1000);
         }
 
-        String memoryId = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
         String parsedPrompt =
                 parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
         String attachments = parseInlineExpression(mc,
@@ -192,12 +191,17 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
 
             Object memoryConfigKeyObj = mc.getProperty(Constants.MEMORY_CONFIG_KEY);
             String memoryConfigKey = memoryConfigKeyObj != null ? memoryConfigKeyObj.toString() : null;
-            ChatMemory chatMemory = Utils.getChatMemory(memoryId, memoryConfigKey, maxChatHistory);
+            String sessionId =
+                    getMediatorParameter(mc, Constants.SESSION_ID, String.class, StringUtils.isEmpty(memoryConfigKey));
+            if (StringUtils.isEmpty(sessionId)) {
+                sessionId = "default";
+            }
+            ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
 
             // Build the AI service context
             AiServiceContext aiServiceContext = new AiServiceContext(null);
             aiServiceContext.chatMemories = new ConcurrentHashMap<>();
-            aiServiceContext.chatMemories.put(memoryId, chatMemory);
+            aiServiceContext.chatMemories.put(sessionId, chatMemory);
             aiServiceContext.toolSpecifications = toolDefinitionsMap.get(agentID).getToolSpecifications();
             aiServiceContext.systemMessageProvider = chatMemoryId -> Optional.of(system);
             aiServiceContext.chatModel = model;
@@ -205,8 +209,8 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             SystemMessage systemMessage = new SystemMessage(system);
             UserMessage userMessage = Utils.buildUserMessage(parsedPrompt, attachments);
 
-            aiServiceContext.chatMemory(memoryId).add(systemMessage);
-            aiServiceContext.chatMemory(memoryId).add(userMessage);
+            aiServiceContext.chatMemory(sessionId).add(systemMessage);
+            aiServiceContext.chatMemory(sessionId).add(userMessage);
 
             ChatRequestParameters parameters = ChatRequestParameters.builder()
                     .toolSpecifications(aiServiceContext.toolSpecifications)
@@ -226,7 +230,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             sharedAgentDataHolder.setAiServiceContext(aiServiceContext);
             sharedAgentDataHolder.setExecutionsLeft(executionsLeft);
             sharedAgentDataHolder.setChatRequestParameters(parameters);
-            sharedAgentDataHolder.setMemoryId(memoryId);
+            sharedAgentDataHolder.setMemoryId(sessionId);
             mc.setProperty(Constants.AGENT_SHARED_DATA_HOLDER + "." + agentID, sharedAgentDataHolder);
 
             return inferenceAgentAndExecuteTools(mc, synLog, agentID);

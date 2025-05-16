@@ -78,26 +78,26 @@ public class Utils {
     }
 
     /**
-     * Returns the chat memory for the given user ID
+     * Returns the chat memory for the current chat session ID
      *
-     * @param userID          User ID
+     * @param sessionId          Current chat session ID
      * @param memoryConfigKey Memory configuration key
      * @param maxChatHistory  Maximum chat history
      * @return Chat memory
      */
-    public static ChatMemory getChatMemory(String userID, String memoryConfigKey, int maxChatHistory) {
+    public static ChatMemory getChatMemory(String sessionId, String memoryConfigKey, int maxChatHistory) {
 
         if (StringUtils.isEmpty(memoryConfigKey)) {
-            return MessageWindowChatMemory.builder().id(userID).chatMemoryStore(new InMemoryChatMemoryStore())
+            return MessageWindowChatMemory.builder().id(sessionId).chatMemoryStore(new InMemoryChatMemoryStore())
                     .maxMessages(maxChatHistory).build();
         }
         ChatMemory chatMemory;
         ChatMemoryStore chatMemoryStore = MemoryStoreHandler.getMemoryStoreHandler().getMemoryStore(memoryConfigKey);
         if (chatMemoryStore instanceof DatabaseChatMemoryStore) {
-            chatMemory = MessageWindowChatMemoryWithDatabase.builder().id(userID)
+            chatMemory = MessageWindowChatMemoryWithDatabase.builder().id(sessionId)
                     .chatMemoryStore((DatabaseChatMemoryStore) chatMemoryStore).maxMessages(maxChatHistory).build();
         } else {
-            chatMemory = MessageWindowChatMemory.builder().id(userID).chatMemoryStore(chatMemoryStore)
+            chatMemory = MessageWindowChatMemory.builder().id(sessionId).chatMemoryStore(chatMemoryStore)
                     .maxMessages(maxChatHistory).build();
         }
         return chatMemory;

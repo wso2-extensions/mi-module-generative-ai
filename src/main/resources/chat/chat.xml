@@ -17,10 +17,10 @@
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="chat">
     <parameter name="connections" description="Connections"/>
-    <parameter name="userID" description="User ID"/>
+    <parameter name="sessionId" description="Session ID"/>
     <parameter name="system" description="System prompt"/>
     <parameter name="prompt" description="Prompt name"/>
-    <parameter name="attachments" description="File attachements"/>
+    <parameter name="attachments" description="File attachments"/>
     <parameter name="outputType" description="Response type"/>
     <parameter name="responseVariable" description="Response variable name"/>
     <parameter name="overwriteBody"

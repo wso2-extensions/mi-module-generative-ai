@@ -26,23 +26,18 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.Result;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
-import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
-import org.wso2.carbon.esb.module.ai.memory.MessageWindowChatMemoryWithDatabase;
-import org.wso2.carbon.esb.module.ai.memory.store.DatabaseChatMemoryStore;
-import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
 import org.wso2.carbon.esb.module.ai.utils.Utils;
 
 import java.lang.reflect.Type;
@@ -85,7 +80,6 @@ public class LLMChat extends AbstractAIMediator {
 
         String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
-        String userID = getMediatorParameter(mc, Constants.USER_ID, String.class, false);
         String prompt = parseInlineExpression(mc, getMediatorParameter(mc, Constants.PROMPT, String.class, false));
         String attachments = parseInlineExpression(mc,
                 getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, true));
@@ -135,8 +129,13 @@ public class LLMChat extends AbstractAIMediator {
 
         Object memoryConfigKeyObj = mc.getProperty(Constants.MEMORY_CONFIG_KEY);
         String memoryConfigKey = memoryConfigKeyObj != null ? memoryConfigKeyObj.toString() : null;
+        String sessionId =
+                getMediatorParameter(mc, Constants.SESSION_ID, String.class, StringUtils.isEmpty(memoryConfigKey));
+        if (StringUtils.isEmpty(sessionId)) {
+            sessionId = "default";
+        }
         int maxChatHistory = maxHistory != null ? maxHistory : 20;
-        ChatMemory chatMemory = Utils.getChatMemory(userID, memoryConfigKey, maxChatHistory);
+        ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
 
         try {
             Object answer = getChatResponse(model, outputType, userMessage, knowledgeRetriever, chatMemory, system);

@@ -79,12 +79,12 @@
           {
             "type": "attribute",
             "value": {
-              "name": "userID",
-              "displayName": "User ID",
+              "name": "sessionId",
+              "displayName": "Session ID",
               "inputType": "stringOrExpression",
-              "placeholder": "payload.userID",
+              "placeholder": "payload.sessionId",
               "required": "true",
-              "helpTip": "Unique user identifier",
+              "helpTip": "Provide a unique identifier for the session.",
               "enableCondition": [
                 "NOT",
                 {
