@@ -18,7 +18,7 @@
 <template xmlns="http://ws.apache.org/ns/synapse" name="agent">
     <parameter name="agentID" description="Agent ID"/>
     <parameter name="connections" description="Connections"/>
-    <parameter name="userID" description="User ID"/>
+    <parameter name="sessionId" description="Session ID"/>
     <parameter name="role" description="Role of the agent"/>
     <parameter name="instructions" description="Instructions for the agent"/>
     <parameter name="prompt" description="Prompt name"/>

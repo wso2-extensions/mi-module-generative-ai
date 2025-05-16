@@ -112,7 +112,7 @@ public class Constants {
     public static final String AGENT_SHARED_DATA_HOLDER = "AGENT_SHARED_DATA_HOLDER";
     public static final String TOOL_EXECUTION_DATA_HOLDER = "toolExecutionDataHolder";
     public static final String MEMORY_ID = "memoryId";
-    public static final String USER_ID = "userID";
+    public static final String SESSION_ID = "sessionId";
     public static final String TOOL_EXECUTION_FAILED = "Tool execution failed";
     public static final String CONNECTIONS = "connections";
     public static final String TOOLS = "tools";

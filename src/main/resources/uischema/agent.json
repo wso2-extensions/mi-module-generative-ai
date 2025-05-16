@@ -51,12 +51,12 @@
                 {
                   "type": "attribute",
                   "value": {
-                    "name": "userID",
-                    "displayName": "User ID",
+                    "name": "sessionId",
+                    "displayName": "Session ID",
                     "inputType": "stringOrExpression",
-                    "placeholder": "payload.userID",
+                    "placeholder": "payload.sessionId",
                     "required": "true",
-                    "helpTip": "Provide a unique identifier for the user interacting with the agent.",
+                    "helpTip": "Provide a unique identifier for the session.",
                     "enableCondition": [
                       "NOT",
                       {

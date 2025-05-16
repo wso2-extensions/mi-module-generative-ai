@@ -17,7 +17,7 @@
 -->
 <template xmlns="http://ws.apache.org/ns/synapse" name="ragChat">
     <parameter name="connections" description="Connections"/>
-    <parameter name="userID" description="User ID"/>
+    <parameter name="sessionId" description="Session ID"/>
     <parameter name="prompt" description="Prompt name"/>
     <parameter name="outputType" description="Response type"/>
     <parameter name="responseVariable" description="Response variable name"/>
@@ -78,7 +78,7 @@
                 <variable name="SKIP_CONFIG_PROCESSING" type="BOOLEAN" value="true"/>
                 <ai.chat>
                     <system>{${exists(params.functionParams.system) ? params.functionParams.system : ""}}</system>
-                    <userID>{${params.functionParams.userID}}</userID>
+                    <sessionId>{${exists(params.functionParams.sessionId) ? params.functionParams.sessionId : ""}}</sessionId>
                     <prompt>{${vars.RAG_CHAT_PARSED_PROMPT}}</prompt>
                     <outputType>{${params.functionParams.outputType}}</outputType>
                     <responseVariable>{${params.functionParams.responseVariable}}</responseVariable>
