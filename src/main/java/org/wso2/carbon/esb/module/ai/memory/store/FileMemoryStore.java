@@ -20,6 +20,8 @@ package org.wso2.carbon.esb.module.ai.memory.store;
 
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
 
 import java.io.File;
@@ -33,6 +35,7 @@ public class FileMemoryStore implements ChatMemoryStore {
 
     public static final String CHAT_MEMORY_STORE = "ai/chat-memory/";
     public static final String JSON = ".json";
+    protected Log log = LogFactory.getLog(this.getClass());
     public static final String CONTENT_TYPE = "application/json";
     private final MicroIntegratorRegistry registry;
     private final String STORE_FILE;
@@ -69,7 +72,7 @@ public class FileMemoryStore implements ChatMemoryStore {
         try {
             persistStoreToFile();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to persist chat memory to file", e);
+            log.error("Failed to persist chat memory to file", e);
         }
     }
 
@@ -80,7 +83,7 @@ public class FileMemoryStore implements ChatMemoryStore {
         try {
             persistStoreToFile();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to persist chat memory to file", e);
+            log.error("Failed to persist chat memory to file", e);
         }
     }
 
