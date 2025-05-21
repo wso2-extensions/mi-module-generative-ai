@@ -21,5 +21,5 @@ package org.wso2.carbon.esb.module.ai.memory;
 public enum MemoryType {
 
     POSTGRES_MEMORY,
-    IN_MEMORY
+    FILE_MEMORY
 }

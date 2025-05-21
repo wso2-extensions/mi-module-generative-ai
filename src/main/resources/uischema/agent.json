@@ -35,7 +35,8 @@
               "displayName": "Memory Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "POSTGRES_MEMORY"
+                "POSTGRES_MEMORY",
+                "FILE_MEMORY"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
