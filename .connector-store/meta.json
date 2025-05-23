@@ -12,7 +12,7 @@
   "type": "Connector",
   "releases": [
     {
-      "tagName": "v0.1.4",
+      "tagName": "v0.1.5",
       "products": [
         "MI 4.4.0"
       ],
@@ -83,6 +83,10 @@
         {
           "name": "POSTGRES_MEMORY",
           "description": "Connection for interacting with the PostgreSQL memory database."
+        },
+        {
+          "name": "FILE_MEMORY",
+          "description": "Connection for interacting with the file-based memory."
         }
       ],
       "isHidden": false
