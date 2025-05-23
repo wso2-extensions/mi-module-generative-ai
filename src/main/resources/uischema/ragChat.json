@@ -100,6 +100,7 @@
               "name": "prompt",
               "displayName": "User query/prompt",
               "inputType": "expressionTextArea",
+              "rowCount": 5,
               "defaultValue": "",
               "required": "true",
               "helpTip": "Query the LLM"
@@ -219,7 +220,8 @@
             "value": {
               "name": "system",
               "displayName": "System prompt",
-              "inputType": "textAreaOrExpression",
+              "inputType": "expressionTextArea",
+              "rowCount": 5,
               "required": "false",
               "helpTip": "Give instructions to LLM"
             }

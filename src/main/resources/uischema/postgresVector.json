@@ -77,7 +77,7 @@
                     "displayName": "Password",
                     "inputType": "stringOrExpression",
                     "defaultValue": "",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "The password to connect to the database"
                   }
                 },

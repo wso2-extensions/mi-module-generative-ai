@@ -83,6 +83,7 @@
                     "name": "prompt",
                     "displayName": "User query/prompt",
                     "inputType": "expressionTextArea",
+                    "rowCount": 5,
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Enter the query or prompt to send to the LLM for processing."
@@ -94,6 +95,7 @@
                     "name": "attachments",
                     "displayName": "Attachments",
                     "inputType": "expressionTextArea",
+                    "rowCount": 2,
                     "placeholder": "[{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]",
                     "required": "false",
                     "helpTip": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
@@ -140,7 +142,8 @@
                   "value": {
                     "name": "system",
                     "displayName": "System prompt",
-                    "inputType": "textAreaOrExpression",
+                    "inputType": "expressionTextArea",
+                    "rowCount": 5,
                     "required": "false",
                     "helpTip": "Provide instructions or guidelines for the LLM to follow during the conversation."
                   }
