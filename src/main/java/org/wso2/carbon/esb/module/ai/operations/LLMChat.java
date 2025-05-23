@@ -89,7 +89,9 @@ public class LLMChat extends AbstractAIMediator {
         String outputType = getMediatorParameter(mc, Constants.OUTPUT_TYPE, String.class, false);
 
         // Advanced configurations
-        String system = getMediatorParameter(mc, Constants.SYSTEM, String.class, true);
+        String systemPrompt = getMediatorParameter(mc, Constants.SYSTEM, String.class, true);
+        String parsedSystemPrompt = parseInlineExpression(mc, systemPrompt);
+
         Double temperature = getMediatorParameter(mc, Constants.TEMPERATURE, Double.class, true);
         Integer maxTokens = getMediatorParameter(mc, Constants.MAX_TOKENS, Integer.class, true);
         Double topP = getMediatorParameter(mc, Constants.TOP_P, Double.class, true);
@@ -138,7 +140,8 @@ public class LLMChat extends AbstractAIMediator {
         ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
 
         try {
-            Object answer = getChatResponse(model, outputType, userMessage, knowledgeRetriever, chatMemory, system);
+            Object answer =
+                    getChatResponse(model, outputType, userMessage, knowledgeRetriever, chatMemory, parsedSystemPrompt);
             if (answer != null) {
                 handleConnectorResponse(mc, responseVariable, overwriteBody, answer, null, null);
             } else {

@@ -94,6 +94,7 @@
                     "name": "instructions",
                     "displayName": "Instructions",
                     "inputType": "expressionTextArea",
+                    "rowCount": 10,
                     "defaultValue": "",
                     "required": "false",
                     "helpTip": "Provide specific instructions or guidelines for the LLM to follow."
@@ -105,6 +106,7 @@
                     "name": "prompt",
                     "displayName": "User query/prompt",
                     "inputType": "expressionTextArea",
+                    "rowCount": 5,
                     "defaultValue": "",
                     "required": "true",
                     "helpTip": "Enter the query or prompt to be processed by the LLM."
@@ -116,6 +118,7 @@
                     "name": "attachments",
                     "displayName": "Attachments",
                     "inputType": "expressionTextArea",
+                    "rowCount": 2,
                     "placeholder": "[{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]",
                     "required": "false",
                     "helpTip": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
