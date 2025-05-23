@@ -28,6 +28,7 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.data.connector.ConnectorResponse;
 import org.apache.synapse.data.connector.DefaultConnectorResponse;
+import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.util.InlineExpressionUtil;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.connector.core.AbstractConnector;
@@ -151,6 +152,7 @@ public abstract class AbstractAIMediator extends AbstractConnector {
             }
             axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.MESSAGE_TYPE, Constants.JSON_CONTENT_TYPE);
             axisMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.CONTENT_TYPE, Constants.JSON_CONTENT_TYPE);
+            axisMsgCtx.removeProperty(PassThroughConstants.NO_ENTITY_BODY);
         } else {
             response.setPayload(output);
         }

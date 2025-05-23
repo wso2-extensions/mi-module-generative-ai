@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.module.ai.memory;
 
-import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
@@ -28,8 +27,12 @@ import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.config.ConnectorUndeployObserver;
 import org.wso2.carbon.esb.module.ai.database.PostgresDatabase;
 import org.wso2.carbon.esb.module.ai.database.RDBMSDatabase;
+import org.wso2.carbon.esb.module.ai.memory.store.FileMemoryStore;
 import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
 import org.wso2.carbon.esb.module.ai.memory.store.RDBMSChatMemoryStore;
+import org.wso2.micro.integrator.registry.MicroIntegratorRegistry;
+
+import java.io.IOException;
 
 public class MemoryConfig extends AbstractConnector implements ManagedLifecycle {
 
@@ -64,6 +67,14 @@ public class MemoryConfig extends AbstractConnector implements ManagedLifecycle 
             RDBMSDatabase.Builder builder = new PostgresDatabase.Builder();
             builder.host(host).port(port).database(database).user(user).password(password).table(table);
             memoryStoreHandler.addMemoryStore(connectionName, new RDBMSChatMemoryStore(builder.build()));
+        } else if (MemoryType.FILE_MEMORY.name().equals(connectionType)) {
+            try {
+                FileMemoryStore fileMemoryStore = new FileMemoryStore(connectionName,
+                        (MicroIntegratorRegistry) messageContext.getConfiguration().getRegistry());
+                memoryStoreHandler.addMemoryStore(connectionName, fileMemoryStore);
+            } catch (IOException e) {
+                handleException("Failed to create file memory store", e, messageContext);
+            }
         } else {
             handleException("Unsupported memory type: " + connectionType, messageContext);
         }

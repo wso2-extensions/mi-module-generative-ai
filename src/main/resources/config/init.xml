@@ -81,7 +81,7 @@
             </case>
 
             <!-- Memory Connection -->
-            <case regex="POSTGRES_MEMORY">
+            <case regex="POSTGRES_MEMORY|FILE_MEMORY">
                 <class name="org.wso2.carbon.esb.module.ai.memory.MemoryConfig"/>
             </case>
 

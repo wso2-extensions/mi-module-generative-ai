@@ -1,0 +1,19 @@
+{
+  "connectorName": "ai",
+  "connectionName": "FILE_MEMORY",
+  "title": "File-Based Memory Store Configuration",
+  "help": "Configuration for connecting to an file based chat memory store",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "FILE_MEMORY_CONN",
+        "required": "true",
+        "helpTip": "Specify a unique name for the file-based memory store connection"
+      }
+    }
+  ]
+}
