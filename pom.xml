@@ -20,7 +20,7 @@
 
     <groupId>org.wso2.integration.connector</groupId>
     <artifactId>mi-connector-ai</artifactId>
-    <version>0.1.6-SNAPSHOT</version>
+    <version>0.1.6</version>
 
     <name>Low Code AI app builder module</name>
     <url>https://wso2.org</url>
@@ -142,7 +142,7 @@
         <connection>scm:git:https://github.com/wso2-extensions/mi-module-generative-ai.git</connection>
         <url>https://github.com/wso2-extensions/mi-module-generative-ai.git</url>
         <developerConnection>scm:git:https://github.com/wso2-extensions/mi-module-generative-ai.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v0.1.6</tag>
     </scm>
 
     <build>
