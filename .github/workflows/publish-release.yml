@@ -125,7 +125,7 @@ jobs:
                           'name': value.get('name', ''),
                           'type': input_type,
                           'required': value.get('required', '').lower() == 'true',
-                          'defaultValue': value.get('defaultValue', ''),
+                          'defaultValue': str(value.get('defaultValue', '')),
                           'description': description
                       })
                   
