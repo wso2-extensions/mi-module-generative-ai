@@ -12,7 +12,7 @@
     "type": "Connector",
     "releases": [
         {
-            "tagName": "v0.1.6",
+            "tagName": "v0.1.7",
             "products": [
                 "MI 4.4.0"
             ],
@@ -312,7 +312,7 @@
                             "name": "needParse",
                             "type": "checkbox",
                             "required": false,
-                            "defaultValue": true,
+                            "defaultValue": "True",
                             "description": "Enable this option if the input needs to be parsed into text."
                         },
                         {
@@ -326,7 +326,7 @@
                             "name": "needSplit",
                             "type": "checkbox",
                             "required": false,
-                            "defaultValue": true,
+                            "defaultValue": "True",
                             "description": "Enable this option if the input needs to be split into smaller segments."
                         },
                         {
@@ -354,7 +354,7 @@
                             "name": "needEmbedding",
                             "type": "checkbox",
                             "required": false,
-                            "defaultValue": true,
+                            "defaultValue": "True",
                             "description": "Enable this option to generate embeddings for the input."
                         },
                         {
@@ -410,7 +410,7 @@
                             "name": "needEmbedding",
                             "type": "checkbox",
                             "required": false,
-                            "defaultValue": true,
+                            "defaultValue": "True",
                             "description": "Check this box if the input needs to be embedded."
                         },
                         {
