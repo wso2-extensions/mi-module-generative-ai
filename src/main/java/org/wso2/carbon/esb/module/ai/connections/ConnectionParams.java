@@ -40,8 +40,14 @@ public class ConnectionParams {
     }
 
     public String getConnectionProperty(String key) {
+
+        return getConnectionProperty(key, false);
+    }
+
+    public String getConnectionProperty(String key, boolean optional) {
+
         String property = connectionProperties.get(key);
-        if (property == null) {
+        if (!optional && property == null) {
             throw new SynapseException("Property " + key + " is not set for connection " + connectionName);
         }
         return property;
