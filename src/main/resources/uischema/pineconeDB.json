@@ -55,7 +55,7 @@
                     "displayName": "Namespace",
                     "inputType": "stringOrExpression",
                     "defaultValue": "ai",
-                    "required": "true",
+                    "required": "false",
                     "helpTip": "Give the namespace"
                   }
                 },

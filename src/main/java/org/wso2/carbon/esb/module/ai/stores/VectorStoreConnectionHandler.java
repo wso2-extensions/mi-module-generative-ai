@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.esb.module.ai.stores;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
@@ -57,9 +58,13 @@ public class VectorStoreConnectionHandler {
 
             case Constants.PINECONE:
                 try {
+                    String namespace = connectionParams.getConnectionProperty(Constants.NAMESPACE, true);
+                    if (namespace == null || Pinecone.DEFAULT_NAMESPACE.equals(namespace)) {
+                        namespace = StringUtils.EMPTY;
+                    }
                     vectorStore = new Pinecone(
                             connectionParams.getConnectionProperty(Constants.API_KEY),
-                            connectionParams.getConnectionProperty(Constants.NAMESPACE),
+                            namespace,
                             connectionParams.getConnectionProperty(Constants.CLOUD),
                             connectionParams.getConnectionProperty(Constants.REGION),
                             connectionParams.getConnectionProperty(Constants.INDEX),
