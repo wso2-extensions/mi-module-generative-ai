@@ -12,7 +12,7 @@
     "type": "Connector",
     "releases": [
         {
-            "tagName": "v0.1.7",
+            "tagName": "v0.1.8",
             "products": [
                 "MI 4.4.0"
             ],
@@ -669,7 +669,7 @@
                         {
                             "name": "namespace",
                             "type": "stringOrExpression",
-                            "required": true,
+                            "required": false,
                             "defaultValue": "ai",
                             "description": "Give the namespace"
                         },
