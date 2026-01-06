@@ -26,7 +26,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.service.AiServices;
@@ -98,7 +98,7 @@ public class LLMChat extends AbstractAIMediator {
         Double frequencyPenalty = getMediatorParameter(mc, Constants.FREQUENCY_PENALTY, Double.class, true);
         Integer seed = getMediatorParameter(mc, Constants.SEED, Integer.class, true);
 
-        ChatLanguageModel model;
+        ChatModel model;
         try {
             model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP, frequencyPenalty, seed);
             if (model == null) {
@@ -124,7 +124,7 @@ public class LLMChat extends AbstractAIMediator {
 
             // Extract text segments from the parsed knowledge and convert to content
             List<Content> knowledgeTexts = parsedKnowledge.stream()
-                    .map(match -> new Content(match.embedded()))
+                    .map(match -> Content.from(match.embedded()))
                     .toList();
             knowledgeRetriever = query -> knowledgeTexts;
         }
@@ -204,10 +204,10 @@ public class LLMChat extends AbstractAIMediator {
         }
     }
 
-    private Object getChatResponse(ChatLanguageModel model, String outputType, UserMessage userMessage,
+    private Object getChatResponse(ChatModel model, String outputType, UserMessage userMessage,
                                    ContentRetriever knowledgeRetriever, ChatMemory chatMemory, String systemMessage) {
 
-        return switch (outputType.toLowerCase()) {
+        Result<?> result = switch (outputType.toLowerCase()) {
             case "string" ->
                     getAgent(model, StringAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(userMessage);
             case "integer" -> getAgent(model, IntegerAgent.class, knowledgeRetriever, chatMemory, systemMessage).chat(
@@ -218,14 +218,51 @@ public class LLMChat extends AbstractAIMediator {
                     userMessage);
             default -> null;
         };
+
+        if (result == null) {
+            return null;
+        }
+
+        // Build response object matching the format from version 0.1.8
+        return buildResponseObject(result);
     }
 
-    private <T> T getAgent(ChatLanguageModel model, Class<T> agentType, ContentRetriever knowledgeRetriever,
+    private Map<String, Object> buildResponseObject(Result<?> result) {
+        // Use LinkedHashMap to preserve field order matching version 0.1.8
+        Map<String, Object> response = new java.util.LinkedHashMap<>();
+        
+        // Field order: content -> tokenUsage -> finishReason -> toolExecutions
+        response.put("content", result.content());
+        
+        // Add token usage information
+        if (result.tokenUsage() != null) {
+            Map<String, Object> tokenUsage = new java.util.LinkedHashMap<>();
+            tokenUsage.put("cacheCreationInputTokens", 0); // Default values for backward compatibility
+            tokenUsage.put("cacheReadInputTokens", 0);
+            tokenUsage.put("inputTokenCount", result.tokenUsage().inputTokenCount());
+            tokenUsage.put("outputTokenCount", result.tokenUsage().outputTokenCount());
+            tokenUsage.put("totalTokenCount", result.tokenUsage().totalTokenCount());
+            
+            response.put("tokenUsage", tokenUsage);
+        }
+        
+        // Add finish reason
+        if (result.finishReason() != null) {
+            response.put("finishReason", result.finishReason().toString());
+        }
+        
+        // Add tool executions (empty array for backward compatibility)
+        response.put("toolExecutions", result.toolExecutions() != null ? result.toolExecutions() : new ArrayList<>());
+        
+        return response;
+    }
+
+    private <T> T getAgent(ChatModel model, Class<T> agentType, ContentRetriever knowledgeRetriever,
                            ChatMemory chatMemory, String system) {
 
         AiServices<T> service = AiServices
                 .builder(agentType)
-                .chatLanguageModel(model);
+                .chatModel(model);
         if (system != null) {
             service = service.systemMessageProvider(chatMemoryId -> system);
         }
