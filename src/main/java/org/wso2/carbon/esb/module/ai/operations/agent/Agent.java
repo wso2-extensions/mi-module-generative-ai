@@ -19,18 +19,18 @@
 package org.wso2.carbon.esb.module.ai.operations.agent;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.FinishReason;
-import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServiceContext;
 import dev.langchain4j.service.Result;
@@ -71,10 +71,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Stack;
 import java.util.Timer;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Language model chat operation
@@ -168,7 +166,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         String attachments = parseInlineExpression(mc,
                 getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, true));
 
-        ChatLanguageModel model = null;
+        ChatModel model = null;
         try {
             model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP,
                     frequencyPenalty, seed);
@@ -198,22 +196,18 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             }
             ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
 
-            // Build the AI service context
-            AiServiceContext aiServiceContext = new AiServiceContext(null);
-            aiServiceContext.chatMemories = new ConcurrentHashMap<>();
-            aiServiceContext.chatMemories.put(sessionId, chatMemory);
-            aiServiceContext.toolSpecifications = toolDefinitionsMap.get(agentID).getToolSpecifications();
-            aiServiceContext.systemMessageProvider = chatMemoryId -> Optional.of(system);
-            aiServiceContext.chatModel = model;
+            // AiServiceContext constructor is protected in langchain4j 1.9.1+, manage components directly
+            AiServiceContext aiServiceContext = null;
 
             SystemMessage systemMessage = new SystemMessage(system);
             UserMessage userMessage = Utils.buildUserMessage(parsedPrompt, attachments);
 
-            aiServiceContext.chatMemory(sessionId).add(systemMessage);
-            aiServiceContext.chatMemory(sessionId).add(userMessage);
+            chatMemory.add(systemMessage);
+            chatMemory.add(userMessage);
 
+            List<ToolSpecification> toolSpecs = toolDefinitionsMap.get(agentID).getToolSpecifications();
             ChatRequestParameters parameters = ChatRequestParameters.builder()
-                    .toolSpecifications(aiServiceContext.toolSpecifications)
+                    .toolSpecifications(toolSpecs)
 //                    .responseFormat(ResponseFormat.JSON) // TODO: add response format support
                     .build();
 
@@ -228,6 +222,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             MessageContext orginalMessageContext = MessageHelper.cloneMessageContext(mc);
             sharedAgentDataHolder.setSynCtx(orginalMessageContext);
             sharedAgentDataHolder.setAiServiceContext(aiServiceContext);
+            sharedAgentDataHolder.setChatMemory(chatMemory);
+            sharedAgentDataHolder.setChatModel(model);
+            sharedAgentDataHolder.setToolSpecifications(toolSpecs);
+            sharedAgentDataHolder.setSystemMessageProvider(chatMemoryId -> system);
             sharedAgentDataHolder.setExecutionsLeft(executionsLeft);
             sharedAgentDataHolder.setChatRequestParameters(parameters);
             sharedAgentDataHolder.setMemoryId(sessionId);
@@ -264,10 +262,11 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         SharedAgentDataHolder sharedAgentDataHolder =
                 (SharedAgentDataHolder) mc.getProperty(Constants.AGENT_SHARED_DATA_HOLDER + "." + agentID);
         String memoryId = sharedAgentDataHolder.getMemoryId();
-        AiServiceContext aiServiceContext = sharedAgentDataHolder.getAiServiceContext();
+        ChatMemory chatMemory = sharedAgentDataHolder.getChatMemory();
+        ChatModel chatModel = sharedAgentDataHolder.getChatModel();
 
-        List<ChatMessage> messages = aiServiceContext.chatMemory(memoryId).messages();
-        AgentUtils.addSystemMessageIfMissing(messages, aiServiceContext, memoryId, DEFAULT_SYSTEM_PROMPT);
+        List<ChatMessage> messages = chatMemory.messages();
+        AgentUtils.addSystemMessageIfMissing(messages, sharedAgentDataHolder.getSystemMessageProvider(), memoryId, DEFAULT_SYSTEM_PROMPT);
         ChatRequest chatRequest =
                 ChatRequest.builder().messages(messages).parameters(sharedAgentDataHolder.getChatRequestParameters())
                         .build();
@@ -279,7 +278,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             }
         }
 
-        ChatResponse chatResponse = aiServiceContext.chatModel.chat(chatRequest);
+        ChatResponse chatResponse = chatModel.chat(chatRequest);
         sharedAgentDataHolder.setTokenUsageAccumulator(
                 TokenUsage.sum(sharedAgentDataHolder.getTokenUsageAccumulator(), chatResponse.metadata().tokenUsage()));
 
@@ -598,6 +597,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         return sharedAgentDataHolder;
     }
 
+    @SuppressWarnings("deprecation")
     private void addToolExecutionResultToDataHolder(SharedAgentDataHolder sharedAgentDataHolder,
                                                     ToolExecutionRequest executionRequest, String result) {
 
@@ -615,8 +615,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         Result<Object> parsedResponse =
                 parseFinalResponse(originalMessageContext, finishChatResponse, sharedAgentDataHolder);
         if (parsedResponse != null) {
+            // Build response object to avoid Gson serialization issues with AtomicReference
+            Object responseObject = buildResponseObject(parsedResponse);
             handleConnectorResponse(originalMessageContext, sharedAgentDataHolder.getResponseVariable(),
-                    sharedAgentDataHolder.isOverwriteBody(), parsedResponse, null, null);
+                    sharedAgentDataHolder.isOverwriteBody(), responseObject, null, null);
         } else {
             handleConnectorException(Errors.INVALID_OUTPUT_TYPE, originalMessageContext);
         }
@@ -779,11 +781,9 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
 
         TokenUsage tokenUsageAccumulator = agentDataHolder.getTokenUsageAccumulator();
         FinishReason finishReason = chatResponse.metadata().finishReason();
-        Response<AiMessage>
-                response = Response.from(chatResponse.aiMessage(), tokenUsageAccumulator, finishReason);
 
         // TODO: Support different output types such as int, boolean, Json(as schema), etc.
-        Object parsedResponse = serviceOutputParser.parse(response, String.class);
+        Object parsedResponse = serviceOutputParser.parse(chatResponse, String.class);
         Result<Object> parsedResult = Result.builder()
                 .content(parsedResponse)
                 .tokenUsage(tokenUsageAccumulator)
@@ -791,6 +791,36 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                 .toolExecutions(agentDataHolder.getToolExecutions())
                 .build();
         return parsedResult;
+    }
+
+    private java.util.Map<String, Object> buildResponseObject(Result<?> result) {
+        // Use LinkedHashMap to preserve field order matching version 0.1.8
+        java.util.Map<String, Object> response = new java.util.LinkedHashMap<>();
+        
+        // Field order: content -> tokenUsage -> finishReason -> toolExecutions
+        response.put("content", result.content());
+        
+        // Add token usage information
+        if (result.tokenUsage() != null) {
+            java.util.Map<String, Object> tokenUsage = new java.util.LinkedHashMap<>();
+            tokenUsage.put("cacheCreationInputTokens", 0); // Default values for backward compatibility
+            tokenUsage.put("cacheReadInputTokens", 0);
+            tokenUsage.put("inputTokenCount", result.tokenUsage().inputTokenCount());
+            tokenUsage.put("outputTokenCount", result.tokenUsage().outputTokenCount());
+            tokenUsage.put("totalTokenCount", result.tokenUsage().totalTokenCount());
+            
+            response.put("tokenUsage", tokenUsage);
+        }
+        
+        // Add finish reason
+        if (result.finishReason() != null) {
+            response.put("finishReason", result.finishReason().toString());
+        }
+        
+        // Add tool executions
+        response.put("toolExecutions", result.toolExecutions() != null ? result.toolExecutions() : new java.util.ArrayList<>());
+        
+        return response;
     }
 
     @Override
