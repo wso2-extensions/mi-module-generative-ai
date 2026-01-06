@@ -31,18 +31,18 @@ This repository contains the source code for the WSO2 Micro Integrator Low Code 
     ```sh
     mvn clean install
     ```
-3. Copy the the generated connector.zip file from the `target` directory to the `<VS_CODE_MI_PROJECT>/src/main/wso2mi/resources/connectors` directory of your integration project.
 
-4. Update the `pom.xml` file of your integration project to include the connector:
+3. Update the `pom.xml` file of your integration project to include the connector:
     ```xml
     <dependency>
-        <groupId>org.wso2.carbon.esb.module.ai</groupId>
-        <artifactId>mi-module-generative-ai</artifactId>
+        <groupId>org.wso2.integration.connector</groupId>
+        <artifactId>mi-connector-ai</artifactId>
         <version>1.0.0</version>
+        <type>zip</type>
     </dependency>
     ```
 
-5. Create an integration project using the WSO2 Micro Integrator Toolkit and run the project.
+4. Create an integration project using the WSO2 Micro Integrator Toolkit and run the project.
 
 ### How to use the latest stable version
 

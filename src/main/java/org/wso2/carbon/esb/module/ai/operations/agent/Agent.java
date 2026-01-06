@@ -19,18 +19,18 @@
 package org.wso2.carbon.esb.module.ai.operations.agent;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.FinishReason;
-import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServiceContext;
 import dev.langchain4j.service.Result;
@@ -71,10 +71,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Stack;
 import java.util.Timer;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Language model chat operation
@@ -168,7 +166,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         String attachments = parseInlineExpression(mc,
                 getMediatorParameter(mc, Constants.ATTACHMENTS, String.class, true));
 
-        ChatLanguageModel model = null;
+        ChatModel model = null;
         try {
             model = LLMConnectionHandler.getChatModel(connectionName, modelName, temperature, maxTokens, topP,
                     frequencyPenalty, seed);
@@ -198,22 +196,18 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             }
             ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
 
-            // Build the AI service context
-            AiServiceContext aiServiceContext = new AiServiceContext(null);
-            aiServiceContext.chatMemories = new ConcurrentHashMap<>();
-            aiServiceContext.chatMemories.put(sessionId, chatMemory);
-            aiServiceContext.toolSpecifications = toolDefinitionsMap.get(agentID).getToolSpecifications();
-            aiServiceContext.systemMessageProvider = chatMemoryId -> Optional.of(system);
-            aiServiceContext.chatModel = model;
+            // AiServiceContext constructor is protected in langchain4j 1.9.1+, manage components directly
+            AiServiceContext aiServiceContext = null;
 
             SystemMessage systemMessage = new SystemMessage(system);
             UserMessage userMessage = Utils.buildUserMessage(parsedPrompt, attachments);
 
-            aiServiceContext.chatMemory(sessionId).add(systemMessage);
-            aiServiceContext.chatMemory(sessionId).add(userMessage);
+            chatMemory.add(systemMessage);
+            chatMemory.add(userMessage);
 
+            List<ToolSpecification> toolSpecs = toolDefinitionsMap.get(agentID).getToolSpecifications();
             ChatRequestParameters parameters = ChatRequestParameters.builder()
-                    .toolSpecifications(aiServiceContext.toolSpecifications)
+                    .toolSpecifications(toolSpecs)
 //                    .responseFormat(ResponseFormat.JSON) // TODO: add response format support
                     .build();
 
@@ -228,6 +222,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             MessageContext orginalMessageContext = MessageHelper.cloneMessageContext(mc);
             sharedAgentDataHolder.setSynCtx(orginalMessageContext);
             sharedAgentDataHolder.setAiServiceContext(aiServiceContext);
+            sharedAgentDataHolder.setChatMemory(chatMemory);
+            sharedAgentDataHolder.setChatModel(model);
+            sharedAgentDataHolder.setToolSpecifications(toolSpecs);
+            sharedAgentDataHolder.setSystemMessageProvider(chatMemoryId -> system);
             sharedAgentDataHolder.setExecutionsLeft(executionsLeft);
             sharedAgentDataHolder.setChatRequestParameters(parameters);
             sharedAgentDataHolder.setMemoryId(sessionId);
@@ -264,10 +262,11 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         SharedAgentDataHolder sharedAgentDataHolder =
                 (SharedAgentDataHolder) mc.getProperty(Constants.AGENT_SHARED_DATA_HOLDER + "." + agentID);
         String memoryId = sharedAgentDataHolder.getMemoryId();
-        AiServiceContext aiServiceContext = sharedAgentDataHolder.getAiServiceContext();
+        ChatMemory chatMemory = sharedAgentDataHolder.getChatMemory();
+        ChatModel chatModel = sharedAgentDataHolder.getChatModel();
 
-        List<ChatMessage> messages = aiServiceContext.chatMemory(memoryId).messages();
-        AgentUtils.addSystemMessageIfMissing(messages, aiServiceContext, memoryId, DEFAULT_SYSTEM_PROMPT);
+        List<ChatMessage> messages = chatMemory.messages();
+        AgentUtils.addSystemMessageIfMissing(messages, sharedAgentDataHolder.getSystemMessageProvider(), memoryId, DEFAULT_SYSTEM_PROMPT);
         ChatRequest chatRequest =
                 ChatRequest.builder().messages(messages).parameters(sharedAgentDataHolder.getChatRequestParameters())
                         .build();
@@ -279,7 +278,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             }
         }
 
-        ChatResponse chatResponse = aiServiceContext.chatModel.chat(chatRequest);
+        ChatResponse chatResponse = chatModel.chat(chatRequest);
         sharedAgentDataHolder.setTokenUsageAccumulator(
                 TokenUsage.sum(sharedAgentDataHolder.getTokenUsageAccumulator(), chatResponse.metadata().tokenUsage()));
 
@@ -304,7 +303,13 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                 }
 
                 // Handle hallucinated tool execution requests
-                if (!toolDefinitionsMap.get(agentID).getToolInvokers().containsKey(toolExecutionRequest.name())) {
+                // Tool is valid if it's either in toolInvokers (Synapse) or mcpToolMappings (MCP)
+                ToolDefinitions toolDefs = toolDefinitionsMap.get(agentID);
+                boolean hasInvoker = toolDefs.getToolInvokers().containsKey(toolExecutionRequest.name());
+                boolean isMCPTool = toolDefs.isMCPTool(toolExecutionRequest.name());
+                boolean isValidTool = hasInvoker || isMCPTool;
+                
+                if (!isValidTool) {
                     addToolExecutionResultToDataHolder(sharedAgentDataHolder, toolExecutionRequest,
                             Constants.HALLUCINATED_TOOL_EXECUTION_REQUEST);
                     continue;
@@ -477,7 +482,8 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         }
         if (aggregate.isComplete(synLog)) {
             synLog.traceOrDebug("Aggregation completed for agent tool executions");
-            return completeAggregate(aggregate);
+            boolean result = completeAggregate(aggregate);
+            return result;
         } else {
             aggregate.releaseLock();
         }
@@ -574,6 +580,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         }
         List<ToolExecutionRequest> toolExecutionRequestList = new ArrayList<>(
                 sharedAgentDataHolder.getCurrentToolExecutionRequests());
+        int toolIndex = 0;
         for (MessageContext synCtx : aggregate.getMessages()) {
             ToolExecutionDataHolder toolExecutionDataHolder = (ToolExecutionDataHolder) synCtx.getProperty(
                     Constants.TOOL_EXECUTION_DATA_HOLDER + "." + agentID);
@@ -598,6 +605,7 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         return sharedAgentDataHolder;
     }
 
+    @SuppressWarnings("deprecation")
     private void addToolExecutionResultToDataHolder(SharedAgentDataHolder sharedAgentDataHolder,
                                                     ToolExecutionRequest executionRequest, String result) {
 
@@ -615,8 +623,10 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
         Result<Object> parsedResponse =
                 parseFinalResponse(originalMessageContext, finishChatResponse, sharedAgentDataHolder);
         if (parsedResponse != null) {
+            // Build response object to avoid Gson serialization issues with AtomicReference
+            Object responseObject = buildResponseObject(parsedResponse);
             handleConnectorResponse(originalMessageContext, sharedAgentDataHolder.getResponseVariable(),
-                    sharedAgentDataHolder.isOverwriteBody(), parsedResponse, null, null);
+                    sharedAgentDataHolder.isOverwriteBody(), responseObject, null, null);
         } else {
             handleConnectorException(Errors.INVALID_OUTPUT_TYPE, originalMessageContext);
         }
@@ -723,26 +733,98 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                              int toolCount) {
 
         ContinuationStackManager.addReliantContinuationState(mc, 0, getMediatorPosition());
-        SequenceMediator invoker =
-                toolDefinitionsMap.get(agentID).getToolInvoker(toolExecutionRequest.name());
         Map<String, Object> arguments = AgentUtils.argumentsAsMap(toolExecutionRequest.arguments());
 
-        // Set the tool execution request arguments as properties to invoke the sequence template
-        for (Map.Entry<String, Object> entry : arguments.entrySet()) {
-            EIPUtils.createSynapseEIPTemplateProperty(mc, toolExecutionRequest.name(), entry.getKey(),
-                    entry.getValue());
+        // Check if this is an MCP tool or regular Synapse template tool
+        ToolDefinitions toolDefinitions = toolDefinitionsMap.get(agentID);
+
+        boolean isMCPTool = toolDefinitions.isMCPTool(toolExecutionRequest.name());
+
+        if (isMCPTool) {
+            // MCP Tool execution path
+            executeMCPTool(agentID, toolExecutionRequest, mc, toolCount, arguments);
+        } else {
+            // Regular Synapse template tool execution path
+            SequenceMediator invoker = toolDefinitions.getToolInvoker(toolExecutionRequest.name());
+
+            // Set the tool execution request arguments as properties to invoke the sequence template
+            for (Map.Entry<String, Object> entry : arguments.entrySet()) {
+                EIPUtils.createSynapseEIPTemplateProperty(mc, toolExecutionRequest.name(), entry.getKey(),
+                        entry.getValue());
+            }
+
+            if (log.isDebugEnabled()) {
+            }
+
+            String correlationIdName = Constants.TOOL_EXECUTION_CORRELATION + "." + agentID;
+            String correlation = (String) mc.getProperty(correlationIdName);
+            if (!activeAggregates.containsKey(agentID) || !activeAggregates.get(agentID).containsKey(correlation)) {
+                startToolExecutionTimeout(agentID, mc, correlation, toolCount);
+            }
+            mc.getEnvironment().injectAsync(mc, invoker);
+        }
+    }
+    
+    private void executeMCPTool(String agentID, ToolExecutionRequest toolExecutionRequest, MessageContext mc,
+                                int toolCount, Map<String, Object> arguments) {
+        
+        
+        ToolDefinitions toolDefinitions = toolDefinitionsMap.get(agentID);
+        ToolDefinitions.MCPToolMetadata metadata = toolDefinitions.getMCPToolMetadata(toolExecutionRequest.name());
+        
+        if (metadata == null) {
+            log.error("[MCP] ERROR: MCP tool metadata not found for tool: " + toolExecutionRequest.name());
+            return;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Asynchronously mediating using the tool invoker anonymous sequence");
+        String resultContent;
+        try {
+            // Get MCP client from connection handler
+            dev.langchain4j.mcp.client.McpClient mcpClient = 
+                org.wso2.carbon.esb.module.ai.mcp.MCPConnectionHandler.getOrCreateClient(metadata.getMcpConnection());
+                        
+            // Call the MCP tool using the ToolExecutionRequest we already have
+            dev.langchain4j.service.tool.ToolExecutionResult toolResult = mcpClient.executeTool(toolExecutionRequest);
+                        
+            // Extract actual result text from ToolExecutionResult
+            if (toolResult != null) {
+                // Try to get resultText first, fall back to result if null
+                String resultText = toolResult.resultText();
+                if (resultText != null && !resultText.isEmpty()) {
+                    resultContent = resultText;
+                } else if (toolResult.result() != null) {
+                    resultContent = toolResult.result().toString();
+                } else {
+                    resultContent = "MCP tool executed successfully (no result)";
+                }
+            } else {
+                resultContent = "MCP tool executed successfully (null result)";
+            }
+            
+        } catch (Exception e) {
+            log.error("[MCP] ERROR during MCP tool execution: " + e.getMessage(), e);
+            resultContent = "MCP tool execution failed: " + e.getMessage();
         }
-
-        String correlationIdName = Constants.TOOL_EXECUTION_CORRELATION + "." + agentID;
-        String correlation = (String) mc.getProperty(correlationIdName);
-        if (!activeAggregates.containsKey(agentID) || !activeAggregates.get(agentID).containsKey(correlation)) {
-            startToolExecutionTimeout(agentID, mc, correlation, toolCount);
+        
+        try {
+            MessageContext resultMc = MessageHelper.cloneMessageContext(mc);
+            
+            // Create ToolExecutionDataHolder with result
+            ToolExecutionDataHolder resultDataHolder = new ToolExecutionDataHolder();
+            resultDataHolder.setToolExecutionRequest(toolExecutionRequest);
+            
+            // Store result directly in the Value object instead of using property expression
+            // This avoids the SynapseExpression parsing issues with MCP result content
+            Value resultValue = new Value(resultContent);
+            resultDataHolder.setResultExpression(resultValue);
+            
+            resultMc.setProperty(Constants.TOOL_EXECUTION_DATA_HOLDER + "." + agentID, resultDataHolder);
+            
+            aggregateToolExecutionResult(agentID, resultMc, toolCount, getLog(mc));
+            
+        } catch (Exception e) {
+            log.error("[MCP] ERROR during result aggregation: " + e.getMessage(), e);
         }
-        mc.getEnvironment().injectAsync(mc, invoker);
     }
 
     private void startToolExecutionTimeout(String agentID, MessageContext mc, String correlation, int toolCount) {
@@ -779,11 +861,9 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
 
         TokenUsage tokenUsageAccumulator = agentDataHolder.getTokenUsageAccumulator();
         FinishReason finishReason = chatResponse.metadata().finishReason();
-        Response<AiMessage>
-                response = Response.from(chatResponse.aiMessage(), tokenUsageAccumulator, finishReason);
 
         // TODO: Support different output types such as int, boolean, Json(as schema), etc.
-        Object parsedResponse = serviceOutputParser.parse(response, String.class);
+        Object parsedResponse = serviceOutputParser.parse(chatResponse, String.class);
         Result<Object> parsedResult = Result.builder()
                 .content(parsedResponse)
                 .tokenUsage(tokenUsageAccumulator)
@@ -791,6 +871,53 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
                 .toolExecutions(agentDataHolder.getToolExecutions())
                 .build();
         return parsedResult;
+    }
+
+    private java.util.Map<String, Object> buildResponseObject(Result<?> result) {
+        // Use LinkedHashMap to preserve field order matching version 0.1.8
+        java.util.Map<String, Object> response = new java.util.LinkedHashMap<>();
+        
+        // Field order: content -> tokenUsage -> finishReason -> toolExecutions
+        response.put("content", result.content());
+        
+        // Add token usage information
+        if (result.tokenUsage() != null) {
+            java.util.Map<String, Object> tokenUsage = new java.util.LinkedHashMap<>();
+            tokenUsage.put("cacheCreationInputTokens", 0); // Default values for backward compatibility
+            tokenUsage.put("cacheReadInputTokens", 0);
+            tokenUsage.put("inputTokenCount", result.tokenUsage().inputTokenCount());
+            tokenUsage.put("outputTokenCount", result.tokenUsage().outputTokenCount());
+            tokenUsage.put("totalTokenCount", result.tokenUsage().totalTokenCount());
+            
+            response.put("tokenUsage", tokenUsage);
+        }
+        
+        // Add finish reason
+        if (result.finishReason() != null) {
+            response.put("finishReason", result.finishReason().toString());
+        }
+        
+        // Convert tool executions to serialization-safe format
+        java.util.List<java.util.Map<String, Object>> toolExecutionsList = new java.util.ArrayList<>();
+        if (result.toolExecutions() != null) {
+            for (dev.langchain4j.service.tool.ToolExecution toolExecution : result.toolExecutions()) {
+                java.util.Map<String, Object> execMap = new java.util.LinkedHashMap<>();
+                execMap.put("request", convertToolExecutionRequest(toolExecution.request()));
+                execMap.put("result", toolExecution.result());
+                toolExecutionsList.add(execMap);
+            }
+        }
+        response.put("toolExecutions", toolExecutionsList);
+        
+        return response;
+    }
+
+    private java.util.Map<String, Object> convertToolExecutionRequest(dev.langchain4j.agent.tool.ToolExecutionRequest request) {
+        java.util.Map<String, Object> requestMap = new java.util.LinkedHashMap<>();
+        requestMap.put("id", request.id());
+        requestMap.put("name", request.name());
+        requestMap.put("arguments", request.arguments());
+        return requestMap;
     }
 
     @Override

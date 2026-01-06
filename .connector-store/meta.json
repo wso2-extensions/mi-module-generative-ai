@@ -932,6 +932,75 @@
                             "description": "The collection name in the ChromaDB server"
                         }
                     ]
+                },
+                {
+                    "name": "MCP",
+                    "description": "MCP (Model Context Protocol) Server Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "MCP_CONNECTION",
+                            "description": "A unique name for the MCP server connection"
+                        },
+                        {
+                            "name": "mcpServerUrl",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "The URL of the MCP server endpoint (e.g., https://api.example.com/mcp/)"
+                        },
+                        {
+                            "name": "authenticationType",
+                            "type": "combo",
+                            "required": true,
+                            "defaultValue": "None",
+                            "description": "Authentication method for the MCP server (None or Bearer Token)"
+                        },
+                        {
+                            "name": "bearerToken",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Bearer token for authentication (required when authentication type is Bearer Token)"
+                        },
+                        {
+                            "name": "customHeaders",
+                            "type": "expressionTextArea",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Additional HTTP headers in key:value format (one per line). Example: Content-Type:application/json"
+                        },
+                        {
+                            "name": "timeout",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "30000",
+                            "description": "Connection timeout in milliseconds"
+                        },
+                        {
+                            "name": "maxConnections",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "10",
+                            "description": "Maximum number of concurrent connections to the MCP server"
+                        },
+                        {
+                            "name": "connectionTimeout",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "5000",
+                            "description": "Connection establishment timeout in milliseconds"
+                        },
+                        {
+                            "name": "socketTimeout",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "30000",
+                            "description": "Socket read/write timeout in milliseconds"
+                        }
+                    ]
                 }
             ]
         }

@@ -56,6 +56,21 @@ public class Constants {
     public static final String AZURE_OPEN_AI = "AZURE_OPEN_AI";
     public static final String DEEPSEEK = "DEEPSEEK";
 
+    // MCP connection properties
+    public static final String MCP = "MCP";
+    public static final String MCP_SERVER_URL = "mcpServerUrl";
+    public static final String MCP_AUTHENTICATION_TYPE = "authenticationType";
+    public static final String MCP_BEARER_TOKEN = "bearerToken";
+    public static final String MCP_CUSTOM_HEADERS = "customHeaders";
+    public static final String MCP_TIMEOUT = "timeout";
+    public static final String MCP_MAX_CONNECTIONS = "maxConnections";
+    public static final String MCP_CONNECTION_TIMEOUT = "connectionTimeout";
+    public static final String MCP_SOCKET_TIMEOUT = "socketTimeout";
+    
+    // Authentication types
+    public static final String AUTH_TYPE_NONE = "None";
+    public static final String AUTH_TYPE_BEARER = "Bearer Token";
+
     // Parser Constants
     public static final String MD_TO_TEXT = "markdown-to-text";
     public static final String HTML_TO_TEXT = "html-to-text";
@@ -121,6 +136,12 @@ public class Constants {
     public static final String RESULT_EXPRESSION = "resultExpression";
     public static final String DESCRIPTION = "description";
 
+    // MCP Tool Constants
+    public static final String MCP_TOOL_TYPE = "mcp";
+    public static final String MCP_CONNECTION = "mcpConnection";
+    public static final String MCP_TOOL_RESULT = "MCP_TOOL_RESULT";
+    public static final String MCP_CONFIG_KEY = "_MCP_CONFIG_KEY";
+
     // Preserve message context properties
     public static final String ORIGINAL_PAYLOAD_BEFORE_INVOKE_TEMPLATE = "ORIGINAL_PAYLOAD_BEFORE_INVOKE_TEMPLATE";
     public static final String ORIGINAL_MESSAGE_TYPE_BEFORE_INVOKE_TEMPLATE =
@@ -144,6 +165,7 @@ public class Constants {
     public static final String LLM_CONFIG_KEY = "_LLM_CONFIG_KEY";
     public static final String VECTOR_STORE_CONFIG_KEY = "_VECTOR_STORE_CONFIG_KEY";
     public static final String EMBEDDING_CONFIG_KEY = "_EMBEDDING_CONFIG_KEY";
+    public static final String MCP_CONNECTIONS = "_MCP_CONNECTIONS";
     public static final String AGENT = "agent";
     public static final String ROLE = "role";
     public static final String INSTRUCTIONS = "instructions";
