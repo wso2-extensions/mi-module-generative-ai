@@ -39,6 +39,8 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
         connectionProperties.put(Constants.DEPLOYMENT_NAME, getProperty(messageContext, Constants.DEPLOYMENT_NAME));
         connectionProperties.put(Constants.ENDPOINT, getProperty(messageContext, Constants.ENDPOINT));
         connectionProperties.put(Constants.BASE_URL, getProperty(messageContext, Constants.BASE_URL));
+        connectionProperties.put(Constants.SERVICE_URL, getProperty(messageContext, Constants.SERVICE_URL));
+        connectionProperties.put(Constants.ACCESS_TOKEN, getProperty(messageContext, Constants.ACCESS_TOKEN));
 
         LLMConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties)
@@ -46,6 +48,7 @@ public class LLMConnection extends AbstractConnector implements ManagedLifecycle
 
         // Clear the apiKey property for security reasons
         messageContext.setProperty(Constants.API_KEY, null);
+        messageContext.setProperty(Constants.ACCESS_TOKEN, null);
     }
 
     @Override

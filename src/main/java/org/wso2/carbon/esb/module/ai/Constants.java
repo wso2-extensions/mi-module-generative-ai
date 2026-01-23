@@ -55,6 +55,7 @@ public class Constants {
     public static final String ANTHROPIC = "ANTHROPIC";
     public static final String AZURE_OPEN_AI = "AZURE_OPEN_AI";
     public static final String DEEPSEEK = "DEEPSEEK";
+    public static final String WSO2_AI = "WSO2_AI";
 
     // Parser Constants
     public static final String MD_TO_TEXT = "markdown-to-text";
@@ -69,6 +70,8 @@ public class Constants {
 
     public static final String INPUT = "input";
     public static final String TYPE = "type";
+    public static final String SERVICE_URL = "serviceUrl";
+    public static final String ACCESS_TOKEN = "accessToken";
 
     // Output Constants
     public static final String RESPONSE_VARIABLE = "responseVariable";

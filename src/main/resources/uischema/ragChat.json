@@ -48,7 +48,8 @@
           "ANTHROPIC",
           "AZURE_OPEN_AI",
           "MISTRAL_AI",
-          "DEEPSEEK"
+          "DEEPSEEK",
+          "WSO2_AI"
         ],
         "defaultType": "connection.local",
         "defaultValue": "",

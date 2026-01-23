@@ -35,6 +35,9 @@
     <parameter name="endpoint" description="Endpoint of Azure Open AI"/>
     <parameter name="baseUrl" description="Base URL of the AI service API"/>
 
+    <parameter name="serviceUrl" description="Service URL for WSO2 AI"/>
+    <parameter name="accessToken" description="Access token for WSO2 AI"/>
+
     <parameter name="host" description="Host of the database"/>
     <parameter name="port" description="Port of the database"/>
     <parameter name="database" description="Database name"/>
@@ -61,6 +64,9 @@
         <property name="endpoint" expression="$func:endpoint"/>
         <property name="baseUrl" expression="$func:baseUrl"/>
 
+        <property name="serviceUrl" expression="$func:serviceUrl"/>
+        <property name="accessToken" expression="$func:accessToken"/>
+
         <property name="host" expression="$func:host"/>
         <property name="port" expression="$func:port"/>
         <property name="database" expression="$func:database"/>
@@ -71,7 +77,7 @@
         <switch source="get-property('connectionType')">
 
             <!-- LLM/Embedding Connection -->
-            <case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
+            <case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK|WSO2_AI">
                 <class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection"/>
             </case>
 
