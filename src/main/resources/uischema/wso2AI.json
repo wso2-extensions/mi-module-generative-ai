@@ -32,7 +32,7 @@
                     "name": "accessToken",
                     "displayName": "Access Token",
                     "inputType": "stringOrExpression",
-                    "defaultValue": "",
+                    "defaultValue": "${configs.WSO2_AI_ACCESS_TOKEN}",
                     "required": "true",
                     "helpTip": "WSO2 AI Access Token"
                   }
@@ -43,7 +43,7 @@
                     "name": "serviceUrl",
                     "displayName": "Service Url",
                     "inputType": "stringOrExpression",
-                    "defaultValue": "",
+                    "defaultValue": "${configs.WSO2_AI_SERVICE_URL}",
                     "required": "true",
                     "helpTip": "WSO2 AI Service Url"
                   }
