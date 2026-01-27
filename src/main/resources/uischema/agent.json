@@ -75,7 +75,13 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "gpt-4o",
                     "required": "true",
-                    "helpTip": "Specify the name of the LLM model to be used for generating responses."
+                    "helpTip": "Specify the name of the LLM model to be used for generating responses.",
+                    "connectionTypeEnableCondition": [
+                      "NOT",
+                      {
+                        "llmConfigKey": "WSO2_AI"
+                      }
+                    ]
                   }
                 },
                 {
