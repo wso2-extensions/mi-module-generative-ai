@@ -113,7 +113,7 @@ public class WSO2AIChatModel implements ChatLanguageModel {
         private String baseUrl;
         private String accessToken;
         private String version;
-        private String modelName;
+        private String modelName = "claude-haiku-4-5";
         private Double temperature;
         private Double topP;
         private Integer topK;

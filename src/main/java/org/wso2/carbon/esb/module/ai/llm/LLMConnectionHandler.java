@@ -102,7 +102,6 @@ public class LLMConnectionHandler {
                         = WSO2AIChatModel.builder()
                         .baseUrl(connectionParams.getConnectionProperty(Constants.SERVICE_URL))
                         .accessToken(connectionParams.getConnectionProperty(Constants.ACCESS_TOKEN))
-                        .modelName(modelName)
                         .maxTokens(maxTokens);
                 // Can only set one of temperature or topP
                 if (temperature != null) {
