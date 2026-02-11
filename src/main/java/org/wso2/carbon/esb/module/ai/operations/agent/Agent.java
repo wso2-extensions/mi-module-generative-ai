@@ -156,6 +156,17 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             maxChatHistory = 10;
         }
 
+        // Get overflow handling parameters
+        String overflowHandlingMethod = getMediatorParameter(mc, Constants.OVERFLOW_HANDLING_METHOD, String.class, true);
+        if (overflowHandlingMethod == null) {
+            overflowHandlingMethod = Constants.TRIM; // Default to trim
+        }
+        
+        Object summarizationLlmConfigKeyObj = mc.getProperty(Constants.SUMMARIZATION_LLM_CONFIG_KEY);
+        String summarizationLlmConfigKey = summarizationLlmConfigKeyObj != null ? summarizationLlmConfigKeyObj.toString() : null;
+        
+        String summarizationModelName = getMediatorParameter(mc, Constants.SUMMARIZATION_MODEL_NAME, String.class, true);
+
         Long toolExecutionTimeout = getMediatorParameter(mc, Constants.TOOL_EXECUTION_TIMEOUT, Long.class, true);
         if (toolExecutionTimeout != null) {
             toolDefinitionsMap.get(agentID).setToolExecutionTimeout(toolExecutionTimeout * 1000);
@@ -194,7 +205,21 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             if (StringUtils.isEmpty(sessionId)) {
                 sessionId = "default";
             }
-            ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
+            
+            // Get chat memory with overflow handling support
+            Object llmConfigKeyObj = mc.getProperty(Constants.LLM_CONFIG_KEY);
+            String llmConfigKey = llmConfigKeyObj != null ? llmConfigKeyObj.toString() : null;
+            
+            ChatMemory chatMemory = Utils.getChatMemoryWithOverflowHandling(
+                    sessionId, 
+                    memoryConfigKey, 
+                    maxChatHistory,
+                    overflowHandlingMethod,
+                    summarizationLlmConfigKey,
+                    summarizationModelName,
+                    llmConfigKey,  // Use agent's LLM as default for summarization
+                    modelName      // Use agent's model as default for summarization
+            );
 
             // AiServiceContext constructor is protected in langchain4j 1.9.1+, manage components directly
             AiServiceContext aiServiceContext = null;
