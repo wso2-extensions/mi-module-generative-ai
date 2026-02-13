@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -46,11 +46,15 @@ public class SummarizingChatMemory implements ChatMemory {
     private final Object memoryId;
     
     private static final String SUMMARIZATION_PROMPT = 
-            "Please provide a concise summary of the following conversation history. " +
-            "Focus on key points, decisions made, and important context that would be needed to continue the conversation. " +
-            "If the conversation includes multiple exchanges, try to capture the overall flow and main topics discussed. " +
-            "Additionally, if the conversation contains a previous summary, make sure not to loose important details that were in the original messages. " +
-            "Keep the summary brief but informative.\n\nConversation:\n";
+            "Your task is to create a concise summary of the conversation below, capturing the user's requests and key information.\n\n" +
+            "IMPORTANT: Give more prominence to the most recent messages, as they represent the current context and direction.\n\n" +
+            "In your summary, focus on:\n" +
+            "1. User's explicit requests and intents (especially from recent messages)\n" +
+            "2. Key decisions and outcomes\n" +
+            "3. Important context needed to continue the conversation\n" +
+            "4. If a previous summary exists in the conversation, preserve critical details while updating with new information\n\n" +
+            "Keep the summary brief but informative, emphasizing recent exchanges.\n\n" +
+            "Conversation:\n";
 
     public SummarizingChatMemory(ChatMemory underlyingMemory, 
                                   ChatModel summarizationModel, 
