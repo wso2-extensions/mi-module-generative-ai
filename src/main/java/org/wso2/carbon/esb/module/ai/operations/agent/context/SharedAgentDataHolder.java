@@ -1,18 +1,13 @@
 package org.wso2.carbon.esb.module.ai.operations.agent.context;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
-import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequestParameters;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServiceContext;
 import dev.langchain4j.service.tool.ToolExecution;
-
-import java.util.function.Function;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.mediators.eip.SharedDataHolder;
@@ -28,10 +23,6 @@ public class SharedAgentDataHolder extends SharedDataHolder {
     private String agentId;
     private AiServiceContext aiServiceContext;
     private String memoryId;
-    private ChatMemory chatMemory;
-    private ChatModel chatModel;
-    private List<ToolSpecification> toolSpecifications;
-    private Function<Object, String> systemMessageProvider;
     private final List<ToolExecution> toolExecutions;
     private TokenUsage tokenUsageAccumulator;
     private AtomicInteger executionsLeft;
@@ -65,38 +56,6 @@ public class SharedAgentDataHolder extends SharedDataHolder {
     public void setMemoryId(String memoryId) {
 
         this.memoryId = memoryId;
-    }
-
-    public ChatMemory getChatMemory() {
-        return chatMemory;
-    }
-
-    public void setChatMemory(ChatMemory chatMemory) {
-        this.chatMemory = chatMemory;
-    }
-
-    public ChatModel getChatModel() {
-        return chatModel;
-    }
-
-    public void setChatModel(ChatModel chatModel) {
-        this.chatModel = chatModel;
-    }
-
-    public List<ToolSpecification> getToolSpecifications() {
-        return toolSpecifications;
-    }
-
-    public void setToolSpecifications(List<ToolSpecification> toolSpecifications) {
-        this.toolSpecifications = toolSpecifications;
-    }
-
-    public Function<Object, String> getSystemMessageProvider() {
-        return systemMessageProvider;
-    }
-
-    public void setSystemMessageProvider(Function<Object, String> systemMessageProvider) {
-        this.systemMessageProvider = systemMessageProvider;
     }
 
     public List<ToolExecution> getToolExecutions() {
@@ -151,13 +110,9 @@ public class SharedAgentDataHolder extends SharedDataHolder {
             AiMessage aiMessage = (AiMessage) message;
             AiMessage toolExecutionRequestMessage =
                     AiMessage.from("Tool Execution Request", aiMessage.toolExecutionRequests());
-            if (chatMemory != null) {
-                chatMemory.add(toolExecutionRequestMessage);
-            }
+            aiServiceContext.chatMemory(memoryId).add(toolExecutionRequestMessage);
         } else {
-            if (chatMemory != null) {
-                chatMemory.add(message);
-            }
+            aiServiceContext.chatMemory(memoryId).add(message);
         }
     }
 
