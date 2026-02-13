@@ -43,6 +43,6 @@ public class HTMLToMDParser implements DocumentParser {
             throw new ParsingException(Errors.HTML_TO_MARKDOWN_ERROR, e);
         }
 
-        return markdown != null ? new Document(markdown) : null;
+        return markdown != null ? Document.from(markdown) : null;
     }
 }

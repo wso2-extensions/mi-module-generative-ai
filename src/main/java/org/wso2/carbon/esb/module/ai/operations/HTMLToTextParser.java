@@ -41,6 +41,6 @@ public class HTMLToTextParser implements DocumentParser {
             throw new ParsingException(Errors.HTML_TO_TEXT_ERROR, e);
         }
 
-        return jsoupDocument.body() != null ? new Document(jsoupDocument.body().text()) : null;
+        return jsoupDocument.body() != null ? Document.from(jsoupDocument.body().text()) : null;
     }
 }
