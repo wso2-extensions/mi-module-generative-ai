@@ -41,18 +41,21 @@
     <parameter name="summarizationModelName" description="Summarization model name"/>
     <parameter name="toolExecutionTimeout" description="Tool execution timeout"/>
     <parameter name="tools" description="Tool declaration"/>
+    <parameter name="mcpConnections" description="MCP connection configurations"/>
 
     <sequence>
         <class name="org.wso2.carbon.esb.module.ai.config.Configure"/>
         <filter xpath="${exists(props.synapse._MEMORY_CONFIG_KEY)}">
             <ai.invokeConnection configKey="{${props.synapse._MEMORY_CONFIG_KEY}}"/>
         </filter>
+        <class name="org.wso2.carbon.esb.module.ai.config.InvokeMCPConnections"/>
         <filter xpath="${exists(props.synapse._LLM_CONFIG_KEY)}">
             <then>
                 <ai.invokeConnection configKey="{${props.synapse._LLM_CONFIG_KEY}}"/>
                 <class name="org.wso2.carbon.esb.module.ai.operations.agent.Agent"/>
                 <property name="_LLM_CONFIG_KEY" scope="default" action="remove"/>
                 <property name="_MEMORY_CONFIG_KEY" scope="default" action="remove"/>
+                <property name="_MCP_CONNECTIONS" scope="default" action="remove"/>
             </then>
             <else>
                 <payloadFactory media-type="json" template-type="default">
