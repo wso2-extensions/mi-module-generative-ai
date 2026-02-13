@@ -235,7 +235,9 @@ public class SummarizingChatMemory implements ChatMemory {
             }
             
             // Add summary as a user message at position 1
-            UserMessage summaryMessage = new UserMessage("Previous conversation summary: " + summary);
+            String summaryPrefix = "This session is being continued from a previous conversation that ran out of context. " +
+                                 "The summary below covers the earlier portion of the conversation.\n\n";
+            UserMessage summaryMessage = new UserMessage(summaryPrefix + summary);
             underlyingMemory.add(summaryMessage);
         } catch (Exception e) {
             log.error("Failed to perform chat history summarization. Continuing with trim behavior.", e);
