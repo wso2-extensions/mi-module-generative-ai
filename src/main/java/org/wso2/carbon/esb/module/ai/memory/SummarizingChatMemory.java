@@ -31,6 +31,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A ChatMemory wrapper that automatically summarizes chat history when it exceeds the maximum limit.
@@ -46,14 +48,57 @@ public class SummarizingChatMemory implements ChatMemory {
     private final Object memoryId;
     
     private static final String SUMMARIZATION_PROMPT = 
-            "Your task is to create a concise summary of the conversation below, capturing the user's requests and key information.\n\n" +
-            "IMPORTANT: Give more prominence to the most recent messages, as they represent the current context and direction.\n\n" +
-            "In your summary, focus on:\n" +
-            "1. User's explicit requests and intents (especially from recent messages)\n" +
-            "2. Key decisions and outcomes\n" +
-            "3. Important context needed to continue the conversation\n" +
-            "4. If a previous summary exists in the conversation, preserve critical details while updating with new information\n\n" +
-            "Keep the summary brief but informative, emphasizing recent exchanges.\n\n" +
+            "Your task is to create a comprehensive yet concise summary of the conversation below. " +
+            "This summary will be used to maintain context when the conversation history exceeds memory limits.\n\n" +
+            "CRITICAL: Give MORE PROMINENCE to the MOST RECENT messages, as they represent the current context, " +
+            "active work, and direction of the conversation. Earlier messages provide background but recent ones " +
+            "are crucial for continuation.\n\n" +
+            "INSTRUCTIONS:\n" +
+            "Before providing your final summary, wrap your analysis in <analysis> tags to organize your thoughts. " +
+            "In your analysis section:\n" +
+            "- Review the conversation chronologically from oldest to newest\n" +
+            "- Identify ALL of the user's explicit requests and intents (prioritize recent messages)\n" +
+            "- Note key decisions, outcomes, technical details, and code patterns\n" +
+            "- Identify what context is absolutely essential for continuing the work\n" +
+            "- Consider what information would be lost if not preserved\n\n" +
+            "Then provide your summary within <summary> tags. Your summary should include:\n" +
+            "1. PRIMARY FOCUS - Recent Context (last 3-5 exchanges):\n" +
+            "   - What is the user currently working on?\n" +
+            "   - What are their most recent explicit requests?\n" +
+            "   - What is the immediate next step or current task?\n\n" +
+            "2. User's Explicit Requests and Intents:\n" +
+            "   - All tasks the user has requested (emphasize recent ones)\n" +
+            "   - Goals and objectives they want to achieve\n" +
+            "   - Any constraints or preferences they've specified\n\n" +
+            "3. Key Decisions and Outcomes:\n" +
+            "   - Important technical decisions made\n" +
+            "   - Completed tasks and their results\n" +
+            "   - Any issues encountered and how they were resolved\n\n" +
+            "4. Technical Context (if applicable):\n" +
+            "   - File names, paths, and code sections discussed\n" +
+            "   - Frameworks, libraries, or technologies involved\n" +
+            "   - Configuration changes or architectural decisions\n\n" +
+            "5. Continuation Context:\n" +
+            "   - What work remains to be done?\n" +
+            "   - Any pending questions or unclear requirements\n" +
+            "   - Dependencies or prerequisites for next steps\n\n" +
+            "6. Previous Summary Integration (if present):\n" +
+            "   - If the conversation contains a previous summary, integrate its critical information\n" +
+            "   - Update outdated information with new developments\n" +
+            "   - Preserve essential historical context while emphasizing recent changes\n\n" +
+            "EXAMPLE FORMAT:\n" +
+            "<analysis>\n" +
+            "[Your thought process here - chronological review, identifying patterns, noting important details]\n" +
+            "</analysis>\n\n" +
+            "<summary>\n" +
+            "RECENT CONTEXT: User is currently [describe current work/task from recent messages]. " +
+            "They just [recent actions/requests].\n\n" +
+            "KEY REQUESTS: [List all user requests with emphasis on recent ones]\n\n" +
+            "DECISIONS & OUTCOMES: [Important decisions and completed work]\n\n" +
+            "TECHNICAL DETAILS: [Files, code, configurations - if applicable]\n\n" +
+            "NEXT STEPS: [What needs to happen next based on the conversation]\n" +
+            "</summary>\n\n" +
+            "Keep the summary informative but concise. Aim for clarity and completeness while avoiding unnecessary verbosity.\n\n" +
             "Conversation:\n";
 
     public SummarizingChatMemory(ChatMemory underlyingMemory, 
@@ -92,6 +137,31 @@ public class SummarizingChatMemory implements ChatMemory {
     @Override
     public void clear() {
         underlyingMemory.clear();
+    }
+
+    /**
+     * Extracts content within <summary> tags from the LLM response.
+     * Uses regex to find and extract only the summary portion, discarding the analysis.
+     * If no summary tags are found, returns the full response as a fallback.
+     * 
+     * @param fullResponse the complete response from the LLM (may include <analysis> and <summary> tags)
+     * @return the extracted summary content, or the full response if tags are not found
+     */
+    private String extractSummary(String fullResponse) {
+        if (fullResponse == null || fullResponse.isEmpty()) {
+            return "";
+        }
+        
+        Pattern pattern = Pattern.compile("<summary>\\s*(.+?)\\s*</summary>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(fullResponse);
+        
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        
+        // Fallback: if no summary tags found, return the full response
+        log.warn("No <summary> tags found in summarization response. Using full response.");
+        return fullResponse.trim();
     }
 
     /**
@@ -152,7 +222,10 @@ public class SummarizingChatMemory implements ChatMemory {
                     .messages(summarizationRequest)
                     .build();
             ChatResponse response = summarizationModel.chat(chatRequest);
-            String summary = response.aiMessage().text();
+            String fullResponse = response.aiMessage().text();
+            
+            // Extract only the content within <summary> tags, discarding <analysis>
+            String summary = extractSummary(fullResponse);
             
             underlyingMemory.clear();
             
