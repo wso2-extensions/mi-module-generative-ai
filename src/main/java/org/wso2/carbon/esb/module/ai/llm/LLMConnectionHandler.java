@@ -20,7 +20,7 @@ package org.wso2.carbon.esb.module.ai.llm;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
-import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -39,12 +39,12 @@ public class LLMConnectionHandler {
         connectionMap.computeIfAbsent(connectionName, k -> connectionParams);
     }
 
-    public static ChatModel getChatModel(
+    public static ChatLanguageModel getChatModel(
             String connectionName, String modelName, Double temperature, Integer maxTokens,
             Double topP, Double frequencyPenalty, Integer seed) {
 
         // TODO: Need to pool the models as it is resource intensive to create a new model for each request
-        ChatModel chatModel = null;
+        ChatLanguageModel chatModel = null;
         ConnectionParams connectionParams = connectionMap.get(connectionName);
         if (connectionParams == null) {
             return null;

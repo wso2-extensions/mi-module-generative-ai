@@ -130,82 +130,19 @@
           {
             "type": "attributeGroup",
             "value": {
-              "groupName": "Memory Configuration",
+              "groupName": "Advanced",
               "elements": [
                 {
                   "type": "attribute",
                   "value": {
                     "name": "maxHistory",
-                    "displayName": "Max Chat History",
+                    "displayName": "Max chat history",
                     "inputType": "string",
                     "defaultValue": "10",
                     "required": "false",
                     "helpTip": "Set the maximum number of previous messages to include in the context."
                   }
                 },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "overflowHandlingMethod",
-                    "displayName": "Overflow Handling Method",
-                    "inputType": "comboOrExpression",
-                    "comboValues": [
-                      "Trim",
-                      "Summarize"
-                    ],
-                    "defaultValue": "Trim",
-                    "required": "false",
-                    "helpTip": "Choose how to handle chat history when it exceeds max history: Trim removes oldest messages, Summarize condenses them."
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "summarizationLlmConfigKey",
-                    "displayName": "Summarization LLM Connection",
-                    "inputType": "connection",
-                    "allowedConnectionTypes": [
-                      "OPEN_AI",
-                      "ANTHROPIC",
-                      "AZURE_OPEN_AI",
-                      "MISTRAL_AI",
-                      "DEEPSEEK"
-                    ],
-                    "defaultType": "connection.local",
-                    "defaultValue": "",
-                    "required": "false",
-                    "helpTip": "Select the LLM connection to use for summarizing chat history when overflow handling method is set to Summarize.",
-                    "enableCondition": [
-                      "AND",
-                      {
-                        "overflowHandlingMethod": "Summarize"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "attribute",
-                  "value": {
-                    "name": "summarizationModelName",
-                    "displayName": "Summarization Model name",
-                    "inputType": "stringOrExpression",
-                    "helpTip": "Specify the name of the LLM model to be used for summarizing responses.",
-                    "enableCondition": [
-                      "AND",
-                      {
-                        "overflowHandlingMethod": "Summarize"
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "type": "attributeGroup",
-            "value": {
-              "groupName": "Advanced",
-              "elements": [
                 {
                   "type": "attribute",
                   "value": {
@@ -234,6 +171,7 @@
                     "name": "topP",
                     "displayName": "Top P",
                     "inputType": "string",
+                    "defaultValue": "1",
                     "required": "false",
                     "helpTip": "Control response diversity: lower values result in more focused outputs."
                   }

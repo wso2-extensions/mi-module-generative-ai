@@ -36,9 +36,6 @@
     <parameter name="seed" description="Seed"/>
 
     <parameter name="maxHistory" description="Max chat messages to be used in history"/>
-    <parameter name="overflowHandlingMethod" description="Method to handle chat history overflow: Trim or Summarize"/>
-    <parameter name="summarizationLlmConfigKey" description="LLM connection for summarization"/>
-    <parameter name="summarizationModelName" description="Summarization model name"/>
     <parameter name="toolExecutionTimeout" description="Tool execution timeout"/>
     <parameter name="tools" description="Tool declaration"/>
 

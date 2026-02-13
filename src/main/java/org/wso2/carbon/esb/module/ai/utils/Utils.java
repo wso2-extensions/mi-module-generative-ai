@@ -31,7 +31,6 @@ import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.apache.commons.lang3.StringUtils;
@@ -43,10 +42,7 @@ import org.apache.pdfbox.pdmodel.graphics.PDXObject;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.wso2.carbon.esb.module.ai.Constants;
-import org.wso2.carbon.esb.module.ai.llm.LLMConnectionHandler;
 import org.wso2.carbon.esb.module.ai.memory.MessageWindowChatMemoryWithDatabase;
-import org.wso2.carbon.esb.module.ai.memory.SummarizingChatMemory;
 import org.wso2.carbon.esb.module.ai.memory.store.DatabaseChatMemoryStore;
 import org.wso2.carbon.esb.module.ai.memory.store.MemoryStoreHandler;
 
@@ -105,68 +101,6 @@ public class Utils {
                     .maxMessages(maxChatHistory).build();
         }
         return chatMemory;
-    }
-
-    /**
-     * Returns the chat memory for the current chat session ID with overflow handling support
-     *
-     * @param sessionId                  Current chat session ID
-     * @param memoryConfigKey            Memory configuration key
-     * @param maxChatHistory             Maximum chat history
-     * @param overflowHandlingMethod     Method to handle overflow: "Trim" or "Summarize"
-     * @param summarizationLlmConfigKey  LLM connection key for summarization (optional)
-     * @param summarizationModelName     Model name for summarization (optional)
-     * @param defaultLlmConfigKey        Default LLM connection key to use if summarization LLM is not provided
-     * @param defaultModelName           Default model name to use if summarization model is not provided
-     * @return Chat memory with appropriate overflow handling
-     */
-    public static ChatMemory getChatMemoryWithOverflowHandling(
-            String sessionId,
-            String memoryConfigKey,
-            int maxChatHistory,
-            String overflowHandlingMethod,
-            String summarizationLlmConfigKey,
-            String summarizationModelName,
-            String defaultLlmConfigKey,
-            String defaultModelName) {
-
-        // Create base memory using existing method
-        ChatMemory baseMemory = getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
-
-        // If overflow handling is not "Summarize", return base memory (default trim behavior)
-        if (!Constants.SUMMARIZE.equals(overflowHandlingMethod)) {
-            return baseMemory;
-        }
-
-        String llmConfigKey = StringUtils.isNotEmpty(summarizationLlmConfigKey) 
-                ? summarizationLlmConfigKey 
-                : defaultLlmConfigKey;
-        String modelName = StringUtils.isNotEmpty(summarizationModelName) 
-                ? summarizationModelName 
-                : defaultModelName;
-
-        try {
-            // Create a chat model for summarization
-            ChatModel summarizationModel = LLMConnectionHandler.getChatModel(
-                    llmConfigKey, modelName, null, null, null, null, null);
-
-            if (summarizationModel == null) {
-                // If we can't create summarization model, fall back to trim behavior
-                return baseMemory;
-            }
-
-            // Wrap base memory with summarizing memory
-            return SummarizingChatMemory.builder()
-                    .underlyingMemory(baseMemory)
-                    .summarizationModel(summarizationModel)
-                    .maxMessages(maxChatHistory)
-                    .memoryId(sessionId)
-                    .build();
-
-        } catch (Exception e) {
-            // If anything fails, fall back to trim behavior
-            return baseMemory;
-        }
     }
 
     public static UserMessage buildUserMessage(String parsedPrompt, String attachments) {
