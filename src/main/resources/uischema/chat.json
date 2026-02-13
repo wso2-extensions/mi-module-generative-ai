@@ -20,7 +20,8 @@
                 "ANTHROPIC",
                 "AZURE_OPEN_AI",
                 "MISTRAL_AI",
-                "DEEPSEEK"
+                "DEEPSEEK",
+                "WSO2_AI"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
@@ -57,7 +58,13 @@
                     "inputType": "stringOrExpression",
                     "defaultValue": "gpt-4o",
                     "required": "true",
-                    "helpTip": "Specify the name of the model to use for generating responses."
+                    "helpTip": "Specify the name of the model to use for generating responses.",
+                    "connectionTypeEnableCondition": [
+                      "NOT",
+                      {
+                        "llmConfigKey": "WSO2_AI"
+                      }
+                    ]
                   }
                 },
                 {
