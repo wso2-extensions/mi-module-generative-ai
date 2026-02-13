@@ -156,6 +156,17 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             maxChatHistory = 10;
         }
 
+        // Get overflow handling parameters
+        String overflowHandlingMethod = getMediatorParameter(mc, Constants.OVERFLOW_HANDLING_METHOD, String.class, true);
+        if (overflowHandlingMethod == null) {
+            overflowHandlingMethod = Constants.TRIM; // Default to trim
+        }
+        
+        Object summarizationLlmConfigKeyObj = mc.getProperty(Constants.SUMMARIZATION_LLM_CONFIG_KEY);
+        String summarizationLlmConfigKey = summarizationLlmConfigKeyObj != null ? summarizationLlmConfigKeyObj.toString() : null;
+        
+        String summarizationModelName = getMediatorParameter(mc, Constants.SUMMARIZATION_MODEL_NAME, String.class, true);
+
         Long toolExecutionTimeout = getMediatorParameter(mc, Constants.TOOL_EXECUTION_TIMEOUT, Long.class, true);
         if (toolExecutionTimeout != null) {
             toolDefinitionsMap.get(agentID).setToolExecutionTimeout(toolExecutionTimeout * 1000);

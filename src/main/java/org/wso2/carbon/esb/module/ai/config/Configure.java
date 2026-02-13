@@ -64,6 +64,9 @@ public class Configure extends AbstractConnector {
                         case "embeddingConfigKey":
                             propertyName = Constants.EMBEDDING_CONFIG_KEY;
                             break;
+                        case "summarizationLlmConfigKey":
+                            propertyName = Constants.SUMMARIZATION_LLM_CONFIG_KEY;
+                            break;
                         default:
                             propertyName = null;
                     }
