@@ -105,6 +105,13 @@ public class Constants {
     public static final String KNOWLEDGE = "knowledge";
     public static final String HISTORY = "history";
     public static final String MAX_HISTORY = "maxHistory";
+    public static final String OVERFLOW_HANDLING_METHOD = "overflowHandlingMethod";
+    public static final String SUMMARIZATION_LLM_CONFIG_KEY = "summarizationLlmConfigKey";
+    public static final String SUMMARIZATION_MODEL_NAME = "summarizationModelName";
+
+    // Overflow handling methods
+    public static final String TRIM = "Trim";
+    public static final String SUMMARIZE = "Summarize";
 
     // Agent Constants
     public static final String TOOL_EXECUTION_CORRELATION = "toolExecutionCorrelation";
