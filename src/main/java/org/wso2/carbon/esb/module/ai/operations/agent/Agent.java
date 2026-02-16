@@ -205,7 +205,15 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
             if (StringUtils.isEmpty(sessionId)) {
                 sessionId = "default";
             }
-            ChatMemory chatMemory = Utils.getChatMemory(sessionId, memoryConfigKey, maxChatHistory);
+            ChatMemory chatMemory = Utils.getChatMemoryWithOverflowHandling(
+                    sessionId, 
+                    memoryConfigKey, 
+                    maxChatHistory, 
+                    overflowHandlingMethod,
+                    summarizationLlmConfigKey,
+                    summarizationModelName,
+                    connectionName,
+                    modelName);
 
             // AiServiceContext constructor is protected in langchain4j 1.9.1+, manage components directly
             AiServiceContext aiServiceContext = null;
