@@ -45,6 +45,11 @@ public class Constants {
     public static final String CHROMA_DB = "CHROMA_DB";
     public static final String PINECONE = "PINECONE";
     public static final String POSTGRES_VECTOR = "POSTGRES_VECTOR";
+    public static final String WEAVIATE = "WEAVIATE";
+    public static final String SCHEME = "scheme";
+    public static final String OBJECT_CLASS = "objectClass";
+    public static final String AVOID_DUPS = "avoidDups";
+    public static final String CONSISTENCY_LEVEL = "consistencyLevel";
 
     // LLM connection properties
     public static final String DEPLOYMENT_NAME = "deploymentName";

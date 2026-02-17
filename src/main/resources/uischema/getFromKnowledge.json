@@ -19,6 +19,7 @@
                 "MI_VECTOR_STORE",
                 "CHROMA_DB",
                 "PINECONE",
+                "WEAVIATE",
                 "POSTGRES_VECTOR"
               ],
               "defaultType": "connection.local",

@@ -42,6 +42,11 @@
     <parameter name="password" description="Password of the database"/>
     <parameter name="table" description="Table name"/>
 
+    <parameter name="scheme" description="Scheme of the Weaviate connection (http/https)"/>
+    <parameter name="objectClass" description="Object class for Weaviate"/>
+    <parameter name="avoidDups" description="Avoid duplicates in Weaviate"/>
+    <parameter name="consistencyLevel" description="Consistency level for Weaviate"/>
+
     <sequence>
         <property name="connectionType" expression="$func:connectionType"/>
         <property name="connectionName" expression="$func:name"/>
@@ -68,6 +73,11 @@
         <property name="password" expression="$func:password"/>
         <property name="table" expression="$func:table"/>
 
+        <property name="scheme" expression="$func:scheme"/>
+        <property name="objectClass" expression="$func:objectClass"/>
+        <property name="avoidDups" expression="$func:avoidDups"/>
+        <property name="consistencyLevel" expression="$func:consistencyLevel"/>
+
         <switch source="get-property('connectionType')">
 
             <!-- LLM/Embedding Connection -->
@@ -76,7 +86,7 @@
             </case>
 
             <!-- Vector Store Connection -->
-            <case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|POSTGRES_VECTOR">
+            <case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|WEAVIATE|POSTGRES_VECTOR">
                 <class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection"/>
             </case>
 
