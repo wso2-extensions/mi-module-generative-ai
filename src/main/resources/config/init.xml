@@ -46,6 +46,14 @@
     <parameter name="objectClass" description="Object class for Weaviate"/>
     <parameter name="avoidDups" description="Avoid duplicates in Weaviate"/>
     <parameter name="consistencyLevel" description="Consistency level for Weaviate"/>
+    <parameter name="mcpServerUrl" description="MCP server URL"/>
+    <parameter name="authenticationType" description="MCP authentication type (None or Bearer Token)"/>
+    <parameter name="bearerToken" description="Bearer token for authentication"/>
+    <parameter name="customHeaders" description="Additional custom headers"/>
+    <parameter name="timeout" description="MCP connection timeout"/>
+    <parameter name="maxConnections" description="Maximum MCP connections"/>
+    <parameter name="connectionTimeout" description="MCP connection timeout"/>
+    <parameter name="socketTimeout" description="MCP socket timeout"/>
 
     <sequence>
         <property name="connectionType" expression="$func:connectionType"/>
@@ -71,7 +79,16 @@
         <property name="database" expression="$func:database"/>
         <property name="user" expression="$func:user"/>
         <property name="password" expression="$func:password"/>
-        <property name="table" expression="$func:table"/>
+        <property name="mcpServerUrl" expression="$func:mcpServerUrl"/>
+        <property name="authenticationType" expression="$func:authenticationType"/>
+        <property name="bearerToken" expression="$func:bearerToken"/>
+        <property name="customHeaders" expression="$func:customHeaders"/>
+        <property name="timeout" expression="$func:timeout"/>Token"/>
+        <property name="timeout" expression="$func:timeout"/>
+        <property name="maxConnections" expression="$func:maxConnections"/>
+        <property name="connectionTimeout" expression="$func:connectionTimeout"/>
+        <property name="socketTimeout" expression="$func:socketTimeout"/>meout"/>
+        <property name="socketTimeout" expression="$func:socketTimeout"/>
 
         <property name="scheme" expression="$func:scheme"/>
         <property name="objectClass" expression="$func:objectClass"/>
@@ -93,6 +110,11 @@
             <!-- Memory Connection -->
             <case regex="POSTGRES_MEMORY|FILE_MEMORY">
                 <class name="org.wso2.carbon.esb.module.ai.memory.MemoryConfig"/>
+            </case>
+
+            <!-- MCP Connection -->
+            <case regex="MCP">
+                <class name="org.wso2.carbon.esb.module.ai.connections.MCPConnection"/>
             </case>
 
             <default>
