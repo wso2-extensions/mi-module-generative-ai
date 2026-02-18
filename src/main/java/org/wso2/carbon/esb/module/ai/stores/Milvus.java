@@ -19,20 +19,13 @@
 package org.wso2.carbon.esb.module.ai.stores;
 
 import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class Milvus extends VectorStore {
-
-    private static final Log log = LogFactory.getLog(Milvus.class);
-
     public Milvus(String uri, String token, String collectionName, int dimension) {
-
         super(buildStore(uri, token, collectionName, dimension));
     }
 
     private static MilvusEmbeddingStore buildStore(String uri, String token, String collectionName, int dimension) {
-
         var builder = MilvusEmbeddingStore.builder()
                 .collectionName(collectionName)
                 .dimension(dimension);
