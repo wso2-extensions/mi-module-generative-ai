@@ -1,0 +1,80 @@
+{
+  "connectorName": "ai",
+  "connectionName": "MILVUS",
+  "title": "Milvus Connection Config",
+  "help": "Configuration for connecting to a Milvus / Zilliz Cloud vector database",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "MILVUS",
+        "required": "true",
+        "helpTip": "A name for the vector store connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "url",
+                    "displayName": "URI",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "http://localhost:19530",
+                    "required": "true",
+                    "helpTip": "The URI of the Milvus instance (e.g. 'http://localhost:19530' for self-hosted, or 'https://xxx.api.gcp-us-west1.zillizcloud.com' for Zilliz Cloud)"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "Token / API Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "The token or API key for authentication (required for Zilliz Cloud, optional for self-hosted)"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "collection",
+                    "displayName": "Collection Name",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "default",
+                    "required": "true",
+                    "helpTip": "The name of the Milvus collection. If it does not exist, it will be created automatically."
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "dimension",
+                    "displayName": "Dimension",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "1536",
+                    "required": "true",
+                    "helpTip": "The dimension of the embedding vectors (e.g. 384 for all-MiniLM-L6-v2, 1536 for OpenAI text-embedding-ada-002)"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -20,6 +20,7 @@
                 "CHROMA_DB",
                 "PINECONE",
                 "WEAVIATE",
+                "MILVUS",
                 "POSTGRES_VECTOR"
               ],
               "defaultType": "connection.local",

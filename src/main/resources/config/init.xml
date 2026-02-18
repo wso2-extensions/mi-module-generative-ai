@@ -86,7 +86,7 @@
             </case>
 
             <!-- Vector Store Connection -->
-            <case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|WEAVIATE|POSTGRES_VECTOR">
+            <case regex="MI_VECTOR_STORE|CHROMA_DB|PINECONE|WEAVIATE|MILVUS|POSTGRES_VECTOR">
                 <class name="org.wso2.carbon.esb.module.ai.connections.VectorStoreConnection"/>
             </case>
 

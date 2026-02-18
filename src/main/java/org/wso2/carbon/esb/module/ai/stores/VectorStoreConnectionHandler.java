@@ -117,6 +117,18 @@ public class VectorStoreConnectionHandler {
                 }
                 break;
 
+            case Constants.MILVUS:
+                try {
+                    vectorStore = new Milvus(
+                            connectionParams.getConnectionProperty(Constants.URL),
+                            connectionParams.getConnectionProperty(Constants.API_KEY, true),
+                            connectionParams.getConnectionProperty(Constants.COLLECTION),
+                            Integer.parseInt(connectionParams.getConnectionProperty(Constants.DIMENSION)));
+                } catch (Exception e) {
+                    throw new VectorStoreException(Errors.MILVUS_CONNECTION_ERROR, e);
+                }
+                break;
+
             case Constants.POSTGRES_VECTOR:
                 try {
                     boolean status = PGVector.testConnection(
