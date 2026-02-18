@@ -1,0 +1,59 @@
+{
+  "connectorName": "ai",
+  "connectionName": "WSO2_AI",
+  "title": "WSO2 Default Model Provider Connection Config",
+  "help": "Configuration for connecting to the WSO2 AI API",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "WSO2_AI_CONNECTION",
+        "required": "true",
+        "helpTip": "The name for the WSO2 AI connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "accessToken",
+                    "displayName": "Access Token",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "${configs.WSO2_AI_ACCESS_TOKEN}",
+                    "required": "true",
+                    "helpTip": "WSO2 AI Access Token"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "serviceUrl",
+                    "displayName": "Service Url",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "${configs.WSO2_AI_SERVICE_URL}",
+                    "required": "true",
+                    "helpTip": "WSO2 AI Service Url"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "hidden": "true"
+      }
+    }
+  ]
+}
