@@ -123,6 +123,11 @@
             <version>${langchain4j.betaversion}</version>
         </dependency>
         <dependency>
+            <groupId>dev.langchain4j.wso2</groupId>
+            <artifactId>langchain4j-milvus</artifactId>
+            <version>${langchain4j.betaversion}.wso2v1</version>
+        </dependency>
+        <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-pgvector</artifactId>
             <version>${langchain4j.betaversion}</version>
