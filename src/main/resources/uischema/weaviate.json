@@ -1,0 +1,122 @@
+{
+  "connectorName": "ai",
+  "connectionName": "WEAVIATE",
+  "title": "Weaviate Connection Config",
+  "help": "Configuration for connecting to the Weaviate API",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "WEAVIATE",
+        "required": "true",
+        "helpTip": "A name for the vector store connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "scheme",
+                    "displayName": "Scheme",
+                    "inputType": "combo",
+                    "comboValues": [
+                      "http",
+                      "https"
+                    ],
+                    "defaultValue": "https",
+                    "required": "true",
+                    "helpTip": "The protocol scheme (http or https), e.g. 'https' for cloud deployment."
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "host",
+                    "displayName": "Host",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "localhost",
+                    "required": "true",
+                    "helpTip": "The host address of the Weaviate server"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "port",
+                    "displayName": "Port",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "443",
+                    "required": "false",
+                    "helpTip": "The port number of the Weaviate server (defaults to 443 for https, 8080 for http)"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "apiKey",
+                    "displayName": "API Key",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "API Key for authentication (optional)"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "objectClass",
+                    "displayName": "Object Class",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "Default",
+                    "required": "false",
+                    "helpTip": "The object class you want to store. Must start with an uppercase letter. Defaults to 'Default'."
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "avoidDups",
+                    "displayName": "Avoid Duplicates",
+                    "inputType": "checkbox",
+                    "defaultValue": true,
+                    "required": "false",
+                    "helpTip": "Whether to avoid storing duplicate embeddings"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "consistencyLevel",
+                    "displayName": "Consistency Level",
+                    "inputType": "combo",
+                    "comboValues": [
+                      "ONE",
+                      "QUORUM",
+                      "ALL"
+                    ],
+                    "defaultValue": "QUORUM",
+                    "required": "false",
+                    "helpTip": "Consistency level: ONE, QUORUM (default), or ALL for read/write operations."
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

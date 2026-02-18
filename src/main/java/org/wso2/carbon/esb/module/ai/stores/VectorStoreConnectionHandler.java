@@ -30,12 +30,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VectorStoreConnectionHandler {
 
     private final static ConcurrentHashMap<String, ConnectionParams> connections = new ConcurrentHashMap<>();
+    // Cache the actual VectorStore instances to reuse them across calls
+    private final static ConcurrentHashMap<String, VectorStore> vectorStoreCache = new ConcurrentHashMap<>();
 
     public static void addConnection(String connectionName, ConnectionParams connectionParams) {
         connections.computeIfAbsent(connectionName, k -> connectionParams);
     }
 
     public static VectorStore getVectorStore(String connectionName, MessageContext mc) throws VectorStoreException {
+
+        VectorStore cachedStore = vectorStoreCache.get(connectionName);
+        if (cachedStore != null) {
+            return cachedStore;
+        }
 
         VectorStore vectorStore = null;
         ConnectionParams connectionParams = connections.get(connectionName);
@@ -74,6 +81,42 @@ public class VectorStoreConnectionHandler {
                 }
                 break;
 
+            case Constants.WEAVIATE:
+                try {
+                    String scheme = connectionParams.getConnectionProperty(Constants.SCHEME);
+                    String apiKey = connectionParams.getConnectionProperty(Constants.API_KEY, true);
+                    String objectClass = connectionParams.getConnectionProperty(Constants.OBJECT_CLASS, true);
+                    if (objectClass == null || objectClass.isEmpty()) {
+                        objectClass = "Default";
+                    }
+
+                    String consistencyLevel = connectionParams.getConnectionProperty(Constants.CONSISTENCY_LEVEL, true);
+                    if (consistencyLevel != null && consistencyLevel.isEmpty()) {
+                        consistencyLevel = null;
+                    }
+                    String avoidDupsStr = connectionParams.getConnectionProperty(Constants.AVOID_DUPS, true);
+                    boolean avoidDups = avoidDupsStr == null || Boolean.parseBoolean(avoidDupsStr);
+                    
+                    // Parse port, handling optional/null values
+                    Integer port = null;
+                    String portStr = connectionParams.getConnectionProperty(Constants.PORT, true);
+                    if (portStr != null && !portStr.isEmpty()) {
+                        port = Integer.parseInt(portStr);
+                    }
+                    
+                    vectorStore = new Weaviate(
+                            scheme,
+                            connectionParams.getConnectionProperty(Constants.HOST),
+                            port,
+                            apiKey,
+                            objectClass,
+                            avoidDups,
+                            consistencyLevel);
+                } catch (Exception e) {
+                    throw new VectorStoreException(Errors.WEAVIATE_CONNECTION_ERROR, e);
+                }
+                break;
+
             case Constants.POSTGRES_VECTOR:
                 try {
                     boolean status = PGVector.testConnection(
@@ -102,6 +145,12 @@ public class VectorStoreConnectionHandler {
             default:
                 break;
         }
+        
+        // Cache the created VectorStore instance for reuse
+        if (vectorStore != null) {
+            vectorStoreCache.put(connectionName, vectorStore);
+        }
+        
         return vectorStore;
     }
 }
