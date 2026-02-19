@@ -23,6 +23,7 @@ import dev.langchain4j.model.azure.AzureOpenAiChatModel;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
+import dev.langchain4j.model.azure.AzureOpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import org.wso2.carbon.esb.module.ai.Constants;
@@ -106,12 +107,20 @@ public class LLMConnectionHandler {
         EmbeddingModel embeddingModel = null;
         ConnectionParams connectionParams = connectionMap.get(connectionName);
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
-            case "OPEN_AI":
+            case Constants.OPEN_AI:
                 // Null values of LLM params will be handled by LangChain4j
                 embeddingModel = OpenAiEmbeddingModel.builder()
                         .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
                         .modelName(modelName)
                         .build();
+                break;
+            case Constants.AZURE_OPEN_AI:
+                embeddingModel = AzureOpenAiEmbeddingModel.builder()
+                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
+                        .deploymentName(connectionParams.getConnectionProperty(Constants.DEPLOYMENT_NAME))
+                        .endpoint(connectionParams.getConnectionProperty(Constants.ENDPOINT))
+                        .build();
+                break;
             default:
                 break;
         }
