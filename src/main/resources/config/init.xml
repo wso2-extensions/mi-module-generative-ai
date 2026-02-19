@@ -98,7 +98,7 @@
         <switch source="get-property('connectionType')">
 
             <!-- LLM/Embedding Connection -->
-            <case regex="OPEN_AI|AZURE_OPEN_AI|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
+            <case regex="OPEN_AI|AZURE_OPEN_AI|AZURE_OPEN_AI_EMBEDDING|ANTHROPIC|MISTRAL_AI|DEEPSEEK">
                 <class name="org.wso2.carbon.esb.module.ai.connections.LLMConnection"/>
             </case>
 

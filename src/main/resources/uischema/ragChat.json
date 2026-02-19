@@ -11,7 +11,8 @@
         "displayName": "Embedding model Connection",
         "inputType": "connection",
         "allowedConnectionTypes": [
-          "OPEN_AI"
+          "OPEN_AI",
+          "AZURE_OPEN_AI_EMBEDDING"
         ],
         "defaultType": "connection.local",
         "defaultValue": "",
