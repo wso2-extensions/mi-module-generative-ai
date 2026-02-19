@@ -114,7 +114,7 @@ public class LLMConnectionHandler {
                         .modelName(modelName)
                         .build();
                 break;
-            case Constants.AZURE_OPEN_AI_EMBEDDING:
+            case Constants.AZURE_OPEN_AI:
                 embeddingModel = AzureOpenAiEmbeddingModel.builder()
                         .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
                         .deploymentName(connectionParams.getConnectionProperty(Constants.DEPLOYMENT_NAME))

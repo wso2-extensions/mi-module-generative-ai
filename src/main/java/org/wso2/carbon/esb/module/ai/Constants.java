@@ -60,7 +60,6 @@ public class Constants {
     public static final String MISTRAL_AI = "MISTRAL_AI";
     public static final String ANTHROPIC = "ANTHROPIC";
     public static final String AZURE_OPEN_AI = "AZURE_OPEN_AI";
-    public static final String AZURE_OPEN_AI_EMBEDDING = "AZURE_OPEN_AI_EMBEDDING";
     public static final String DEEPSEEK = "DEEPSEEK";
 
     // MCP connection properties

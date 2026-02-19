@@ -12,7 +12,7 @@
         "inputType": "connection",
         "allowedConnectionTypes": [
           "OPEN_AI",
-          "AZURE_OPEN_AI_EMBEDDING"
+          "AZURE_OPEN_AI"
         ],
         "defaultType": "connection.local",
         "defaultValue": "",
