@@ -12,158 +12,11 @@
     "type": "Connector",
     "releases": [
         {
-            "tagName": "v0.2.1",
+            "tagName": "v0.2.2",
             "products": [
                 "MI 4.6.0"
             ],
             "operations": [
-                {
-                    "name": "ragChat",
-                    "description": "RAG Chat Completion",
-                    "params": [
-                        {
-                            "name": "embeddingConfigKey",
-                            "type": "connection",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Embedding model connection to be used"
-                        },
-                        {
-                            "name": "vectorStoreConfigKey",
-                            "type": "connection",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Vector store connection to be used"
-                        },
-                        {
-                            "name": "llmConfigKey",
-                            "type": "connection",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "LLM service connection to be used"
-                        },
-                        {
-                            "name": "memoryConfigKey",
-                            "type": "connection",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Memory connection to be used"
-                        },
-                        {
-                            "name": "sessionId",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Provide a unique identifier for the session."
-                        },
-                        {
-                            "name": "prompt",
-                            "type": "expressionTextArea",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Query the LLM"
-                        },
-                        {
-                            "name": "embeddingModel",
-                            "type": "combo",
-                            "required": true,
-                            "defaultValue": "text-embedding-3-small",
-                            "description": "Select the splitting strategy Supported values: text-embedding-3-small, text-embedding-3-large, text-embedding-ada-002"
-                        },
-                        {
-                            "name": "maxResults",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "5",
-                            "description": "Maximum number of results to be returned"
-                        },
-                        {
-                            "name": "minScore",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "0.75",
-                            "description": "Minimum score to be considered as a valid result"
-                        },
-                        {
-                            "name": "modelName",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "gpt-4o",
-                            "description": "Name of the model to use"
-                        },
-                        {
-                            "name": "outputType",
-                            "type": "combo",
-                            "required": true,
-                            "defaultValue": "string",
-                            "description": "Define type of the output Supported values: string, integer, float, boolean"
-                        },
-                        {
-                            "name": "maxHistory",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "10",
-                            "description": "Maximum chat history to use"
-                        },
-                        {
-                            "name": "system",
-                            "type": "expressionTextArea",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Give instructions to LLM"
-                        },
-                        {
-                            "name": "maxTokens",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "4069",
-                            "description": "Maximum number of tokens to generate"
-                        },
-                        {
-                            "name": "temperature",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "0.7",
-                            "description": "Controls randomness: lower temperature results in less randomness"
-                        },
-                        {
-                            "name": "topP",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "1",
-                            "description": "Controls diversity: lower value results in more diversity"
-                        },
-                        {
-                            "name": "frequencyPenalty",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "0",
-                            "description": "Controls repetition: lower value results in less repetition"
-                        },
-                        {
-                            "name": "seed",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Seed"
-                        },
-                        {
-                            "name": "responseVariable",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Name of the variable to which the output of the operation should be assigned"
-                        },
-                        {
-                            "name": "overwriteBody",
-                            "type": "checkbox",
-                            "required": false,
-                            "defaultValue": "false",
-                            "description": "Replace the Message Body in Message Context with the output of the operation (This will remove the payload from the above variable)."
-                        }
-                    ],
-                    "isHidden": false
-                },
                 {
                     "name": "agent",
                     "description": "AI Agent",
@@ -312,20 +165,6 @@
                     "isHidden": false
                 },
                 {
-                    "name": "mcpTools",
-                    "description": "Add MCP Tools",
-                    "params": [
-                        {
-                            "name": "mcpToolsSelection",
-                            "type": "mcpToolsSelection",
-                            "required": false,
-                            "defaultValue": "[]",
-                            "description": "Select tools from the connected MCP server"
-                        }
-                    ],
-                    "isHidden": false
-                },
-                {
                     "name": "chat",
                     "description": "Chat Completion",
                     "params": [
@@ -445,57 +284,134 @@
                     "isHidden": false
                 },
                 {
-                    "name": "getFromKnowledge",
-                    "description": "Search the vector store",
+                    "name": "ragChat",
+                    "description": "RAG Chat Completion",
                     "params": [
-                        {
-                            "name": "vectorStoreConfigKey",
-                            "type": "connection",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Select the vector store connection to retrieve data from."
-                        },
                         {
                             "name": "embeddingConfigKey",
                             "type": "connection",
                             "required": true,
                             "defaultValue": "",
-                            "description": "Choose the AI service connection for embedding generation."
+                            "description": "Embedding model connection to be used"
                         },
                         {
-                            "name": "input",
+                            "name": "vectorStoreConfigKey",
+                            "type": "connection",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Vector store connection to be used"
+                        },
+                        {
+                            "name": "llmConfigKey",
+                            "type": "connection",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "LLM service connection to be used"
+                        },
+                        {
+                            "name": "memoryConfigKey",
+                            "type": "connection",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Memory connection to be used"
+                        },
+                        {
+                            "name": "sessionId",
                             "type": "stringOrExpression",
                             "required": true,
                             "defaultValue": "",
-                            "description": "Provide the input text or query to search in the vector store."
+                            "description": "Provide a unique identifier for the session."
                         },
                         {
-                            "name": "needEmbedding",
-                            "type": "checkbox",
-                            "required": false,
-                            "defaultValue": "True",
-                            "description": "Check this box if the input needs to be embedded."
+                            "name": "prompt",
+                            "type": "expressionTextArea",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Query the LLM"
                         },
                         {
                             "name": "embeddingModel",
                             "type": "combo",
                             "required": true,
                             "defaultValue": "text-embedding-3-small",
-                            "description": "Select the embedding model to use for processing the input. Supported values: text-embedding-3-small, text-embedding-3-small, text-embedding-ada-002"
+                            "description": "Select the splitting strategy Supported values: text-embedding-3-small, text-embedding-3-large, text-embedding-ada-002"
                         },
                         {
                             "name": "maxResults",
                             "type": "stringOrExpression",
                             "required": false,
                             "defaultValue": "5",
-                            "description": "Specify the maximum number of results to return."
+                            "description": "Maximum number of results to be returned"
                         },
                         {
                             "name": "minScore",
                             "type": "stringOrExpression",
                             "required": false,
                             "defaultValue": "0.75",
-                            "description": "Set the minimum score threshold for valid results."
+                            "description": "Minimum score to be considered as a valid result"
+                        },
+                        {
+                            "name": "modelName",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "gpt-4o",
+                            "description": "Name of the model to use"
+                        },
+                        {
+                            "name": "outputType",
+                            "type": "combo",
+                            "required": true,
+                            "defaultValue": "string",
+                            "description": "Define type of the output Supported values: string, integer, float, boolean"
+                        },
+                        {
+                            "name": "maxHistory",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "10",
+                            "description": "Maximum chat history to use"
+                        },
+                        {
+                            "name": "system",
+                            "type": "expressionTextArea",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Give instructions to LLM"
+                        },
+                        {
+                            "name": "maxTokens",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "4069",
+                            "description": "Maximum number of tokens to generate"
+                        },
+                        {
+                            "name": "temperature",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "0.7",
+                            "description": "Controls randomness: lower temperature results in less randomness"
+                        },
+                        {
+                            "name": "topP",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "1",
+                            "description": "Controls diversity: lower value results in more diversity"
+                        },
+                        {
+                            "name": "frequencyPenalty",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "0",
+                            "description": "Controls repetition: lower value results in less repetition"
+                        },
+                        {
+                            "name": "seed",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Seed"
                         },
                         {
                             "name": "responseVariable",
@@ -611,53 +527,152 @@
                         }
                     ],
                     "isHidden": false
+                },
+                {
+                    "name": "getFromKnowledge",
+                    "description": "Search the vector store",
+                    "params": [
+                        {
+                            "name": "vectorStoreConfigKey",
+                            "type": "connection",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Select the vector store connection to retrieve data from."
+                        },
+                        {
+                            "name": "embeddingConfigKey",
+                            "type": "connection",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Choose the AI service connection for embedding generation."
+                        },
+                        {
+                            "name": "input",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Provide the input text or query to search in the vector store."
+                        },
+                        {
+                            "name": "needEmbedding",
+                            "type": "checkbox",
+                            "required": false,
+                            "defaultValue": "True",
+                            "description": "Check this box if the input needs to be embedded."
+                        },
+                        {
+                            "name": "embeddingModel",
+                            "type": "combo",
+                            "required": true,
+                            "defaultValue": "text-embedding-3-small",
+                            "description": "Select the embedding model to use for processing the input. Supported values: text-embedding-3-small, text-embedding-3-small, text-embedding-ada-002"
+                        },
+                        {
+                            "name": "maxResults",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "5",
+                            "description": "Specify the maximum number of results to return."
+                        },
+                        {
+                            "name": "minScore",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "0.75",
+                            "description": "Set the minimum score threshold for valid results."
+                        },
+                        {
+                            "name": "responseVariable",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Name of the variable to which the output of the operation should be assigned"
+                        },
+                        {
+                            "name": "overwriteBody",
+                            "type": "checkbox",
+                            "required": false,
+                            "defaultValue": "false",
+                            "description": "Replace the Message Body in Message Context with the output of the operation (This will remove the payload from the above variable)."
+                        }
+                    ],
+                    "isHidden": false
+                },
+                {
+                    "name": "mcpTools",
+                    "description": "Add MCP Tools",
+                    "params": [
+                        {
+                            "name": "mcpToolsSelection",
+                            "type": "mcpToolsSelection",
+                            "required": false,
+                            "defaultValue": "[]",
+                            "description": "Select tools from the connected MCP server"
+                        }
+                    ],
+                    "isHidden": false
                 }
             ],
             "connections": [
                 {
-                    "name": "AZURE_OPEN_AI",
-                    "description": "Azure OpenAI Connection Config",
+                    "name": "POSTGRES_VECTOR",
+                    "description": "PGVector Connection Config",
                     "params": [
                         {
                             "name": "connectionName",
                             "type": "string",
                             "required": true,
-                            "defaultValue": "AZURE_OPEN_AI_CONNECTION",
-                            "description": "The name for the Azure OpenAI connection"
+                            "defaultValue": "POSTGRES_VECTOR",
+                            "description": "A name for the vector store connection"
                         },
                         {
-                            "name": "apiKey",
+                            "name": "host",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "localhost",
+                            "description": "The host name of the database server"
+                        },
+                        {
+                            "name": "port",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "5432",
+                            "description": "The port number of the database server"
+                        },
+                        {
+                            "name": "database",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "postgres",
+                            "description": "The name of the database"
+                        },
+                        {
+                            "name": "user",
                             "type": "stringOrExpression",
                             "required": true,
                             "defaultValue": "",
-                            "description": "Azure OpenAI Key"
+                            "description": "The user name to connect to the database"
                         },
                         {
-                            "name": "deploymentName",
+                            "name": "password",
                             "type": "stringOrExpression",
-                            "required": true,
+                            "required": false,
                             "defaultValue": "",
-                            "description": "Azure deployment name"
+                            "description": "The password to connect to the database"
                         },
                         {
-                            "name": "endpoint",
+                            "name": "table",
                             "type": "stringOrExpression",
                             "required": true,
-                            "defaultValue": "",
-                            "description": "Azure endpoint"
-                        }
-                    ]
-                },
-                {
-                    "name": "FILE_MEMORY",
-                    "description": "File-Based Memory Store Configuration",
-                    "params": [
+                            "defaultValue": "mi",
+                            "description": "The table name"
+                        },
                         {
-                            "name": "connectionName",
-                            "type": "string",
+                            "name": "dimension",
+                            "type": "stringOrExpression",
                             "required": true,
-                            "defaultValue": "FILE_MEMORY_CONN",
-                            "description": "Specify a unique name for the file-based memory store connection"
+                            "defaultValue": "1536",
+                            "description": "Give the dimension of the embeddings"
                         }
                     ]
                 },
@@ -678,73 +693,6 @@
                             "required": true,
                             "defaultValue": "",
                             "description": "MistralAI Key"
-                        }
-                    ]
-                },
-                {
-                    "name": "OPEN_AI",
-                    "description": "OpenAI Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "OPEN_AI_CONNECTION",
-                            "description": "The name for the OpenAI connection"
-                        },
-                        {
-                            "name": "apiKey",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "OpenAI Key"
-                        },
-                        {
-                            "name": "baseUrl",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "https://api.openai.com/v1",
-                            "description": "Base url"
-                        }
-                    ]
-                },
-                {
-                    "name": "DEEPSEEK",
-                    "description": "DEEPSEEK Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "DEEPSEEK_CONNECTION",
-                            "description": "The name for the DEEPSEEK connection"
-                        },
-                        {
-                            "name": "apiKey",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Deepseek API Key"
-                        },
-                        {
-                            "name": "baseUrl",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "https://api.deepseek.com",
-                            "description": "Base Url"
-                        }
-                    ]
-                },
-                {
-                    "name": "MI_VECTOR_STORE",
-                    "description": "MI Registry Vector Store",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "MI_VECTOR_STORE_1",
-                            "description": "A name for the vector store connection"
                         }
                     ]
                 },
@@ -845,61 +793,6 @@
                     ]
                 },
                 {
-                    "name": "PINECONE",
-                    "description": "Pinecone connection config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "PINECONE",
-                            "description": "A name for the vector store connection"
-                        },
-                        {
-                            "name": "apiKey",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Pinecone Key"
-                        },
-                        {
-                            "name": "index",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "wso2-mi",
-                            "description": "Give the index"
-                        },
-                        {
-                            "name": "namespace",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "ai",
-                            "description": "Give the namespace"
-                        },
-                        {
-                            "name": "cloud",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "AWS",
-                            "description": "Give the cloud"
-                        },
-                        {
-                            "name": "region",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "us-east-1",
-                            "description": "Give the region"
-                        },
-                        {
-                            "name": "dimension",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "1536",
-                            "description": "Give the dimension of the embeddings"
-                        }
-                    ]
-                },
-                {
                     "name": "POSTGRES_MEMORY",
                     "description": "POSTGRES Memory Connection Config",
                     "params": [
@@ -955,64 +848,70 @@
                     ]
                 },
                 {
-                    "name": "POSTGRES_VECTOR",
-                    "description": "PGVector Connection Config",
+                    "name": "MILVUS",
+                    "description": "Milvus Connection Config",
                     "params": [
                         {
                             "name": "connectionName",
                             "type": "string",
                             "required": true,
-                            "defaultValue": "POSTGRES_VECTOR",
+                            "defaultValue": "MILVUS",
                             "description": "A name for the vector store connection"
                         },
                         {
-                            "name": "host",
+                            "name": "url",
                             "type": "stringOrExpression",
                             "required": true,
-                            "defaultValue": "localhost",
-                            "description": "The host name of the database server"
+                            "defaultValue": "http://localhost:19530",
+                            "description": "The URI of the Milvus instance (e.g. 'http://localhost:19530' for self-hosted, or 'https://xxx.api.gcp-us-west1.zillizcloud.com' for Zilliz Cloud)"
                         },
                         {
-                            "name": "port",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "5432",
-                            "description": "The port number of the database server"
-                        },
-                        {
-                            "name": "database",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "postgres",
-                            "description": "The name of the database"
-                        },
-                        {
-                            "name": "user",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "The user name to connect to the database"
-                        },
-                        {
-                            "name": "password",
+                            "name": "apiKey",
                             "type": "stringOrExpression",
                             "required": false,
                             "defaultValue": "",
-                            "description": "The password to connect to the database"
+                            "description": "The token or API key for authentication (required for Zilliz Cloud, optional for self-hosted)"
                         },
                         {
-                            "name": "table",
+                            "name": "collection",
                             "type": "stringOrExpression",
                             "required": true,
-                            "defaultValue": "mi",
-                            "description": "The table name"
+                            "defaultValue": "default",
+                            "description": "The name of the Milvus collection. If it does not exist, it will be created automatically."
                         },
                         {
                             "name": "dimension",
                             "type": "stringOrExpression",
                             "required": true,
                             "defaultValue": "1536",
-                            "description": "Give the dimension of the embeddings"
+                            "description": "The dimension of the embedding vectors (e.g. 384 for all-MiniLM-L6-v2, 1536 for OpenAI text-embedding-ada-002)"
+                        }
+                    ]
+                },
+                {
+                    "name": "DEEPSEEK",
+                    "description": "DEEPSEEK Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "DEEPSEEK_CONNECTION",
+                            "description": "The name for the DEEPSEEK connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Deepseek API Key"
+                        },
+                        {
+                            "name": "baseUrl",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "https://api.deepseek.com",
+                            "description": "Base Url"
                         }
                     ]
                 },
@@ -1033,6 +932,210 @@
                             "required": true,
                             "defaultValue": "",
                             "description": "Anthropic Key"
+                        }
+                    ]
+                },
+                {
+                    "name": "AZURE_OPEN_AI",
+                    "description": "Azure OpenAI Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "AZURE_OPEN_AI_CONNECTION",
+                            "description": "The name for the Azure OpenAI connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Azure OpenAI Key"
+                        },
+                        {
+                            "name": "deploymentName",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Azure deployment name"
+                        },
+                        {
+                            "name": "endpoint",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Azure endpoint"
+                        }
+                    ]
+                },
+                {
+                    "name": "FILE_MEMORY",
+                    "description": "File-Based Memory Store Configuration",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "FILE_MEMORY_CONN",
+                            "description": "Specify a unique name for the file-based memory store connection"
+                        }
+                    ]
+                },
+                {
+                    "name": "WEAVIATE",
+                    "description": "Weaviate Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "WEAVIATE",
+                            "description": "A name for the vector store connection"
+                        },
+                        {
+                            "name": "scheme",
+                            "type": "combo",
+                            "required": true,
+                            "defaultValue": "https",
+                            "description": "The protocol scheme (http or https), e.g. 'https' for cloud deployment. Supported values: http, https"
+                        },
+                        {
+                            "name": "host",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "localhost",
+                            "description": "The host address of the Weaviate server"
+                        },
+                        {
+                            "name": "port",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "443",
+                            "description": "The port number of the Weaviate server (defaults to 443 for https, 8080 for http)"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "API Key for authentication (optional)"
+                        },
+                        {
+                            "name": "objectClass",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "Default",
+                            "description": "The object class you want to store. Must start with an uppercase letter. Defaults to 'Default'."
+                        },
+                        {
+                            "name": "avoidDups",
+                            "type": "checkbox",
+                            "required": false,
+                            "defaultValue": "True",
+                            "description": "Whether to avoid storing duplicate embeddings"
+                        },
+                        {
+                            "name": "consistencyLevel",
+                            "type": "combo",
+                            "required": false,
+                            "defaultValue": "QUORUM",
+                            "description": "Consistency level: ONE, QUORUM (default), or ALL for read/write operations. Supported values: ONE, QUORUM, ALL"
+                        }
+                    ]
+                },
+                {
+                    "name": "OPEN_AI",
+                    "description": "OpenAI Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "OPEN_AI_CONNECTION",
+                            "description": "The name for the OpenAI connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "OpenAI Key"
+                        },
+                        {
+                            "name": "baseUrl",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "https://api.openai.com/v1",
+                            "description": "Base url"
+                        }
+                    ]
+                },
+                {
+                    "name": "MI_VECTOR_STORE",
+                    "description": "MI Registry Vector Store",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "MI_VECTOR_STORE_1",
+                            "description": "A name for the vector store connection"
+                        }
+                    ]
+                },
+                {
+                    "name": "PINECONE",
+                    "description": "Pinecone connection config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "PINECONE",
+                            "description": "A name for the vector store connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Pinecone Key"
+                        },
+                        {
+                            "name": "index",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "wso2-mi",
+                            "description": "Give the index"
+                        },
+                        {
+                            "name": "namespace",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "ai",
+                            "description": "Give the namespace"
+                        },
+                        {
+                            "name": "cloud",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "AWS",
+                            "description": "Give the cloud"
+                        },
+                        {
+                            "name": "region",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "us-east-1",
+                            "description": "Give the region"
+                        },
+                        {
+                            "name": "dimension",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "1536",
+                            "description": "Give the dimension of the embeddings"
                         }
                     ]
                 }
