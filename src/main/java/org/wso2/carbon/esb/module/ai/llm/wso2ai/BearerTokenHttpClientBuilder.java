@@ -21,9 +21,9 @@ package org.wso2.carbon.esb.module.ai.llm.wso2ai;
 import dev.langchain4j.exception.HttpException;
 import dev.langchain4j.http.client.HttpClient;
 import dev.langchain4j.http.client.HttpClientBuilder;
+import dev.langchain4j.http.client.HttpClientBuilderLoader;
 import dev.langchain4j.http.client.HttpRequest;
 import dev.langchain4j.http.client.SuccessfulHttpResponse;
-import dev.langchain4j.http.client.HttpClientBuilderLoader;
 import dev.langchain4j.http.client.sse.ServerSentEventListener;
 import dev.langchain4j.http.client.sse.ServerSentEventParser;
 
@@ -34,10 +34,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Custom HttpClientBuilder for WSO2 AI proxy authentication.
- * Produces an HttpClient that replaces the standard Anthropic {@code x-api-key}
- * header with {@code Authorization: Bearer <token>}, enabling use of
- * AnthropicChatModel against a WSO2-hosted proxy without a direct API key.
+ * Custom HttpClientBuilder for WSO2 AI proxy authentication. Produces an HttpClient that replaces the standard
+ * Anthropic {@code x-api-key} header with {@code Authorization: Bearer <token>} and injects the required WSO2 AI proxy
+ * routing headers ({@code x-product}, {@code x-usage-context}, {@code x-metadata}), enabling use of AnthropicChatModel
+ * against a WSO2-hosted proxy without a direct API key.
  */
 public class BearerTokenHttpClientBuilder implements HttpClientBuilder {
 
@@ -84,17 +84,10 @@ public class BearerTokenHttpClientBuilder implements HttpClientBuilder {
     }
 
     /**
-     * HttpClient wrapper that swaps {@code x-api-key} for {@code Authorization: Bearer}.
+     * HttpClient wrapper that swaps {@code x-api-key} for {@code Authorization: Bearer} and injects required WSO2 AI
+     * proxy headers.
      */
-    private static class BearerTokenHttpClient implements HttpClient {
-
-        private final HttpClient delegate;
-        private final String accessToken;
-
-        BearerTokenHttpClient(HttpClient delegate, String accessToken) {
-            this.delegate = delegate;
-            this.accessToken = accessToken;
-        }
+    private record BearerTokenHttpClient(HttpClient delegate, String accessToken) implements HttpClient {
 
         @Override
         public SuccessfulHttpResponse execute(HttpRequest request) throws HttpException {
@@ -109,8 +102,13 @@ public class BearerTokenHttpClientBuilder implements HttpClientBuilder {
 
         private HttpRequest withBearerAuth(HttpRequest original) {
             Map<String, List<String>> headers = new LinkedHashMap<>(original.headers());
+
             headers.remove("x-api-key");
             headers.put("Authorization", new ArrayList<>(List.of("Bearer " + accessToken)));
+
+            // Required headers for WSO2 AI proxy
+            headers.put("User-Agent", new ArrayList<>(List.of("MI-VSCode-Plugin")));
+
             return HttpRequest.builder()
                     .method(original.method())
                     .url(original.url())
