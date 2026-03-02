@@ -18,6 +18,7 @@ public class ToolDefinitions {
     private final Map<String, Value> toolResultExpression;
     private final Map<String, SequenceMediator> toolInvokers;
     private final List<ToolSpecification> toolSpecifications;
+    private final Map<String, MCPToolMetadata> mcpToolMappings;  // Maps tool name to MCP metadata
     private long toolExecutionTimeout = 10000; // Default timeout: 10 seconds
 
     public ToolDefinitions() {
@@ -25,6 +26,7 @@ public class ToolDefinitions {
         this.toolResultExpression = new HashMap<>();
         this.toolInvokers = new HashMap<>();
         this.toolSpecifications = new ArrayList<>();
+        this.mcpToolMappings = new HashMap<>();
     }
 
     public void addToolResultExpression(String toolName, Value value) {
@@ -75,5 +77,48 @@ public class ToolDefinitions {
     public void setToolExecutionTimeout(long toolExecutionTimeout) {
 
         this.toolExecutionTimeout = toolExecutionTimeout;
+    }
+
+    /**
+     * Add MCP tool mapping (tool name -> MCP connection)
+     */
+    public void addMCPToolMapping(String toolName, String mcpConnection) {
+        this.mcpToolMappings.put(toolName, new MCPToolMetadata(mcpConnection));
+    }
+
+    /**
+     * Get MCP tool metadata for a given tool name
+     */
+    public MCPToolMetadata getMCPToolMetadata(String toolName) {
+        return mcpToolMappings.get(toolName);
+    }
+
+    /**
+     * Check if a tool is an MCP tool
+     */
+    public boolean isMCPTool(String toolName) {
+        return mcpToolMappings.containsKey(toolName);
+    }
+
+    /**
+     * Get all MCP tool mappings
+     */
+    public Map<String, MCPToolMetadata> getMcpToolMappings() {
+        return mcpToolMappings;
+    }
+
+    /**
+     * Metadata for MCP tools
+     */
+    public static class MCPToolMetadata {
+        private final String mcpConnection;
+
+        public MCPToolMetadata(String mcpConnection) {
+            this.mcpConnection = mcpConnection;
+        }
+
+        public String getMcpConnection() {
+            return mcpConnection;
+        }
     }
 }

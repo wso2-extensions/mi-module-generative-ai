@@ -1,0 +1,157 @@
+{
+  "connectorName": "ai",
+  "connectionName": "MCP",
+  "title": "MCP Server Connection Config",
+  "help": "Configuration for connecting to an MCP (Model Context Protocol) server",
+  "elements": [
+    {
+      "type": "attribute",
+      "value": {
+        "name": "connectionName",
+        "displayName": "Connection Name",
+        "inputType": "string",
+        "defaultValue": "MCP_CONNECTION",
+        "required": "true",
+        "helpTip": "A unique name for the MCP server connection",
+        "validation": "nameWithoutSpecialCharactors"
+      }
+    },
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "mcpServerUrl",
+                    "displayName": "MCP Server URL",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "The URL of the MCP server endpoint (e.g., https://api.example.com/mcp/)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Authentication",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "authenticationType",
+                    "displayName": "Authentication Type",
+                    "inputType": "combo",
+                    "comboValues": [
+                      "None",
+                      "Bearer Token"
+                    ],
+                    "defaultValue": "None",
+                    "required": "true",
+                    "helpTip": "Select the authentication method for the MCP server"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "bearerToken",
+                    "displayName": "Bearer Token",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "The bearer token for authentication (e.g., your API key or access token)",
+                    "enableCondition": [
+                      {
+                        "authenticationType": "Bearer Token"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Custom Headers",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "customHeaders",
+                    "displayName": "Additional Headers",
+                    "inputType": "expressionTextArea",
+                    "defaultValue": "",
+                    "required": "false",
+                    "helpTip": "Additional HTTP headers in key:value format (one per line). Example:\nContent-Type:application/json\nX-Custom-Header:value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Connection Settings",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "timeout",
+                    "displayName": "Timeout (ms)",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "30000",
+                    "required": "false",
+                    "helpTip": "Connection timeout in milliseconds"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "maxConnections",
+                    "displayName": "Max Connections",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "10",
+                    "required": "false",
+                    "helpTip": "Maximum number of concurrent connections to the MCP server"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "connectionTimeout",
+                    "displayName": "Connection Timeout (ms)",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "5000",
+                    "required": "false",
+                    "helpTip": "Connection establishment timeout in milliseconds"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "socketTimeout",
+                    "displayName": "Socket Timeout (ms)",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "30000",
+                    "required": "false",
+                    "helpTip": "Socket read/write timeout in milliseconds"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -53,6 +53,12 @@ public class VectorStoreConnection extends AbstractConnector implements ManagedL
         connectionProperties.put(Constants.PASSWORD, getProperty(messageContext, Constants.PASSWORD));
         connectionProperties.put(Constants.TABLE, getProperty(messageContext, Constants.TABLE));
 
+        // Weaviate specific properties
+        connectionProperties.put(Constants.SCHEME, getProperty(messageContext, Constants.SCHEME));
+        connectionProperties.put(Constants.OBJECT_CLASS, getProperty(messageContext, Constants.OBJECT_CLASS));
+        connectionProperties.put(Constants.AVOID_DUPS, getProperty(messageContext, Constants.AVOID_DUPS));
+        connectionProperties.put(Constants.CONSISTENCY_LEVEL, getProperty(messageContext, Constants.CONSISTENCY_LEVEL));
+
         VectorStoreConnectionHandler.addConnection(
                 connectionName, new ConnectionParams(connectionName, connectionType, connectionProperties));
 

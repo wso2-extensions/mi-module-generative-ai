@@ -75,7 +75,7 @@ public class EmbeddingGenerator extends AbstractAIMediator {
                         embedding.content().get(i).vector(), inputs.get(i).metadata()));
             }
         } catch (Exception e) {
-            handleConnectorException(Errors.EMBEDDING_GENERATION_ERROR, mc);
+            handleConnectorException(Errors.EMBEDDING_GENERATION_ERROR, mc, e);
         }
 
         // If multiple inputs were provided, return a JSON array of TextEmbedding objects

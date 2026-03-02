@@ -45,6 +45,12 @@ public class Constants {
     public static final String CHROMA_DB = "CHROMA_DB";
     public static final String PINECONE = "PINECONE";
     public static final String POSTGRES_VECTOR = "POSTGRES_VECTOR";
+    public static final String WEAVIATE = "WEAVIATE";
+    public static final String MILVUS = "MILVUS";
+    public static final String SCHEME = "scheme";
+    public static final String OBJECT_CLASS = "objectClass";
+    public static final String AVOID_DUPS = "avoidDups";
+    public static final String CONSISTENCY_LEVEL = "consistencyLevel";
 
     // LLM connection properties
     public static final String DEPLOYMENT_NAME = "deploymentName";
@@ -56,6 +62,21 @@ public class Constants {
     public static final String AZURE_OPEN_AI = "AZURE_OPEN_AI";
     public static final String DEEPSEEK = "DEEPSEEK";
     public static final String WSO2_AI = "WSO2_AI";
+
+    // MCP connection properties
+    public static final String MCP = "MCP";
+    public static final String MCP_SERVER_URL = "mcpServerUrl";
+    public static final String MCP_AUTHENTICATION_TYPE = "authenticationType";
+    public static final String MCP_BEARER_TOKEN = "bearerToken";
+    public static final String MCP_CUSTOM_HEADERS = "customHeaders";
+    public static final String MCP_TIMEOUT = "timeout";
+    public static final String MCP_MAX_CONNECTIONS = "maxConnections";
+    public static final String MCP_CONNECTION_TIMEOUT = "connectionTimeout";
+    public static final String MCP_SOCKET_TIMEOUT = "socketTimeout";
+    
+    // Authentication types
+    public static final String AUTH_TYPE_NONE = "None";
+    public static final String AUTH_TYPE_BEARER = "Bearer Token";
 
     // Parser Constants
     public static final String MD_TO_TEXT = "markdown-to-text";
@@ -108,6 +129,13 @@ public class Constants {
     public static final String KNOWLEDGE = "knowledge";
     public static final String HISTORY = "history";
     public static final String MAX_HISTORY = "maxHistory";
+    public static final String OVERFLOW_HANDLING_METHOD = "overflowHandlingMethod";
+    public static final String SUMMARIZATION_LLM_CONFIG_KEY = "summarizationLlmConfigKey";
+    public static final String SUMMARIZATION_MODEL_NAME = "summarizationModelName";
+
+    // Overflow handling methods
+    public static final String TRIM = "Trim";
+    public static final String SUMMARIZE = "Summarize";
 
     // Agent Constants
     public static final String TOOL_EXECUTION_CORRELATION = "toolExecutionCorrelation";
@@ -123,6 +151,12 @@ public class Constants {
     public static final String TEMPLATE = "template";
     public static final String RESULT_EXPRESSION = "resultExpression";
     public static final String DESCRIPTION = "description";
+
+    // MCP Tool Constants
+    public static final String MCP_TOOL_TYPE = "mcp";
+    public static final String MCP_CONNECTION = "mcpConnection";
+    public static final String MCP_TOOL_RESULT = "MCP_TOOL_RESULT";
+    public static final String MCP_CONFIG_KEY = "_MCP_CONFIG_KEY";
 
     // Preserve message context properties
     public static final String ORIGINAL_PAYLOAD_BEFORE_INVOKE_TEMPLATE = "ORIGINAL_PAYLOAD_BEFORE_INVOKE_TEMPLATE";
@@ -147,6 +181,7 @@ public class Constants {
     public static final String LLM_CONFIG_KEY = "_LLM_CONFIG_KEY";
     public static final String VECTOR_STORE_CONFIG_KEY = "_VECTOR_STORE_CONFIG_KEY";
     public static final String EMBEDDING_CONFIG_KEY = "_EMBEDDING_CONFIG_KEY";
+    public static final String MCP_CONNECTIONS = "_MCP_CONNECTIONS";
     public static final String AGENT = "agent";
     public static final String ROLE = "role";
     public static final String INSTRUCTIONS = "instructions";

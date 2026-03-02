@@ -28,5 +28,10 @@
 			<description>Invoke connection operation</description>
 			<hidden>true</hidden>
 		</component>
+		<component name="invokeMCPConnections">
+			<file>invokeMCPConnections.xml</file>
+			<description>Invoke MCP connections operation</description>
+			<hidden>true</hidden>
+		</component>
     </subComponents>    
 </component>

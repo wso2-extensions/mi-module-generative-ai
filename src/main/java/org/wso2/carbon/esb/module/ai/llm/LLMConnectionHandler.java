@@ -20,14 +20,15 @@ package org.wso2.carbon.esb.module.ai.llm;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
+import dev.langchain4j.model.azure.AzureOpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.connections.ConnectionParams;
-import org.wso2.carbon.esb.module.ai.llm.wso2ai.WSO2AIChatModel;
+import org.wso2.carbon.esb.module.ai.llm.wso2ai.BearerTokenHttpClientBuilder;
 
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,12 +41,12 @@ public class LLMConnectionHandler {
         connectionMap.computeIfAbsent(connectionName, k -> connectionParams);
     }
 
-    public static ChatLanguageModel getChatModel(
+    public static ChatModel getChatModel(
             String connectionName, String modelName, Double temperature, Integer maxTokens,
             Double topP, Double frequencyPenalty, Integer seed) {
 
         // TODO: Need to pool the models as it is resource intensive to create a new model for each request
-        ChatLanguageModel chatModel = null;
+        ChatModel chatModel = null;
         ConnectionParams connectionParams = connectionMap.get(connectionName);
         if (connectionParams == null) {
             return null;
@@ -98,18 +99,20 @@ public class LLMConnectionHandler {
                         .build();
                 break;
             case Constants.WSO2_AI:
-                WSO2AIChatModel.Builder chatModelBuilder
-                        = WSO2AIChatModel.builder()
+                var wso2Builder = AnthropicChatModel.builder()
                         .baseUrl(connectionParams.getConnectionProperty(Constants.SERVICE_URL))
-                        .accessToken(connectionParams.getConnectionProperty(Constants.ACCESS_TOKEN))
+                        .apiKey("not-used")
+                        .httpClientBuilder(new BearerTokenHttpClientBuilder(
+                                connectionParams.getConnectionProperty(Constants.ACCESS_TOKEN)))
+                        .modelName(modelName)
                         .maxTokens(maxTokens);
                 // Can only set one of temperature or topP
                 if (temperature != null) {
-                    chatModelBuilder.temperature(temperature);
+                    wso2Builder.temperature(temperature);
                 } else if (topP != null) {
-                    chatModelBuilder.topP(topP);
+                    wso2Builder.topP(topP);
                 }
-                chatModel = chatModelBuilder.build();
+                chatModel = wso2Builder.build();
                 break;
             default:
                 break;
@@ -121,12 +124,20 @@ public class LLMConnectionHandler {
         EmbeddingModel embeddingModel = null;
         ConnectionParams connectionParams = connectionMap.get(connectionName);
         switch (Objects.requireNonNull(connectionParams).getConnectionType()) {
-            case "OPEN_AI":
+            case Constants.OPEN_AI:
                 // Null values of LLM params will be handled by LangChain4j
                 embeddingModel = OpenAiEmbeddingModel.builder()
                         .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
                         .modelName(modelName)
                         .build();
+                break;
+            case Constants.AZURE_OPEN_AI:
+                embeddingModel = AzureOpenAiEmbeddingModel.builder()
+                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
+                        .deploymentName(connectionParams.getConnectionProperty(Constants.DEPLOYMENT_NAME))
+                        .endpoint(connectionParams.getConnectionProperty(Constants.ENDPOINT))
+                        .build();
+                break;
             default:
                 break;
         }

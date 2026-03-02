@@ -24,7 +24,6 @@ import dev.langchain4j.data.document.splitter.DocumentBySentenceSplitter;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.document.splitter.DocumentByParagraphSplitter;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.esb.module.ai.AbstractAIMediator;
 import org.wso2.carbon.esb.module.ai.Constants;
@@ -58,13 +57,13 @@ public class DocSplitter extends AbstractAIMediator {
         DocumentSplitter splitter = null;
         switch (strategy) {
             case Constants.RECURSIVE:
-                splitter = DocumentSplitters.recursive(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
+                splitter = DocumentSplitters.recursive(maxSegmentSize, maxOverlapSize);
                 break;
             case Constants.BY_PARAGRAPH:
-                splitter = new DocumentByParagraphSplitter(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
+                splitter = new DocumentByParagraphSplitter(maxSegmentSize, maxOverlapSize);
                 break;
             case Constants.BY_SENTENCE:
-                splitter = new DocumentBySentenceSplitter(maxSegmentSize, maxOverlapSize, new OpenAiTokenizer());
+                splitter = new DocumentBySentenceSplitter(maxSegmentSize, maxOverlapSize);
                 break;
             default:
                 handleConnectorException(Errors.INVALID_SPLITTING_STRATEGY, mc);
@@ -72,7 +71,7 @@ public class DocSplitter extends AbstractAIMediator {
 
         List<TextSegment> segments = null;
         try {
-            segments = Objects.requireNonNull(splitter).split(new Document(input));
+            segments = Objects.requireNonNull(splitter).split(Document.from(input));
         } catch (Exception e) {
             handleConnectorException(Errors.FAILED_TO_SPLIT, mc, e);
         }

@@ -36,6 +36,13 @@ public class Configure extends AbstractConnector {
                 (boolean) messageContext.getVariable(SKIP_CONFIG_PROCESSING)) {
             return;
         }
+        
+        // Process MCP connections
+        Object mcpConnections = getParameter(messageContext, "mcpConnections");
+        if (mcpConnections instanceof ResolvedInvokeParam mcpConnectionsParam) {
+            messageContext.setProperty(Constants.MCP_CONNECTIONS, mcpConnectionsParam);
+        }
+        
         Object connections = getParameter(messageContext, Constants.CONNECTIONS);
         if (connections instanceof ResolvedInvokeParam connectionsParam) {
             List<ResolvedInvokeParam> children = connectionsParam.getChildren();
@@ -56,6 +63,9 @@ public class Configure extends AbstractConnector {
                             break;
                         case "embeddingConfigKey":
                             propertyName = Constants.EMBEDDING_CONFIG_KEY;
+                            break;
+                        case "summarizationLlmConfigKey":
+                            propertyName = Constants.SUMMARIZATION_LLM_CONFIG_KEY;
                             break;
                         default:
                             propertyName = null;

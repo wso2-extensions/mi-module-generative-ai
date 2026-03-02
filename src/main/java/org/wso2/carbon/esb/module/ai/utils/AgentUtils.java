@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.service.AiServiceContext;
 
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,14 +43,13 @@ public class AgentUtils {
         return matcher.replaceAll("$1");
     }
 
-    public static void addSystemMessageIfMissing(List<ChatMessage> messages, AiServiceContext aiServiceContext,
-                                                 String memoryId, String defaultSystemPrompt) {
+    public static void addSystemMessageIfMissing(List<ChatMessage> messages, Function<Object, String> systemMessageProvider,
+                                                    String memoryId, String defaultSystemPrompt) {
 
         if (!(messages.get(0) instanceof SystemMessage)) {
-            Optional<String> systemPrompt = aiServiceContext.systemMessageProvider.apply(memoryId);
-            SystemMessage systemMessage =
-                    new SystemMessage(systemPrompt.orElse(defaultSystemPrompt));
-            messages.add(systemMessage);
+            String systemPromptText = systemMessageProvider != null ? systemMessageProvider.apply(memoryId) : defaultSystemPrompt;
+            SystemMessage systemMessage = new SystemMessage(systemPromptText != null ? systemPromptText : defaultSystemPrompt);
+            messages.add(0, systemMessage);
         }
         Iterator<ChatMessage> iterator = messages.iterator();
 

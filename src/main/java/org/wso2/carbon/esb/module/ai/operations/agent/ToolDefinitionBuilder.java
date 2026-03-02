@@ -35,27 +35,34 @@ public class ToolDefinitionBuilder {
         List<ToolSpecification> toolSpecifications = new ArrayList<>();
         if (!tools.isEmpty()) {
             for (Tool tool : tools) {
-                String toolTemplate = tool.getTemplate();
-                Mediator mediator = mc.getSequenceTemplate(toolTemplate);
-                if (mediator instanceof TemplateMediator templateMediator) {
-                    String template = tool.getTemplate();
-                    String description = templateMediator.getDescription();
-                    List<TemplateParam> templateParams = new ArrayList<>(templateMediator.getParameters());
-                    JsonObjectSchema parameterSchema = generateParameterSchema(templateParams);
-                    ToolSpecification toolSpecification =
-                            ToolSpecification.builder().name(template).description(description)
-                                    .parameters(parameterSchema).build();
-                    toolDefinitions.addToolResultExpression(template, tool.getResultExpression());
-                    toolSpecifications.add(toolSpecification);
+                // Check if this is an MCP tool
+                if (Constants.MCP_TOOL_TYPE.equals(tool.getType())) {
+                    // Handle MCP tool
+                    generateMCPToolSpecification(tool, toolSpecifications, toolDefinitions);
+                } else {
+                    // Handle regular Synapse template tool
+                    String toolTemplate = tool.getTemplate();
+                    Mediator mediator = mc.getSequenceTemplate(toolTemplate);
+                    if (mediator instanceof TemplateMediator templateMediator) {
+                        String template = tool.getTemplate();
+                        String description = templateMediator.getDescription();
+                        List<TemplateParam> templateParams = new ArrayList<>(templateMediator.getParameters());
+                        JsonObjectSchema parameterSchema = generateParameterSchema(templateParams);
+                        ToolSpecification toolSpecification =
+                                ToolSpecification.builder().name(template).description(description)
+                                        .parameters(parameterSchema).build();
+                        toolDefinitions.addToolResultExpression(template, tool.getResultExpression());
+                        toolSpecifications.add(toolSpecification);
 
-                    // Add invoker for tool
-                    SequenceMediator toolInvoker = new SequenceMediator();
-                    toolInvoker.setSequenceType(SequenceType.ANON);
-                    InvokeMediator invoker = new InvokeMediator();
-                    invoker.setTargetTemplate(toolTemplate);
+                        // Add invoker for tool
+                        SequenceMediator toolInvoker = new SequenceMediator();
+                        toolInvoker.setSequenceType(SequenceType.ANON);
+                        InvokeMediator invoker = new InvokeMediator();
+                        invoker.setTargetTemplate(toolTemplate);
 
-                    toolInvoker.addChild(invoker);
-                    toolDefinitions.addToolInvoker(template, toolInvoker);
+                        toolInvoker.addChild(invoker);
+                        toolDefinitions.addToolInvoker(template, toolInvoker);
+                    }
                 }
             }
         }
@@ -71,23 +78,87 @@ public class ToolDefinitionBuilder {
             for (ResolvedInvokeParam toolParam : toolList) {
                 Map<String, Object> toolAttributes = toolParam.getAttributes();
                 String name = (String) toolAttributes.get(Constants.NAME);
-                String template = (String) toolAttributes.get(Constants.TEMPLATE);
-                String resultExpression = (String) toolAttributes.get(Constants.RESULT_EXPRESSION);
-                if (StringUtils.isBlank(name) || StringUtils.isBlank(template) ||
-                        StringUtils.isBlank(resultExpression)) {
-                    handleConnectorException(Errors.INVALID_TOOL_CONFIGURATION, mc);
-                }
-                name = name.replaceAll("\\s", "_");
-                SynapseExpression resultSynapseExpression =
-                        new ValueFactory().createSynapseExpression(resultExpression);
-                Value resultExpressionValue = new Value(resultSynapseExpression);
+                String type = (String) toolAttributes.get(Constants.TYPE);
                 String description = (String) toolAttributes.get(Constants.DESCRIPTION);
-                Tool
-                        tool = new Tool(name, template, resultExpressionValue, description);
-                tools.add(tool);
+                
+                // Check if this is an MCP tool
+                if (Constants.MCP_TOOL_TYPE.equals(type)) {
+                    String mcpConnection = (String) toolAttributes.get(Constants.MCP_CONNECTION);
+                    
+                    if (StringUtils.isBlank(name) || StringUtils.isBlank(mcpConnection)) {
+                        handleConnectorException(Errors.INVALID_TOOL_CONFIGURATION, mc);
+                    }
+                    
+                    name = name.replaceAll("\\s", "_");
+                    Tool tool = new Tool(name, type, mcpConnection, description);
+                    tools.add(tool);
+                } else {
+                    // Regular Synapse template tool: requires template and resultExpression
+                    String template = (String) toolAttributes.get(Constants.TEMPLATE);
+                    String resultExpression = (String) toolAttributes.get(Constants.RESULT_EXPRESSION);
+                    
+                    if (StringUtils.isBlank(name) || StringUtils.isBlank(template) ||
+                            StringUtils.isBlank(resultExpression)) {
+                        handleConnectorException(Errors.INVALID_TOOL_CONFIGURATION, mc);
+                    }
+                    
+                    name = name.replaceAll("\\s", "_");
+                    SynapseExpression resultSynapseExpression =
+                            new ValueFactory().createSynapseExpression(resultExpression);
+                    Value resultExpressionValue = new Value(resultSynapseExpression);
+                    Tool tool = new Tool(name, template, resultExpressionValue, description);
+                    tools.add(tool);
+                }
             }
         }
         return tools;
+    }
+
+    /**
+     * Generate MCP tool specification by fetching tool details from MCP server
+     */
+    private void generateMCPToolSpecification(Tool tool, List<ToolSpecification> toolSpecifications,
+                                              ToolDefinitions toolDefinitions) {
+        try {
+            String mcpConnection = tool.getMcpConnection();
+            String toolName = tool.getName();
+            
+            // Get MCP client for the connection
+            dev.langchain4j.mcp.client.McpClient mcpClient = 
+                org.wso2.carbon.esb.module.ai.mcp.MCPConnectionHandler.getOrCreateClient(mcpConnection);
+            
+            // Fetch available tools from MCP server
+            List<dev.langchain4j.agent.tool.ToolSpecification> mcpTools = mcpClient.listTools();
+            
+            // Find the specific tool by name
+            dev.langchain4j.agent.tool.ToolSpecification mcpToolSpec = mcpTools.stream()
+                    .filter(ts -> toolName.equals(ts.name()))
+                    .findFirst()
+                    .orElseThrow(() -> new SynapseException("MCP tool '" + toolName + 
+                            "' not found on server '" + mcpConnection + "'. Available tools: " + 
+                            mcpTools.stream().map(dev.langchain4j.agent.tool.ToolSpecification::name)
+                                    .reduce((a, b) -> a + ", " + b).orElse("none")));
+            
+            ToolSpecification toolSpec = ToolSpecification.builder()
+                    .name(tool.getName())
+                    .description(tool.getDescription() != null && !tool.getDescription().isEmpty() ? 
+                            tool.getDescription() : mcpToolSpec.description())
+                    .parameters(mcpToolSpec.parameters())
+                    .build();
+            
+            toolSpecifications.add(toolSpec);
+            
+            // Store MCP tool metadata for execution
+            toolDefinitions.addMCPToolMapping(tool.getName(), mcpConnection);
+            
+            if (log.isDebugEnabled()) {
+                log.debug("Tool schema: " + (mcpToolSpec.parameters() != null ? 
+                        "provided" : "empty"));
+            }
+        } catch (Exception e) {
+            log.error("Error generating MCP tool specification for '" + tool.getName() + "'", e);
+            throw new SynapseException("Failed to generate MCP tool specification: " + e.getMessage(), e);
+        }
     }
 
     private JsonObjectSchema generateParameterSchema(List<TemplateParam> templateParams) {
@@ -117,55 +188,74 @@ public class ToolDefinitionBuilder {
     private static class Tool {
 
         private String name;
-        private String template;
-        private Value resultExpression;
+        private String type;  // null for regular tools, "mcp" for MCP tools
+        private String template;  // For regular Synapse template tools
+        private Value resultExpression;  // For regular Synapse template tools
+        private String mcpConnection;  // For MCP tools
         private String description;
 
+        // Constructor for regular Synapse template tools
         public Tool(String name, String template, Value resultExpression, String description) {
-
             this.name = name;
+            this.type = null;  // Regular tool
             this.template = template;
             this.resultExpression = resultExpression;
             this.description = description;
         }
 
-        public String getName() {
+        // Constructor for MCP tools
+        public Tool(String name, String type, String mcpConnection, String description) {
+            this.name = name;
+            this.type = type;
+            this.mcpConnection = mcpConnection;
+            this.description = description;
+        }
 
+        public String getName() {
             return name;
         }
 
         public void setName(String name) {
-
             this.name = name;
         }
 
-        public String getTemplate() {
+        public String getType() {
+            return type;
+        }
 
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getTemplate() {
             return template;
         }
 
         public void setTemplate(String template) {
-
             this.template = template;
         }
 
         public Value getResultExpression() {
-
             return resultExpression;
         }
 
         public void setResultExpression(Value resultExpression) {
-
             this.resultExpression = resultExpression;
         }
 
-        public String getDescription() {
+        public String getMcpConnection() {
+            return mcpConnection;
+        }
 
+        public void setMcpConnection(String mcpConnection) {
+            this.mcpConnection = mcpConnection;
+        }
+
+        public String getDescription() {
             return description;
         }
 
         public void setDescription(String description) {
-
             this.description = description;
         }
     }

@@ -1,0 +1,41 @@
+{
+  "connectorName": "ai",
+  "operationName": "mcpTools",
+  "title": "Add MCP Tools",
+  "help": "This operation allows you to search and add MCP tools to an agent from external MCP Servers",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": ["MCP"],
+              "defaultType": "connection.mcp",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "MCP Server connection to be used"
+            }
+          },
+          {
+            "type": "attribute",
+            "value": {
+              "name": "mcpToolsSelection",
+              "displayName": "MCP Tools Selection",
+              "inputType": "mcpToolsSelection",
+              "defaultValue": [],
+              "required": "false",
+              "helpTip": "Select tools from the connected MCP server"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "canTryOut": false
+}

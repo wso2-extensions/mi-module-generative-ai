@@ -19,6 +19,8 @@
                 "MI_VECTOR_STORE",
                 "CHROMA_DB",
                 "PINECONE",
+                "WEAVIATE",
+                "MILVUS",
                 "POSTGRES_VECTOR"
               ],
               "defaultType": "connection.local",
@@ -34,7 +36,8 @@
               "displayName": "Embedding model Connection",
               "inputType": "connection",
               "allowedConnectionTypes": [
-                "OPEN_AI"
+                "OPEN_AI",
+                "AZURE_OPEN_AI"
               ],
               "defaultType": "connection.local",
               "defaultValue": "",
