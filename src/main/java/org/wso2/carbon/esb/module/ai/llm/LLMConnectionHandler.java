@@ -20,10 +20,10 @@ package org.wso2.carbon.esb.module.ai.llm;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
+import dev.langchain4j.model.azure.AzureOpenAiEmbeddingModel;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
-import dev.langchain4j.model.azure.AzureOpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import org.wso2.carbon.esb.module.ai.Constants;
@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LLMConnectionHandler {
 
+    private final static String WSO2_DEFAULT_MODEL = "claude-haiku-4-5";
     private final static ConcurrentHashMap<String, ConnectionParams> connectionMap = new ConcurrentHashMap<>();
 
     public static void addConnection(String connectionName, ConnectionParams connectionParams) {
@@ -99,12 +100,12 @@ public class LLMConnectionHandler {
                         .build();
                 break;
             case Constants.WSO2_AI:
-                var wso2Builder = AnthropicChatModel.builder()
+                AnthropicChatModel.AnthropicChatModelBuilder wso2Builder = AnthropicChatModel.builder()
                         .baseUrl(connectionParams.getConnectionProperty(Constants.SERVICE_URL))
                         .apiKey("not-used")
                         .httpClientBuilder(new BearerTokenHttpClientBuilder(
                                 connectionParams.getConnectionProperty(Constants.ACCESS_TOKEN)))
-                        .modelName(modelName)
+                        .modelName(WSO2_DEFAULT_MODEL)
                         .maxTokens(maxTokens);
                 // Can only set one of temperature or topP
                 if (temperature != null) {
