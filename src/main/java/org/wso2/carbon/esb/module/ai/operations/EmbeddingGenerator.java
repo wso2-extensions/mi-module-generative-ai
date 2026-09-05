@@ -57,7 +57,9 @@ public class EmbeddingGenerator extends AbstractAIMediator {
         String connectionName = getProperty(mc, Constants.CONNECTION_NAME, String.class, false);
 
         List<TextSegment> inputs = parseAndValidateInput(input);
-        if (inputs == null) {
+        if (inputs == null || inputs.isEmpty()) {
+            log.error("Invalid or empty input for embedding generation. Input: " +
+                    (input != null && input.length() > 200 ? input.substring(0, 200) + "..." : input));
             handleConnectorException(Errors.INVALID_INPUT_FOR_EMBEDDING_GENERATION, mc);
             return;
         }

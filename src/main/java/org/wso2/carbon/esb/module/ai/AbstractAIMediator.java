@@ -162,10 +162,13 @@ public abstract class AbstractAIMediator extends AbstractConnector {
     }
 
     public void handleConnectorException(Errors code, MessageContext mc, Throwable e) {
+        String errorDetail = code.getMessage() + (e != null ? " : " + e.getMessage() : "");
         this.log.error(code.getMessage(), e);
 
         mc.setProperty("ERROR_CODE", code.getCode());
         mc.setProperty("ERROR_MESSAGE", code.getMessage());
+        mc.setVariable("_AI_ERROR_MESSAGE", errorDetail);
+        setErrorResponse(mc, code.getCode(), errorDetail);
         throw new SynapseException(code.getMessage(), e);
     }
 
@@ -174,7 +177,18 @@ public abstract class AbstractAIMediator extends AbstractConnector {
 
         mc.setProperty("ERROR_CODE", code.getCode());
         mc.setProperty("ERROR_MESSAGE", code.getMessage());
+        mc.setVariable("_AI_ERROR_MESSAGE", code.getMessage());
+        setErrorResponse(mc, code.getCode(), code.getMessage());
         throw new SynapseException(code.getMessage());
+    }
+
+    private void setErrorResponse(MessageContext mc, String errorCode, String errorMessage) {
+
+        String responseVariable = (String) getParameter(mc, Constants.RESPONSE_VARIABLE);
+        if (responseVariable != null && !responseVariable.isEmpty()) {
+            Map<String, Object> errorPayload = Map.of("error", errorMessage, "errorCode", errorCode);
+            handleConnectorResponse(mc, responseVariable, false, errorPayload, null, null);
+        }
     }
 
     protected String parseInlineExpression(MessageContext mc, String inlineExpression) {

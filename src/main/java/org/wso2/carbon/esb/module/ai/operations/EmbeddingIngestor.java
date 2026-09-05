@@ -51,7 +51,10 @@ public class EmbeddingIngestor extends AbstractAIMediator {
         String embeddings = getMediatorParameter(mc, Constants.INPUT, String.class, false);
 
         List<TextEmbedding> textEmbeddings = parseAndValidateInput(embeddings);
-        if (textEmbeddings == null) {
+        if (textEmbeddings == null || textEmbeddings.isEmpty()) {
+            log.error("Invalid or empty input for embedding ingestion. The input could not be parsed as valid TextEmbedding data. " +
+                    "Ensure the input contains both 'text' and 'embedding' fields. Input: " +
+                    (embeddings != null && embeddings.length() > 200 ? embeddings.substring(0, 200) + "..." : embeddings));
             handleConnectorException(Errors.INVALID_INPUT_FOR_EMBEDDING_INGESTION, mc);
             return;
         }
