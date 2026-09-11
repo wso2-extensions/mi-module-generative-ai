@@ -286,6 +286,9 @@ public class Agent extends AbstractAIMediator implements FlowContinuableMediator
 
         List<ChatMessage> messages = chatMemory.messages();
         AgentUtils.addSystemMessageIfMissing(messages, sharedAgentDataHolder.getSystemMessageProvider(), memoryId, DEFAULT_SYSTEM_PROMPT);
+        if (messages.stream().allMatch(message -> message instanceof SystemMessage)) {
+            handleConnectorException(Errors.MAX_HISTORY_TOO_LOW_FOR_TOOL_USAGE, mc);
+        }
         ChatRequest chatRequest =
                 ChatRequest.builder().messages(messages).parameters(sharedAgentDataHolder.getChatRequestParameters())
                         .build();
