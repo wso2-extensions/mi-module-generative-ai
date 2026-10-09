@@ -13,6 +13,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.langchain4j.data.message.UserMessage;
+
 public class AgentUtils {
 
     private static final Gson GSON = new Gson();
@@ -44,7 +46,13 @@ public class AgentUtils {
     }
 
     public static void addSystemMessageIfMissing(List<ChatMessage> messages, Function<Object, String> systemMessageProvider,
-                                                    String memoryId, String defaultSystemPrompt) {
+                                                 String memoryId, String defaultSystemPrompt) {
+
+        if (messages == null || messages.isEmpty()) {
+            String systemPromptText = systemMessageProvider != null ? systemMessageProvider.apply(memoryId) : defaultSystemPrompt;
+            messages.add(new SystemMessage(systemPromptText != null ? systemPromptText : defaultSystemPrompt));
+            return;
+        }
 
         if (!(messages.get(0) instanceof SystemMessage)) {
             String systemPromptText = systemMessageProvider != null ? systemMessageProvider.apply(memoryId) : defaultSystemPrompt;
@@ -63,6 +71,13 @@ public class AgentUtils {
             if (message instanceof SystemMessage) {
                 iterator.remove();
             }
+        }
+
+        // Ensure that the conversation begins with a UserMessage after the SystemMessage.
+        // If history eviction caused an AiMessage or an orphaned ToolExecutionResultMessage
+        // to be at the start, remove orphaned messages until the first valid UserMessage is reached.
+        while (messages.size() > 1 && !(messages.get(1) instanceof UserMessage)) {
+            messages.remove(1);
         }
     }
 }
