@@ -30,7 +30,6 @@ import org.wso2.carbon.esb.module.ai.Constants;
 import org.wso2.carbon.esb.module.ai.Errors;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Document splitting operation
@@ -54,32 +53,33 @@ public class DocSplitter extends AbstractAIMediator {
         maxSegmentSize = (maxSegmentSize == null) ? 1000 : maxSegmentSize;
         maxOverlapSize = (maxOverlapSize == null) ? 200 : maxOverlapSize;
 
-        DocumentSplitter splitter = null;
-        switch (strategy) {
-            case Constants.RECURSIVE:
-                splitter = DocumentSplitters.recursive(maxSegmentSize, maxOverlapSize);
-                break;
-            case Constants.BY_PARAGRAPH:
-                splitter = new DocumentByParagraphSplitter(maxSegmentSize, maxOverlapSize);
-                break;
-            case Constants.BY_SENTENCE:
-                splitter = new DocumentBySentenceSplitter(maxSegmentSize, maxOverlapSize);
-                break;
-            default:
-                handleConnectorException(Errors.INVALID_SPLITTING_STRATEGY, mc);
-        }
-
-        List<TextSegment> segments = null;
         try {
-            segments = Objects.requireNonNull(splitter).split(Document.from(input));
+            DocumentSplitter splitter = null;
+            switch (strategy) {
+                case Constants.RECURSIVE:
+                    splitter = DocumentSplitters.recursive(maxSegmentSize, maxOverlapSize);
+                    break;
+                case Constants.BY_PARAGRAPH:
+                    splitter = new DocumentByParagraphSplitter(maxSegmentSize, maxOverlapSize);
+                    break;
+                case Constants.BY_SENTENCE:
+                    splitter = new DocumentBySentenceSplitter(maxSegmentSize, maxOverlapSize);
+                    break;
+                default:
+                    handleConnectorException(Errors.INVALID_SPLITTING_STRATEGY, mc);
+                    return;
+            }
+
+            List<TextSegment> segments = splitter.split(Document.from(input));
+
+            if (segments == null || segments.isEmpty()) {
+                handleConnectorException(Errors.FAILED_TO_SPLIT, mc);
+                return;
+            }
+
+            handleConnectorResponse(mc, responseVariable, overwriteBody, segments, null, null);
         } catch (Exception e) {
             handleConnectorException(Errors.FAILED_TO_SPLIT, mc, e);
         }
-
-        if (segments == null) {
-            handleConnectorException(Errors.FAILED_TO_SPLIT, mc);
-        }
-
-        handleConnectorResponse(mc, responseVariable, overwriteBody, segments, null, null);
     }
 }

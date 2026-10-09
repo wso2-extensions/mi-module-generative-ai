@@ -78,7 +78,7 @@
               "name": "needParse",
               "displayName": "Parse",
               "inputType": "checkbox",
-              "defaultValue": true,
+              "defaultValue": false,
               "required": "false",
               "helpTip": "Enable this option if the input needs to be parsed into text."
             }
@@ -124,7 +124,7 @@
               "name": "needSplit",
               "displayName": "Split",
               "inputType": "checkbox",
-              "defaultValue": true,
+              "defaultValue": false,
               "required": "false",
               "helpTip": "Enable this option if the input needs to be split into smaller segments."
             }

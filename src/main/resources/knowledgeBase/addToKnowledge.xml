@@ -48,6 +48,7 @@
                     </ai.parse>
                     <variable name="ADD_TO_KNOWLEDGE_INPUT" expression="${vars.ADD_TO_KNOWLEDGE_INPUT.payload}"/>
                 </filter>
+                <class name="org.wso2.carbon.esb.module.ai.config.ErrorChecker"/>
                 <filter xpath="${boolean(params.functionParams.needSplit)}">
                     <ai.split>
                         <input>{${vars.ADD_TO_KNOWLEDGE_INPUT}}</input>
@@ -59,6 +60,7 @@
                     </ai.split>
                     <variable name="ADD_TO_KNOWLEDGE_INPUT" expression="${vars.ADD_TO_KNOWLEDGE_INPUT.payload}"/>
                 </filter>
+                <class name="org.wso2.carbon.esb.module.ai.config.ErrorChecker"/>
                 <filter xpath="${boolean(params.functionParams.needEmbedding)}">
                     <ai.invokeConnection configKey="{${props.synapse._EMBEDDING_CONFIG_KEY}}"/>
                     <ai.generateEmbeddings>

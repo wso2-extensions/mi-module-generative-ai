@@ -46,15 +46,15 @@ public enum Errors {
     MILVUS_CONNECTION_ERROR("701135", "AI:ERROR_MILVUS_CONNECTION"),
 
     // Parser related errors
-    PARSE_ERROR("701141", "AI:ERROR_PARSE"),
-    UNSUPPORTED_PARSER_INPUT("701142", "AI:ERROR_UNSUPPORTED_PARSER_INPUT"),
-    UNSUPPORTED_PARSER_TYPE("701143", "AI:ERROR_UNSUPPORTED_PARSER_TYPE"),
+    PARSE_ERROR("701141", "AI:ERROR_PARSE - Failed to parse the input. Please check the input format and the selected parse type."),
+    UNSUPPORTED_PARSER_INPUT("701142", "AI:ERROR_UNSUPPORTED_PARSER_INPUT - The provided input is not supported for the selected parser."),
+    UNSUPPORTED_PARSER_TYPE("701143", "AI:ERROR_UNSUPPORTED_PARSER_TYPE - The specified parser type is not supported."),
     HTML_TO_TEXT_ERROR("701144", "AI:ERROR_HTML_TO_TEXT"),
     HTML_TO_MARKDOWN_ERROR("701145", "AI:ERROR_HTML_TO_MARKDOWN"),
 
     // Splitter related errors
-    INVALID_SPLITTING_STRATEGY("701151", "AI:ERROR_INVALID_SPLITTING_STRATEGY"),
-    FAILED_TO_SPLIT("701152", "AI:ERROR_FAILED_TO_SPLIT"),
+    INVALID_SPLITTING_STRATEGY("701151", "AI:ERROR_INVALID_SPLITTING_STRATEGY - The specified splitting strategy is not valid."),
+    FAILED_TO_SPLIT("701152", "AI:ERROR_FAILED_TO_SPLIT - Failed to split the input. Please check the input data and the selected split strategy."),
 
     // Embedding generator related errors
     EMBEDDING_GENERATION_ERROR("701161", "AI:ERROR_EMBEDDING_GENERATION"),

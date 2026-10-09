@@ -31,7 +31,6 @@ import org.wso2.carbon.esb.module.ai.Constants;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
-import java.util.Objects;
 
 /**
  * Parsing operation
@@ -55,50 +54,50 @@ public class DocParser extends AbstractAIMediator {
         String input = getMediatorParameter(mc, Constants.INPUT, String.class, false);
         String parserType = getMediatorParameter(mc, Constants.TYPE, String.class, false);
 
-        PARSER parser;
-        parser = determineParser(parserType);
-        if (parser == null) {
-            handleConnectorException(Errors.UNSUPPORTED_PARSER_TYPE, mc);
-        }
-
-        DocumentParser docParser = null;
-        ByteArrayInputStream inputStream = null;
-        switch (Objects.requireNonNull(parser)) {
-            case TEXT:
-                docParser = new TextDocumentParser();
-                inputStream = new ByteArrayInputStream(input.getBytes());
-                break;
-            case HTML_TO_TEXT:
-                docParser = new HTMLToTextParser();
-                inputStream = new ByteArrayInputStream(input.getBytes());
-                break;
-            case PDF_BOX:
-                docParser = new ApachePdfBoxDocumentParser();
-                inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
-                break;
-            case POI:
-                docParser = new ApachePoiDocumentParser();
-                inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
-                break;
-            default:
-                handleConnectorException(Errors.UNSUPPORTED_PARSER_INPUT, mc);
-        }
-
-        Document doc = null;
         try {
-            doc = docParser.parse(inputStream);
+            PARSER parser = determineParser(parserType);
+            if (parser == null) {
+                handleConnectorException(Errors.UNSUPPORTED_PARSER_TYPE, mc);
+                return;
+            }
+
+            DocumentParser docParser = null;
+            ByteArrayInputStream inputStream = null;
+            switch (parser) {
+                case TEXT:
+                    docParser = new TextDocumentParser();
+                    inputStream = new ByteArrayInputStream(input.getBytes());
+                    break;
+                case HTML_TO_TEXT:
+                    docParser = new HTMLToTextParser();
+                    inputStream = new ByteArrayInputStream(input.getBytes());
+                    break;
+                case PDF_BOX:
+                    docParser = new ApachePdfBoxDocumentParser();
+                    inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
+                    break;
+                case POI:
+                    docParser = new ApachePoiDocumentParser();
+                    inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(input));
+                    break;
+                default:
+                    handleConnectorException(Errors.UNSUPPORTED_PARSER_INPUT, mc);
+                    return;
+            }
+
+            Document doc = docParser.parse(inputStream);
+
+            if (doc == null || doc.text() == null || doc.text().isEmpty()) {
+                handleConnectorException(Errors.PARSE_ERROR, mc);
+                return;
+            }
+
+            handleConnectorResponse(mc, responseVariable, overwriteBody, doc.text(), null, null);
         } catch (ParsingException e) {
             handleConnectorException(e.getError(), mc, e);
         } catch (Exception e) {
             handleConnectorException(Errors.PARSE_ERROR, mc, e);
         }
-
-        if (doc == null) {
-            handleConnectorException(Errors.PARSE_ERROR, mc);
-        }
-
-        handleConnectorResponse(mc, responseVariable, overwriteBody,
-                Objects.requireNonNull(doc).text(), null, null);
     }
 
     private PARSER determineParser(String contentType) {
