@@ -82,13 +82,17 @@ public class LLMConnectionHandler {
                         .build();
                 break;
             case Constants.ANTHROPIC:
-                chatModel = AnthropicChatModel.builder()
+                AnthropicChatModel.AnthropicChatModelBuilder anthropicBuilder = AnthropicChatModel.builder()
                         .modelName(modelName)
-                        .temperature(temperature)
                         .maxTokens(maxTokens)
-                        .topP(topP)
-                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY))
-                        .build();
+                        .apiKey(connectionParams.getConnectionProperty(Constants.API_KEY));
+                // Newer Claude models reject requests that set both temperature and topP
+                if (temperature != null) {
+                    anthropicBuilder.temperature(temperature);
+                } else if (topP != null) {
+                    anthropicBuilder.topP(topP);
+                }
+                chatModel = anthropicBuilder.build();
                 break;
             case Constants.MISTRAL_AI:
                 chatModel = MistralAiChatModel.builder()
