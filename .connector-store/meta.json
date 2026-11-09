@@ -3,7 +3,7 @@
     "owner": "WSO2",
     "product": "MI",
     "category": "Developer Tools",
-    "documentationUrl": "https://mi.docs.wso2.com/en/4.4.0/",
+    "documentationUrl": "https://mi.docs.wso2.com/en/latest/reference/connectors/ai-module/ai-module-overview/",
     "mavenGroupId": "org.wso2.integration.connector",
     "mavenArtifactId": "mi-connector-ai",
     "description": "The AI module allows you to integrate with AI services and develop AI applications.",
