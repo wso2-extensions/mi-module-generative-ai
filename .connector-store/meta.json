@@ -12,7 +12,7 @@
     "type": "Connector",
     "releases": [
         {
-            "tagName": "v1.0.2",
+            "tagName": "v1.0.3",
             "products": [
                 "MI 4.4.0",
                 "MI 4.5.0",
@@ -21,15 +21,148 @@
             ],
             "operations": [
                 {
-                    "name": "mcpTools",
-                    "description": "Add MCP Tools",
+                    "name": "agent",
+                    "description": "AI Agent",
                     "params": [
                         {
-                            "name": "mcpToolsSelection",
-                            "type": "mcpToolsSelection",
+                            "name": "llmConfigKey",
+                            "type": "connection",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Select the LLM service connection to be used for processing queries."
+                        },
+                        {
+                            "name": "memoryConfigKey",
+                            "type": "connection",
                             "required": false,
-                            "defaultValue": "[]",
-                            "description": "Select tools from the connected MCP server"
+                            "defaultValue": "",
+                            "description": "Choose the memory connection to store and retrieve chat history or context."
+                        },
+                        {
+                            "name": "sessionId",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Provide a unique identifier for the session."
+                        },
+                        {
+                            "name": "modelName",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "gpt-4o",
+                            "description": "Specify the name of the LLM model to be used for generating responses."
+                        },
+                        {
+                            "name": "role",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Define the role or persona of the agent (e.g., AI Assistant)."
+                        },
+                        {
+                            "name": "instructions",
+                            "type": "expressionTextArea",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Provide specific instructions or guidelines for the LLM to follow."
+                        },
+                        {
+                            "name": "prompt",
+                            "type": "expressionTextArea",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Enter the query or prompt to be processed by the LLM."
+                        },
+                        {
+                            "name": "attachments",
+                            "type": "expressionTextArea",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
+                        },
+                        {
+                            "name": "maxHistory",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "10",
+                            "description": "Set the maximum number of previous messages to include in the context."
+                        },
+                        {
+                            "name": "overflowHandlingMethod",
+                            "type": "comboOrExpression",
+                            "required": false,
+                            "defaultValue": "Trim",
+                            "description": "Choose how to handle chat history when it exceeds max history: Trim removes oldest messages, Summarize condenses them. Supported values: Trim, Summarize"
+                        },
+                        {
+                            "name": "summarizationLlmConfigKey",
+                            "type": "connection",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Select the LLM connection to use for summarizing chat history when overflow handling method is set to Summarize."
+                        },
+                        {
+                            "name": "summarizationModelName",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Specify the name of the LLM model to be used for summarizing responses."
+                        },
+                        {
+                            "name": "maxTokens",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "4069",
+                            "description": "Specify the maximum number of tokens to generate in the response."
+                        },
+                        {
+                            "name": "temperature",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "0.7",
+                            "description": "Adjust the randomness of the response: lower values produce more deterministic outputs."
+                        },
+                        {
+                            "name": "topP",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Control response diversity: lower values result in more focused outputs."
+                        },
+                        {
+                            "name": "frequencyPenalty",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "0",
+                            "description": "Reduce repetition in responses: higher values discourage repeated phrases."
+                        },
+                        {
+                            "name": "seed",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "Set a seed value for deterministic outputs (useful for debugging)."
+                        },
+                        {
+                            "name": "toolExecutionTimeout",
+                            "type": "string",
+                            "required": false,
+                            "defaultValue": "10",
+                            "description": "Specify the maximum time (in seconds) allowed for tool execution."
+                        },
+                        {
+                            "name": "responseVariable",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Name of the variable to which the output of the operation should be assigned"
+                        },
+                        {
+                            "name": "overwriteBody",
+                            "type": "checkbox",
+                            "required": false,
+                            "defaultValue": "false",
+                            "description": "Replace the Message Body in Message Context with the output of the operation (This will remove the payload from the above variable)."
                         }
                     ],
                     "isHidden": false
@@ -177,6 +310,20 @@
                             "required": false,
                             "defaultValue": "false",
                             "description": "Replace the Message Body in Message Context with the output of the operation (This will remove the payload from the above variable)."
+                        }
+                    ],
+                    "isHidden": false
+                },
+                {
+                    "name": "mcpTools",
+                    "description": "Add MCP Tools",
+                    "params": [
+                        {
+                            "name": "mcpToolsSelection",
+                            "type": "mcpToolsSelection",
+                            "required": false,
+                            "defaultValue": "[]",
+                            "description": "Select tools from the connected MCP server"
                         }
                     ],
                     "isHidden": false
@@ -467,200 +614,128 @@
                         }
                     ],
                     "isHidden": false
-                },
-                {
-                    "name": "agent",
-                    "description": "AI Agent",
-                    "params": [
-                        {
-                            "name": "llmConfigKey",
-                            "type": "connection",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Select the LLM service connection to be used for processing queries."
-                        },
-                        {
-                            "name": "memoryConfigKey",
-                            "type": "connection",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Choose the memory connection to store and retrieve chat history or context."
-                        },
-                        {
-                            "name": "sessionId",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Provide a unique identifier for the session."
-                        },
-                        {
-                            "name": "modelName",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "gpt-4o",
-                            "description": "Specify the name of the LLM model to be used for generating responses."
-                        },
-                        {
-                            "name": "role",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Define the role or persona of the agent (e.g., AI Assistant)."
-                        },
-                        {
-                            "name": "instructions",
-                            "type": "expressionTextArea",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Provide specific instructions or guidelines for the LLM to follow."
-                        },
-                        {
-                            "name": "prompt",
-                            "type": "expressionTextArea",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Enter the query or prompt to be processed by the LLM."
-                        },
-                        {
-                            "name": "attachments",
-                            "type": "expressionTextArea",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Attach additional data or context to enhance the LLM's response. The attachments should be in the format [{\"type\":\"application/pdf\", \"content\":\"base64 content\"}]. The supported types are: application/pdf, image/png, image/jpeg, text/plain, text/html, text/csv, text/xml. The content should be base64 encoded."
-                        },
-                        {
-                            "name": "maxHistory",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "10",
-                            "description": "Set the maximum number of previous messages to include in the context."
-                        },
-                        {
-                            "name": "overflowHandlingMethod",
-                            "type": "comboOrExpression",
-                            "required": false,
-                            "defaultValue": "Trim",
-                            "description": "Choose how to handle chat history when it exceeds max history: Trim removes oldest messages, Summarize condenses them. Supported values: Trim, Summarize"
-                        },
-                        {
-                            "name": "summarizationLlmConfigKey",
-                            "type": "connection",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Select the LLM connection to use for summarizing chat history when overflow handling method is set to Summarize."
-                        },
-                        {
-                            "name": "summarizationModelName",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Specify the name of the LLM model to be used for summarizing responses."
-                        },
-                        {
-                            "name": "maxTokens",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "4069",
-                            "description": "Specify the maximum number of tokens to generate in the response."
-                        },
-                        {
-                            "name": "temperature",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "0.7",
-                            "description": "Adjust the randomness of the response: lower values produce more deterministic outputs."
-                        },
-                        {
-                            "name": "topP",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Control response diversity: lower values result in more focused outputs."
-                        },
-                        {
-                            "name": "frequencyPenalty",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "0",
-                            "description": "Reduce repetition in responses: higher values discourage repeated phrases."
-                        },
-                        {
-                            "name": "seed",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "Set a seed value for deterministic outputs (useful for debugging)."
-                        },
-                        {
-                            "name": "toolExecutionTimeout",
-                            "type": "string",
-                            "required": false,
-                            "defaultValue": "10",
-                            "description": "Specify the maximum time (in seconds) allowed for tool execution."
-                        },
-                        {
-                            "name": "responseVariable",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Name of the variable to which the output of the operation should be assigned"
-                        },
-                        {
-                            "name": "overwriteBody",
-                            "type": "checkbox",
-                            "required": false,
-                            "defaultValue": "false",
-                            "description": "Replace the Message Body in Message Context with the output of the operation (This will remove the payload from the above variable)."
-                        }
-                    ],
-                    "isHidden": false
                 }
             ],
             "connections": [
                 {
-                    "name": "MISTRAL_AI",
-                    "description": "MistralAI Connection Config",
+                    "name": "WSO2_AI",
+                    "description": "WSO2 Default Model Provider Connection Config",
                     "params": [
                         {
                             "name": "connectionName",
                             "type": "string",
                             "required": true,
-                            "defaultValue": "MISTRAL_AI_CONNECTION_1",
-                            "description": "The name for the MistralAI connection"
+                            "defaultValue": "WSO2_AI_CONNECTION",
+                            "description": "The name for the WSO2 AI connection"
                         },
                         {
-                            "name": "apiKey",
+                            "name": "accessToken",
                             "type": "stringOrExpression",
                             "required": true,
-                            "defaultValue": "",
-                            "description": "MistralAI Key"
+                            "defaultValue": "${configs.WSO2_AI_ACCESS_TOKEN}",
+                            "description": "WSO2 AI Access Token"
+                        },
+                        {
+                            "name": "serviceUrl",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "${configs.WSO2_AI_SERVICE_URL}",
+                            "description": "WSO2 AI Service Url"
                         }
                     ]
                 },
                 {
-                    "name": "OPEN_AI",
-                    "description": "OpenAI Connection Config",
+                    "name": "FILE_MEMORY",
+                    "description": "File-Based Memory Store Configuration",
                     "params": [
                         {
                             "name": "connectionName",
                             "type": "string",
                             "required": true,
-                            "defaultValue": "OPEN_AI_CONNECTION",
-                            "description": "The name for the OpenAI connection"
+                            "defaultValue": "FILE_MEMORY_CONN",
+                            "description": "Specify a unique name for the file-based memory store connection"
+                        }
+                    ]
+                },
+                {
+                    "name": "PINECONE",
+                    "description": "Pinecone connection config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "PINECONE",
+                            "description": "A name for the vector store connection"
                         },
                         {
                             "name": "apiKey",
                             "type": "stringOrExpression",
                             "required": true,
                             "defaultValue": "",
-                            "description": "OpenAI Key"
+                            "description": "Pinecone Key"
+                        },
+                        {
+                            "name": "index",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "wso2-mi",
+                            "description": "Give the index"
+                        },
+                        {
+                            "name": "namespace",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "ai",
+                            "description": "Give the namespace"
+                        },
+                        {
+                            "name": "cloud",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "AWS",
+                            "description": "Give the cloud"
+                        },
+                        {
+                            "name": "region",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "us-east-1",
+                            "description": "Give the region"
+                        },
+                        {
+                            "name": "dimension",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "1536",
+                            "description": "Give the dimension of the embeddings"
+                        }
+                    ]
+                },
+                {
+                    "name": "DEEPSEEK",
+                    "description": "DEEPSEEK Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "DEEPSEEK_CONNECTION",
+                            "description": "The name for the DEEPSEEK connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "Deepseek API Key"
                         },
                         {
                             "name": "baseUrl",
                             "type": "stringOrExpression",
                             "required": false,
-                            "defaultValue": "https://api.openai.com/v1",
-                            "description": "Base url"
+                            "defaultValue": "https://api.deepseek.com",
+                            "description": "Base Url"
                         }
                     ]
                 },
@@ -702,6 +777,170 @@
                             "required": true,
                             "defaultValue": "1536",
                             "description": "The dimension of the embedding vectors (e.g. 384 for all-MiniLM-L6-v2, 1536 for OpenAI text-embedding-ada-002)"
+                        }
+                    ]
+                },
+                {
+                    "name": "CHROMA_DB",
+                    "description": "ChromaDB Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "CHROMA_DB",
+                            "description": "A name for the vector store connection"
+                        },
+                        {
+                            "name": "url",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "http://localhost:8000/",
+                            "description": "The base URL of the ChromaDB server"
+                        },
+                        {
+                            "name": "collection",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "WSO2-MI",
+                            "description": "The collection name in the ChromaDB server"
+                        }
+                    ]
+                },
+                {
+                    "name": "POSTGRES_MEMORY",
+                    "description": "POSTGRES Memory Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "POSTGRES_MEMORY",
+                            "description": "A name for the vector store connection"
+                        },
+                        {
+                            "name": "host",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "localhost",
+                            "description": "The host name of the database server"
+                        },
+                        {
+                            "name": "port",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "5432",
+                            "description": "The port number of the database server"
+                        },
+                        {
+                            "name": "database",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "postgres",
+                            "description": "The name of the database"
+                        },
+                        {
+                            "name": "user",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "The user name to connect to the database"
+                        },
+                        {
+                            "name": "password",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "The password to connect to the database"
+                        },
+                        {
+                            "name": "table",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "mi",
+                            "description": "The table name"
+                        }
+                    ]
+                },
+                {
+                    "name": "MISTRAL_AI",
+                    "description": "MistralAI Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "MISTRAL_AI_CONNECTION_1",
+                            "description": "The name for the MistralAI connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "MistralAI Key"
+                        }
+                    ]
+                },
+                {
+                    "name": "POSTGRES_VECTOR",
+                    "description": "PGVector Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "POSTGRES_VECTOR",
+                            "description": "A name for the vector store connection"
+                        },
+                        {
+                            "name": "host",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "localhost",
+                            "description": "The host name of the database server"
+                        },
+                        {
+                            "name": "port",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "5432",
+                            "description": "The port number of the database server"
+                        },
+                        {
+                            "name": "database",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "postgres",
+                            "description": "The name of the database"
+                        },
+                        {
+                            "name": "user",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "The user name to connect to the database"
+                        },
+                        {
+                            "name": "password",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "",
+                            "description": "The password to connect to the database"
+                        },
+                        {
+                            "name": "table",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "mi",
+                            "description": "The table name"
+                        },
+                        {
+                            "name": "dimension",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "1536",
+                            "description": "Give the dimension of the embeddings"
                         }
                     ]
                 },
@@ -775,111 +1014,36 @@
                     ]
                 },
                 {
-                    "name": "DEEPSEEK",
-                    "description": "DEEPSEEK Connection Config",
+                    "name": "AZURE_OPEN_AI",
+                    "description": "Azure OpenAI Connection Config",
                     "params": [
                         {
                             "name": "connectionName",
                             "type": "string",
                             "required": true,
-                            "defaultValue": "DEEPSEEK_CONNECTION",
-                            "description": "The name for the DEEPSEEK connection"
+                            "defaultValue": "AZURE_OPEN_AI_CONNECTION",
+                            "description": "The name for the Azure OpenAI connection"
                         },
                         {
                             "name": "apiKey",
                             "type": "stringOrExpression",
                             "required": true,
                             "defaultValue": "",
-                            "description": "Deepseek API Key"
+                            "description": "Azure OpenAI Key"
                         },
                         {
-                            "name": "baseUrl",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "https://api.deepseek.com",
-                            "description": "Base Url"
-                        }
-                    ]
-                },
-                {
-                    "name": "POSTGRES_MEMORY",
-                    "description": "POSTGRES Memory Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "POSTGRES_MEMORY",
-                            "description": "A name for the vector store connection"
-                        },
-                        {
-                            "name": "host",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "localhost",
-                            "description": "The host name of the database server"
-                        },
-                        {
-                            "name": "port",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "5432",
-                            "description": "The port number of the database server"
-                        },
-                        {
-                            "name": "database",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "postgres",
-                            "description": "The name of the database"
-                        },
-                        {
-                            "name": "user",
+                            "name": "deploymentName",
                             "type": "stringOrExpression",
                             "required": true,
                             "defaultValue": "",
-                            "description": "The user name to connect to the database"
+                            "description": "Azure deployment name"
                         },
                         {
-                            "name": "password",
+                            "name": "endpoint",
                             "type": "stringOrExpression",
-                            "required": false,
+                            "required": true,
                             "defaultValue": "",
-                            "description": "The password to connect to the database"
-                        },
-                        {
-                            "name": "table",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "mi",
-                            "description": "The table name"
-                        }
-                    ]
-                },
-                {
-                    "name": "CHROMA_DB",
-                    "description": "ChromaDB Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "CHROMA_DB",
-                            "description": "A name for the vector store connection"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "http://localhost:8000/",
-                            "description": "The base URL of the ChromaDB server"
-                        },
-                        {
-                            "name": "collection",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "WSO2-MI",
-                            "description": "The collection name in the ChromaDB server"
+                            "description": "Azure endpoint"
                         }
                     ]
                 },
@@ -900,6 +1064,46 @@
                             "required": true,
                             "defaultValue": "",
                             "description": "Anthropic Key"
+                        }
+                    ]
+                },
+                {
+                    "name": "OPEN_AI",
+                    "description": "OpenAI Connection Config",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "OPEN_AI_CONNECTION",
+                            "description": "The name for the OpenAI connection"
+                        },
+                        {
+                            "name": "apiKey",
+                            "type": "stringOrExpression",
+                            "required": true,
+                            "defaultValue": "",
+                            "description": "OpenAI Key"
+                        },
+                        {
+                            "name": "baseUrl",
+                            "type": "stringOrExpression",
+                            "required": false,
+                            "defaultValue": "https://api.openai.com/v1",
+                            "description": "Base url"
+                        }
+                    ]
+                },
+                {
+                    "name": "MI_VECTOR_STORE",
+                    "description": "MI Registry Vector Store",
+                    "params": [
+                        {
+                            "name": "connectionName",
+                            "type": "string",
+                            "required": true,
+                            "defaultValue": "MI_VECTOR_STORE_1",
+                            "description": "A name for the vector store connection"
                         }
                     ]
                 },
@@ -962,210 +1166,6 @@
                             "required": false,
                             "defaultValue": "QUORUM",
                             "description": "Consistency level: ONE, QUORUM (default), or ALL for read/write operations. Supported values: ONE, QUORUM, ALL"
-                        }
-                    ]
-                },
-                {
-                    "name": "POSTGRES_VECTOR",
-                    "description": "PGVector Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "POSTGRES_VECTOR",
-                            "description": "A name for the vector store connection"
-                        },
-                        {
-                            "name": "host",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "localhost",
-                            "description": "The host name of the database server"
-                        },
-                        {
-                            "name": "port",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "5432",
-                            "description": "The port number of the database server"
-                        },
-                        {
-                            "name": "database",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "postgres",
-                            "description": "The name of the database"
-                        },
-                        {
-                            "name": "user",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "The user name to connect to the database"
-                        },
-                        {
-                            "name": "password",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "",
-                            "description": "The password to connect to the database"
-                        },
-                        {
-                            "name": "table",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "mi",
-                            "description": "The table name"
-                        },
-                        {
-                            "name": "dimension",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "1536",
-                            "description": "Give the dimension of the embeddings"
-                        }
-                    ]
-                },
-                {
-                    "name": "PINECONE",
-                    "description": "Pinecone connection config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "PINECONE",
-                            "description": "A name for the vector store connection"
-                        },
-                        {
-                            "name": "apiKey",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Pinecone Key"
-                        },
-                        {
-                            "name": "index",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "wso2-mi",
-                            "description": "Give the index"
-                        },
-                        {
-                            "name": "namespace",
-                            "type": "stringOrExpression",
-                            "required": false,
-                            "defaultValue": "ai",
-                            "description": "Give the namespace"
-                        },
-                        {
-                            "name": "cloud",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "AWS",
-                            "description": "Give the cloud"
-                        },
-                        {
-                            "name": "region",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "us-east-1",
-                            "description": "Give the region"
-                        },
-                        {
-                            "name": "dimension",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "1536",
-                            "description": "Give the dimension of the embeddings"
-                        }
-                    ]
-                },
-                {
-                    "name": "AZURE_OPEN_AI",
-                    "description": "Azure OpenAI Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "AZURE_OPEN_AI_CONNECTION",
-                            "description": "The name for the Azure OpenAI connection"
-                        },
-                        {
-                            "name": "apiKey",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Azure OpenAI Key"
-                        },
-                        {
-                            "name": "deploymentName",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Azure deployment name"
-                        },
-                        {
-                            "name": "endpoint",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "",
-                            "description": "Azure endpoint"
-                        }
-                    ]
-                },
-                {
-                    "name": "WSO2_AI",
-                    "description": "WSO2 Default Model Provider Connection Config",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "WSO2_AI_CONNECTION",
-                            "description": "The name for the WSO2 AI connection"
-                        },
-                        {
-                            "name": "accessToken",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "${configs.WSO2_AI_ACCESS_TOKEN}",
-                            "description": "WSO2 AI Access Token"
-                        },
-                        {
-                            "name": "serviceUrl",
-                            "type": "stringOrExpression",
-                            "required": true,
-                            "defaultValue": "${configs.WSO2_AI_SERVICE_URL}",
-                            "description": "WSO2 AI Service Url"
-                        }
-                    ]
-                },
-                {
-                    "name": "FILE_MEMORY",
-                    "description": "File-Based Memory Store Configuration",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "FILE_MEMORY_CONN",
-                            "description": "Specify a unique name for the file-based memory store connection"
-                        }
-                    ]
-                },
-                {
-                    "name": "MI_VECTOR_STORE",
-                    "description": "MI Registry Vector Store",
-                    "params": [
-                        {
-                            "name": "connectionName",
-                            "type": "string",
-                            "required": true,
-                            "defaultValue": "MI_VECTOR_STORE_1",
-                            "description": "A name for the vector store connection"
                         }
                     ]
                 }
